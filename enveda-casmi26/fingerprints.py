@@ -25,6 +25,18 @@ def fp_packed(smiles):
     return np.packbits(gen.GetFingerprintAsNumPy(mol).astype(np.uint8))
 
 
+def fp_packed_v2(smiles):
+    """Morgan radius 2 (2,048 bits) followed by MACCS keys (167 bits, padded to 168), packed: 277 bytes."""
+    from rdkit.Chem import MACCSkeys
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return np.zeros((N_BITS + 168) // 8, np.uint8)
+    gen = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=N_BITS)
+    maccs = np.zeros(168, np.uint8)
+    maccs[:167] = np.array(list(MACCSkeys.GenMACCSKeys(mol)), np.uint8)
+    return np.packbits(np.concatenate([gen.GetFingerprintAsNumPy(mol).astype(np.uint8), maccs]))
+
+
 def main(train_path, coconut_path, out):
     train = (pd.read_parquet(train_path, columns=['inchikey14', 'normalized_smiles', 'molecular_formula'])
              .drop_duplicates('inchikey14'))
