@@ -26,6 +26,8 @@ In [part 1](https://www.kaggle.com/code/aryanawasthiteykik/casmi26-validation-th
 | Fingerprint only | 0.338 | 0.371 | 0.365 |
 | **Gate: cosine ≥ 0.7 first, then fingerprint** | 0.785 | 0.337 | **0.409** |
 
+**Public LB: 0.176** (cosine only: 0.150). That's a real gain, but far below the 0.41 the validation predicts, and section 3 explains why: in the simulation the answer is always in the candidate pool, while for the hidden test only about 1 in 5 class-2/3 answers seem to be in COCONUT ∪ train. **Candidate coverage, not ranking, is the bottleneck for this pool.**
+
 Everything runs offline in about 15 minutes on CPU. The model weights are in the [`casmi26-spectrum-to-fingerprint-mlp`](https://www.kaggle.com/datasets/aryanawasthiteykik/casmi26-spectrum-to-fingerprint-mlp) dataset, with the code that trained them."""),
 md("## Setup\nRDKit comes from the official offline wheel; the model code and weights come from the dataset."),
 code(f"""import glob, subprocess, sys
@@ -140,8 +142,11 @@ ax.set_xlabel('cosine gate'); ax.set_ylabel('MRR@25'); ax.legend(frameon=False);
 plt.tight_layout(); plt.show()"""),
 md("""The expected score is flat between gates of 0.6 and 0.8. I use **0.7**, the middle of that plateau, rather than the single best value on 250 molecules.
 
-Two caveats:
-- **Coverage.** In this simulation the answer is always in the pool. Hidden class-2 molecules are only guaranteed to be in *PubChem or COCONUT*, so some won't be in this pool, and the leaderboard will come out below the 0.41 estimate.
+**Why the leaderboard says 0.176, not 0.41.** In this simulation the answer is *always* in the pool. Hidden class-2 molecules are only guaranteed to be in PubChem or COCONUT. If class 1 keeps its 0.785 and class 2/3 scores 0.337 × *coverage*, then 0.16 × 0.785 + 0.84 × 0.337 × c = 0.176 gives **c ≈ 18%**. So only about one hidden class-2/3 answer in five is in COCONUT ∪ train. (The public LB has ~130 molecules, so treat this as a rough figure.)
+
+The lesson for validation: **a retrieval CV is only as honest as its candidate pool.** Mine put every answer in the pool, so it measured ranking quality but not coverage.
+
+The other caveat:
 - **Isomers.** Most misses here lose to a candidate with the *same formula*, as the forum has found too. Better isomer separation (more fingerprint types, fragmentation scoring) is the next lever."""),
 md("## 4. Submission\nThe full model, the full cosine library, and gate 0.7."),
 code("""model.load_state_dict(torch.load(CODE / 'fpnet_full.pt', map_location='cpu'))
@@ -174,7 +179,7 @@ sub.head()"""),
 md("""## Takeaways
 1. **A small spectrum → fingerprint model lifts class 2/3 from 0.05 to 0.37** on the simulated split, with no external spectra and no GPU.
 2. **Gating beats blending.** The two scores live on different scales, so let confident library hits go first and let the fingerprint model decide the rest.
-3. **What's next:** more candidates (PubChem coverage), more fingerprint types, and a learned ranker for same-formula isomers.
+3. **Coverage is the bottleneck.** On the leaderboard the gain is 0.150 → 0.176, because most hidden answers aren't in COCONUT ∪ train. Next: PubChem candidates (~100M structures) with a prior that keeps natural-product-like candidates on top, validated on a split where the answer is *only* reachable through PubChem.
 
 *If this was useful, an upvote helps others find it. Feedback is welcome in the comments.*"""),
 ]
