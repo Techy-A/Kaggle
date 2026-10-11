@@ -1,0 +1,21 @@
+{
+  "id": "aryanawasthiteykik/casmi26-fingerprint-model-v2-morgan-maccs",
+  "title": "CASMI26: Fingerprint Model v2 (Morgan+MACCS)",
+  "code_file": "notebooks/notebook_fpnet_v2.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": false,
+  "competition_sources": [
+    "enveda-CASMI26-molecule-id-mass-spectra"
+  ],
+  "dataset_sources": [
+    "aryanawasthiteykik/casmi26-spectrum-to-fingerprint-mlp",
+    "prvsiyan/coconut-casmi26-candidates",
+    "metric/rdkit-2026-3-3-wheel",
+    "ahmedberatozer/casmi26-pubchem-tier",
+    "dmitriigluzdov/casmi26-pubchem-popularity-prior"
+  ],
+  "kernel_sources": []
+}
