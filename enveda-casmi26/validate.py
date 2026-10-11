@@ -8,7 +8,7 @@ import time
 import numpy as np
 import pandas as pd
 
-from casmi import TEST_ADDUCTS, Library, make_validation, mrr_at_25, rank_molecule
+from casmi import TEST_ADDUCTS, Library, make_validation, mrr_at_25, rank_molecule, read_rows
 
 path = sys.argv[1]
 meta = pd.read_parquet(path, columns=['inchikey14', 'ingest_lib', 'adduct'])
@@ -22,8 +22,7 @@ lib = Library.build(path, keep=lambda df: (df.ingest_lib != 'enveda-np-examples'
                     & df.adduct.isin(TEST_ADDUCTS) & ~df.inchikey14.isin(banned))
 print(f'library: {len(lib.meta):,} spectra, {len(lib.struct_keys):,} structures, built in {time.time() - t:.0f}s')
 
-queries = pd.read_parquet(path, filters=[('ingest_lib', '=', 'enveda-np-examples')])
-queries = queries[queries.adduct.isin(TEST_ADDUCTS)]
+queries = read_rows(path, lambda df: (df.ingest_lib == 'enveda-np-examples') & df.adduct.isin(TEST_ADDUCTS))
 rows = []
 t = time.time()
 for key, spectra in queries.groupby('inchikey14'):
