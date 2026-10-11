@@ -108,19 +108,22 @@ def make_model(n_out, hidden=1536, dropout=0.2):
         nn.Linear(hidden, n_out))
 
 
-def train(work, exclude_validation=False, epochs=4, batch=512, lr=1e-3, max_per_struct=8, seed=0):
+def train(work, exclude_validation=False, epochs=4, batch=512, lr=1e-3, max_per_struct=8, seed=0,
+          fps_file='fps.npy', hidden=1536, holdout_file=None, name=None):
     import torch
     torch.manual_seed(seed)
     rng = np.random.default_rng(seed)
     store = SpectrumStore.load(f'{work}/train_spectra')
     structs = pd.read_parquet(f'{work}/structures.parquet')
-    fps = np.load(f'{work}/fps.npy')
+    fps = np.load(f'{work}/{fps_file}')
     row_of = pd.Series(np.arange(len(structs)), index=structs.ik14)
     info = store.info
     keep = info.inchikey14.isin(row_of.index).to_numpy().copy()
     if exclude_validation:   # never train on any validation structure
         val_keys = set(info.loc[info.ingest_lib == 'enveda-np-examples', 'inchikey14'])
         keep &= ~info.inchikey14.isin(val_keys).to_numpy()
+    if holdout_file:         # extra held-out structures (e.g. enveda-180 molecules without public spectra)
+        keep &= ~info.inchikey14.isin(set(open(holdout_file).read().split())).to_numpy()
     idx = np.flatnonzero(keep)
     # cap spectra per structure so the 180k-structure synthetic library doesn't drown everything else
     order = rng.permutation(idx)
@@ -130,7 +133,7 @@ def train(work, exclude_validation=False, epochs=4, batch=512, lr=1e-3, max_per_
     y_row = row_of.reindex(info.inchikey14.to_numpy()[idx]).to_numpy()
     print(f'training on {len(idx):,} spectra of {len(set(y_row)):,} structures')
 
-    model = make_model(fps.shape[1] * 8)
+    model = make_model(fps.shape[1] * 8, hidden=hidden)
     opt = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-4)
     steps = epochs * (len(idx) // batch)
     sched = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=lr, total_steps=steps, pct_start=0.05)
@@ -153,7 +156,7 @@ def train(work, exclude_validation=False, epochs=4, batch=512, lr=1e-3, max_per_
             step += 1
             if step % 500 == 0:
                 print(f'epoch {ep} step {step}/{steps} loss {total / (b + 1):.4f} {time.time() - t:.0f}s', flush=True)
-        name = 'fpnet_val' if exclude_validation else 'fpnet_full'
+        name = name or ('fpnet_val' if exclude_validation else 'fpnet_full')
         torch.save(model.state_dict(), f'{work}/{name}.pt')
     print('done', time.time() - t)
 
@@ -192,5 +195,8 @@ if __name__ == '__main__':
     if cmd == 'prep':
         prep(sys.argv[2], sys.argv[3])
     elif cmd == 'train':
-        epochs = int(sys.argv[sys.argv.index('--epochs') + 1]) if '--epochs' in sys.argv else 4
-        train(sys.argv[2], exclude_validation='--exclude-validation' in sys.argv, epochs=epochs)
+        def opt(flag, default, cast=str):
+            return cast(sys.argv[sys.argv.index(flag) + 1]) if flag in sys.argv else default
+        train(sys.argv[2], exclude_validation='--exclude-validation' in sys.argv, epochs=opt('--epochs', 4, int),
+              max_per_struct=opt('--max-per-struct', 8, int), fps_file=opt('--fps', 'fps.npy'),
+              hidden=opt('--hidden', 1536, int), holdout_file=opt('--holdout', None), name=opt('--name', None))
