@@ -53,40 +53,42 @@ def main(path, work, pc_dir, pop_dir, *models):
     pc = PubChemTier(pc_dir)
     pc_ik14 = np.load(f'{pop_dir}/pc_ik14.npy', mmap_mode='r')
 
-    groups = list(queries.groupby('inchikey14'))
-    windows, flat = [], []
-    for key, spectra in groups:
-        lo, hi = pc.window(molecule_mass(spectra), 10)
-        windows.append((len(flat), lo, hi))
-        flat.extend(pc.smiles(lo, hi))
-    t = time.time()
-    with Pool() as p:
-        pc_fps = np.stack(p.map(fp_v2_repaired, flat, chunksize=4000))
-    n_flat = len(flat)
-    del flat
-    print(f'{n_flat:,} PubChem candidates fingerprinted in {time.time() - t:.0f}s', flush=True)
-
     store = SpectrumStore.from_frame(queries)
-    results = []
+    nets = []
     for spec in models:
         name, nbytes, hidden = spec.split(':')
-        nbytes, hidden = int(nbytes), int(hidden)
-        model = make_model(nbytes * 8, hidden=hidden)
+        model = make_model(int(nbytes) * 8, hidden=int(hidden))
         model.load_state_dict(torch.load(f'{work}/{name}.pt', map_location='cpu'))
-        logits = predict_logits(model, store, np.arange(len(queries)))
-        for (key, spectra), (start, plo, phi) in zip(groups, windows):
-            m = molecule_mass(spectra)
-            lo, hi = np.searchsorted(masses, [m * (1 - 1e-5), m * (1 + 1e-5)])
-            lg = logits[spectra.index.to_numpy()]
-            ids = np.concatenate([keys[lo:hi], np.asarray(pc_ik14[plo:phi]).astype(str)])
-            fp = np.concatenate([fp_loglik(lg, fps_v2[lo:hi, :nbytes]),
-                                 fp_loglik(lg, pc_fps[start:start + phi - plo, :nbytes])])
-            best = pd.Series(fp).groupby(ids).max()           # one score per identity
-            covered = key in best.index
-            rank = int((best > best[key]).sum()) + 1 if covered else None
-            results.append(dict(model=name, split=spectra.split.iloc[0], covered=covered, candidates=len(best),
-                                rr=(1 / rank if covered and rank <= 25 else 0.0), top1=covered and rank == 1,
-                                top25=covered and rank <= 25))
+        nets.append((name, int(nbytes), predict_logits(model, store, np.arange(len(queries)))))
+        del model
+
+    groups = list(queries.groupby('inchikey14'))
+    results, t = [], time.time()
+    with Pool() as p:
+        for b in range(0, len(groups), 40):                 # batches keep memory small
+            batch = groups[b:b + 40]
+            windows, flat = [], []
+            for key, spectra in batch:
+                lo, hi = pc.window(molecule_mass(spectra), 10)
+                windows.append((len(flat), lo, hi))
+                flat.extend(pc.smiles(lo, hi))
+            pc_fps = np.stack(p.map(fp_v2_repaired, flat, chunksize=2000)) if flat else np.zeros((0, 277), np.uint8)
+            del flat
+            for (key, spectra), (start, plo, phi) in zip(batch, windows):
+                m = molecule_mass(spectra)
+                lo, hi = np.searchsorted(masses, [m * (1 - 1e-5), m * (1 + 1e-5)])
+                ids = np.concatenate([keys[lo:hi], np.asarray(pc_ik14[plo:phi]).astype(str)])
+                rows = spectra.index.to_numpy()
+                for name, nbytes, logits in nets:
+                    fp = np.concatenate([fp_loglik(logits[rows], fps_v2[lo:hi, :nbytes]),
+                                         fp_loglik(logits[rows], pc_fps[start:start + phi - plo, :nbytes])])
+                    best = pd.Series(fp).groupby(ids).max()   # one score per identity
+                    covered = key in best.index
+                    rank = int((best > best[key]).sum()) + 1 if covered else None
+                    results.append(dict(model=name, split=spectra.split.iloc[0], covered=covered,
+                                        candidates=len(best), rr=(1 / rank if covered and rank <= 25 else 0.0),
+                                        top1=covered and rank == 1, top25=covered and rank <= 25))
+            print(f'{min(b + 40, len(groups))}/{len(groups)} molecules {time.time() - t:.0f}s', flush=True)
     res = pd.DataFrame(results)
     res.to_csv(f'{work}/compare_models.csv', index=False)
     print(res.groupby(['split', 'model']).agg(molecules=('rr', 'size'), answer_in_pool=('covered', 'mean'),
