@@ -1,0 +1,13 @@
+{
+  "id": "aryanawasthiteykik/casmi26-finding-molecules-not-in-any-library",
+  "title": "CASMI26: Finding Molecules Not in Any Library",
+  "code_file": "notebooks/notebook_fingerprint.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": false,
+  "competition_sources": ["enveda-CASMI26-molecule-id-mass-spectra"],
+  "dataset_sources": ["aryanawasthiteykik/casmi26-spectrum-to-fingerprint-mlp", "prvsiyan/coconut-casmi26-candidates", "metric/rdkit-2026-3-3-wheel"],
+  "kernel_sources": []
+}

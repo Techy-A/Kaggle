@@ -135,6 +135,12 @@ class Library:
         return self.struct_keys[lo:hi]
 
 
+def read_rows(path, keep, batch_size=100_000):
+    """Read only the rows of a large parquet file for which keep(df) is True, batch by batch."""
+    parts = [df[keep(df)] for df in (b.to_pandas() for b in pq.ParquetFile(path).iter_batches(batch_size=batch_size))]
+    return pd.concat(parts, ignore_index=True)
+
+
 # ---------------------------------------------------------------- search
 
 def molecule_mass(spectra):
