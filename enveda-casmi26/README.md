@@ -4,8 +4,9 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 
 | | |
 |---|---|
-| **Public leaderboard** | 0.150 (cosine library-search baseline) |
-| **Notebook** | [CASMI26: Validation That Behaves Like the Test](https://www.kaggle.com/code/aryanawasthiteykik/casmi26-validation-that-behaves-like-the-test) |
+| **Public leaderboard** | 0.150 (cosine library search), fingerprint model pending |
+| **Notebook 1** | [CASMI26: Validation That Behaves Like the Test](https://www.kaggle.com/code/aryanawasthiteykik/casmi26-validation-that-behaves-like-the-test) |
+| **Notebook 2** | CASMI26: Finding Molecules Not in Any Library (spectrum → fingerprint model) |
 
 ## Findings so far
 
@@ -19,6 +20,14 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 
 3. **Only about 16% of the public test is class 1** (LB 0.150 / class-1 MRR 0.939). Most of the available score is in molecules without reference spectra.
 
+4. **A spectrum → fingerprint model finds the molecules that have no reference spectra.** A CPU-trained MLP predicts 2,048 Morgan bits; candidates from COCONUT ∪ training structures (median 58 within 10 ppm) are ranked by fingerprint likelihood. Confident cosine matches (≥ 0.7) go first:
+
+   | Method | Class 1 | Class 2/3 | Expected at 16% class 1 |
+   |---|---|---|---|
+   | Cosine only | 0.939 | 0.051 | 0.19 |
+   | Fingerprint only | 0.338 | 0.371 | 0.365 |
+   | Gate: cosine ≥ 0.7, then fingerprint | 0.785 | 0.337 | 0.409 |
+
 ## Layout
 
 | File | Purpose |
@@ -26,6 +35,11 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 | `casmi.py` | Mass helpers, peak cleaning, cosine search, library index, MRR@25, novelty-class split |
 | `validate.py` | Scores the baseline per simulated class: `python validate.py data/train.parquet` |
 | `build_notebook.py` | Generates `notebooks/notebook_validation.ipynb` from `casmi.py` plus the analysis cells |
-| `kernel-metadata.json` | Kaggle notebook metadata |
+| `fingerprints.py` | Morgan fingerprints for the candidate pool (training structures + COCONUT) |
+| `fpmodel.py` | Spectrum featurisation, the MLP, training (`prep` / `train`), fingerprint likelihood, cosine gate |
+| `evaluate.py` | Per-class comparison of cosine, fingerprint and gated ranking |
+| `predict.py` | Writes `submission.csv` with the gated ranking |
+| `build_notebook2.py` | Generates `notebooks/notebook_fingerprint.ipynb` |
+| `kernel-metadata*.json` | Kaggle notebook metadata |
 
 The competition data (CC BY-NC 4.0) is not redistributed here. Download it from Kaggle into `data/`.
