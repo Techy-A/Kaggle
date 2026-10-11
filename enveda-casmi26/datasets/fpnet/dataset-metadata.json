@@ -1,0 +1,17 @@
+{
+ "title": "CASMI26 spectrum-to-fingerprint MLP",
+ "id": "aryanawasthiteykik/casmi26-spectrum-to-fingerprint-mlp",
+ "subtitle": "MS/MS to Morgan fingerprint MLP + code for offline candidate ranking",
+ "licenses": [
+  {
+   "name": "CC-BY-NC-SA-4.0"
+  }
+ ],
+ "keywords": [
+  "chemistry",
+  "biology",
+  "neural networks"
+ ],
+ "isPrivate": true,
+ "description": "# CASMI26 spectrum \u2192 fingerprint MLP\n\nA small model that reads an MS/MS spectrum and predicts the probability of each of the 2,048 bits of a Morgan fingerprint (radius 2). Candidates within a mass window are ranked by the log-likelihood of their fingerprint, which works for molecules that have no reference spectra (novelty classes 2 and 3).\n\nUsed in [CASMI26: finding molecules that aren't in any library](https://www.kaggle.com/code/aryanawasthiteykik/casmi26-finding-molecules-not-in-any-library).\n\n## Files\n\n| File | What it is |\n|---|---|\n| `fpnet_full.pt` | PyTorch state dict trained on all training structures. Use it for submissions. |\n| `fpnet_val.pt` | Same model with every `enveda-np-examples` structure held out. Use it to validate honestly on those 250 timsTOF natural products. |\n| `fpmodel.py` | Featurisation, model definition, training loop, fingerprint log-likelihood and the cosine gate |\n| `casmi.py` | Mass helpers, peak cleaning, cosine library search, MRR@25, the novelty-class validation split |\n| `fingerprints.py` | Morgan fingerprints for the candidate pool (RDKit) |\n\n## Model\n\n- **Input (2,514 dims):** fragment m/z in 0.5 Da bins up to 1000; neutral losses in 1 Da bins up to 500; adduct one-hot (10 test adducts), ion mode, collision energy, precursor m/z, peak count. Top 60 peaks, sqrt intensities.\n- **Network:** 3-layer MLP, 1,536 hidden, LayerNorm + GELU + dropout 0.2, 2,048 sigmoid outputs.\n- **Training:** BCE, AdamW, one-cycle LR 1e-3, 4 epochs, batch 512, up to 8 spectra per structure (1.3M spectra, 268k structures), spectra with |precursor error| < 20 ppm. About 27 minutes on 4 CPU cores.\n- **Data:** competition `train.parquet` only. No NIST, no external spectra.\n\n## Validation (simulated novelty classes, 250 timsTOF natural products)\n\n| Method | Class 1 | Class 2/3 |\n|---|---|---|\n| Cosine library search | 0.939 | 0.051 |\n| Fingerprint likelihood | 0.338 | 0.371 |\n| Gate: cosine \u2265 0.7 first, then fingerprint | 0.785 | 0.337 |\n\n## Usage\n\n```python\nimport sys, torch\nsys.path.insert(0, '/kaggle/input/casmi26-spectrum-to-fingerprint-mlp')\nfrom fpmodel import SpectrumStore, make_model, predict_logits, fp_loglik\nmodel = make_model(2048)\nmodel.load_state_dict(torch.load('/kaggle/input/casmi26-spectrum-to-fingerprint-mlp/fpnet_full.pt', map_location='cpu'))\nlogits = predict_logits(model, SpectrumStore.from_frame(test_df), np.arange(len(test_df)))\nscores = fp_loglik(logits[rows_of_one_molecule], candidate_packed_fps)   # higher is better\n```\n\n## Licence\n\nCC BY-NC-SA 4.0. The weights are trained on the competition data (CC BY-NC 4.0), so they are for non-commercial use."
+}
