@@ -4,7 +4,7 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 
 | | |
 |---|---|
-| **Public leaderboard** | 0.150 (cosine library search), fingerprint model pending |
+| **Public leaderboard** | 0.176 (fingerprint model + cosine gate); 0.150 (cosine only) |
 | **Notebook 1** | [CASMI26: Validation That Behaves Like the Test](https://www.kaggle.com/code/aryanawasthiteykik/casmi26-validation-that-behaves-like-the-test) |
 | **Notebook 2** | CASMI26: Finding Molecules Not in Any Library (spectrum → fingerprint model) |
 
@@ -27,6 +27,8 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
    | Cosine only | 0.939 | 0.051 | 0.19 |
    | Fingerprint only | 0.338 | 0.371 | 0.365 |
    | Gate: cosine ≥ 0.7, then fingerprint | 0.785 | 0.337 | 0.409 |
+
+5. **Leaderboard: 0.176, not the ~0.41 the validation predicts.** In the simulation the answer is always in the candidate pool. Working back from the score, only about 18% of hidden class-2/3 answers are in COCONUT ∪ train. Candidate coverage (PubChem) is the next lever, and the validation needs a split where the answer is only reachable through PubChem.
 
 ## Layout
 
