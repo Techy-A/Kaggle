@@ -30,6 +30,8 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 
 5. **Leaderboard: 0.176, not the ~0.41 the validation predicts.** In the simulation the answer is always in the candidate pool. Working back from the score, only about 18% of hidden class-2/3 answers are in COCONUT ∪ train. Candidate coverage (PubChem) is the next lever, and the validation needs a split where the answer is only reachable through PubChem.
 
+6. **PubChem + popularity prior: also 0.176 on the LB.** On the stricter split (answers reachable only through PubChem) PubChem covers 97% of class-2/3 answers, but with ~7,000 candidates per molecule the fingerprint model alone ranks them poorly (class 2/3 MRR 0.11). A popularity / natural-product prior lifts the *validation* score to 0.61, yet the leaderboard didn't move. The validation molecules come from public spectral libraries, so they are well studied, and popularity favours them in a way it doesn't favour the hidden molecules. A prior can't be tuned on this split.
+
 ## Layout
 
 | File | Purpose |
