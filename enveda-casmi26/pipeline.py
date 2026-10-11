@@ -2,7 +2,7 @@
 popularity / natural-product prior, cosine gate.
 
     python pipeline.py <train.parquet> <test.parquet> <structures.parquet> <fps.npy> <model.pt>
-                       <pubchem_dir> <popularity_dir> [w_pop] [w_np] [gate]
+                       <pubchem_dir> <popularity_dir> [w_pop] [w_np] [gate] [hidden]
 """
 import sys
 import time
@@ -18,16 +18,24 @@ from pubchem import PubChemTier, repair
 PPM = 10
 
 
-def fp_and_smiles(smiles):
-    """Packed Morgan fingerprint and a clean canonical SMILES for one PubChem candidate."""
+def fp_and_smiles(smiles, maccs=False):
+    """Packed fingerprint (Morgan 2048, plus MACCS when maccs=True) and a clean canonical SMILES for one candidate."""
     from rdkit import Chem, RDLogger
-    from rdkit.Chem import rdFingerprintGenerator
+    from rdkit.Chem import MACCSkeys, rdFingerprintGenerator
     RDLogger.DisableLog('rdApp.*')
     mol = repair(smiles)
     if mol is None:
-        return np.zeros(256, np.uint8), ''
-    gen = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
-    return np.packbits(gen.GetFingerprintAsNumPy(mol).astype(np.uint8)), Chem.MolToSmiles(mol, isomericSmiles=False)
+        return np.zeros(277 if maccs else 256, np.uint8), ''
+    bits = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048).GetFingerprintAsNumPy(mol).astype(np.uint8)
+    if maccs:
+        extra = np.zeros(168, np.uint8)
+        extra[:167] = np.array(list(MACCSkeys.GenMACCSKeys(mol)), np.uint8)
+        bits = np.concatenate([bits, extra])
+    return np.packbits(bits), Chem.MolToSmiles(mol, isomericSmiles=False)
+
+
+def fp_and_smiles_maccs(smiles):
+    return fp_and_smiles(smiles, maccs=True)
 
 
 def prior_order(fp, cos, pop, natural, w_pop, w_np, gate):
@@ -47,7 +55,7 @@ def pool_priors(structs, pop_dir):
 
 
 def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_dir,
-        w_pop=0.25, w_np=1.0, gate=0.7, n_out=25):
+        w_pop=0.25, w_np=1.0, gate=0.7, n_out=25, hidden=1536):
     import torch
     t0 = time.time()
     test = pd.read_parquet(test_path).reset_index(drop=True)
@@ -68,7 +76,8 @@ def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_d
     pc_lpmid = np.load(f'{pop_dir}/pc_lpmid.npy', mmap_mode='r')
     pc_npf = np.load(f'{pop_dir}/pc_np.npy', mmap_mode='r')
 
-    model = make_model(2048)
+    maccs = fps.shape[1] == 277              # the fingerprint layout follows the pool file
+    model = make_model(fps.shape[1] * 8, hidden=hidden)
     model.load_state_dict(torch.load(model_path, map_location='cpu'))
     logits = predict_logits(model, SpectrumStore.from_frame(test), np.arange(len(test)))
 
@@ -79,7 +88,7 @@ def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_d
         windows.append((len(flat), lo, hi))
         flat.extend(pc.smiles(lo, hi))
     with Pool() as p:
-        res = p.map(fp_and_smiles, flat, chunksize=2000)
+        res = p.map(fp_and_smiles_maccs if maccs else fp_and_smiles, flat, chunksize=2000)
     del flat
     pc_fps = np.stack([r[0] for r in res])
     pc_smiles = np.array([r[1] for r in res], dtype=object)
@@ -119,5 +128,5 @@ def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_d
 
 if __name__ == '__main__':
     a = sys.argv[1:]
-    sub = run(*a[:7], *(float(x) for x in a[7:10]))
+    sub = run(*a[:7], *(float(x) for x in a[7:10]), hidden=int(a[10]) if len(a) > 10 else 1536)
     sub.to_csv('submission.csv', index=False)
