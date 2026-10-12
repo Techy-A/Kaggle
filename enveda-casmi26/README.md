@@ -49,6 +49,8 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 
 10. **Prior weights tuned on both PubChem-only splits** (`tune_prior.py`, v2 held-out model). S1 (library natural products) flatters popularity and S2 (no public spectra) penalises it, so the choice is made on the average and the worse split: w_pop 0.10 / w_np 1.0 gives S1 0.729, S2 0.273 (average 0.501), against 0.800 / 0.178 (0.489) for the 0.25 / 1.0 behind LB 0.221. Submitted as a probe.
 
+11. **0.440 public fork + v2 fingerprint re-rank (β 0.3): 0.437.** Inside the source's own run-to-run range (0.436–0.440), so no measurable gain. Variants queued: β 0 (clean baseline), β 0.15, and top-guess-protected (only ranks 2–25 re-ranked). The official metric (read in full) scores the first correct guess only, so re-ordering cannot "poison" a row.
+
 ## Layout
 
 | File | Purpose |
