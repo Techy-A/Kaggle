@@ -35,6 +35,8 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 
 7. **Why the prior fooled the validation.** Ranked by PubChem popularity alone, the answer is #1 in its 10 ppm window for 67% of `enveda-np-examples` molecules, 18% of public-library molecules, and ~0% of `enveda-180` molecules without public spectra (top 25: 99% / 53% / 0.7%). Class-2 molecules have no public spectra by definition, so they look like the last group.
 
+8. **v2 fingerprint model (Morgan + MACCS) doubles PubChem-only MRR offline but scored 0.146 on the LB** (v2, PubChem + COCONUT + train, cosine gate 0.7, *no* prior). Offline, on 490 held-out `enveda-180` structures without public spectra: MRR 0.157 → 0.318. **Correction to finding 6 / notebook 4:** "0.176 with and without the prior" compared runs that also differed in candidates (COCONUT-only vs + PubChem), so it doesn't isolate the prior. A v2 + prior run is the clean comparison.
+
 ## Layout
 
 | File | Purpose |
