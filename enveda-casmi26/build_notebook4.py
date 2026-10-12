@@ -9,7 +9,9 @@ md, code = nbf.v4.new_markdown_cell, nbf.v4.new_code_cell
 cells = [
 md("""# CASMI26: the popularity-prior trap
 
-Adding a PubChem popularity prior (substance + PubMed counts) to my pipeline lifted my validation MRR on class 2/3 from **0.11 to 0.61**. On the public leaderboard it changed **nothing: 0.176 before, 0.176 after.**
+Adding a PubChem popularity prior (substance + PubMed counts) to my pipeline lifted my validation MRR on class 2/3 from **0.11 to 0.61** (+0.50). On the public leaderboard the same prior is worth **+0.075** (0.146 → 0.221, same model and candidates, prior off vs on).
+
+> **Correction (v2).** An earlier version said the prior changed nothing on the LB (0.176 → 0.176). That comparison also changed the candidate pool, so it didn't isolate the prior. The clean comparison above shows the prior **does** help on the LB, just far less than validation suggests.
 
 This notebook shows why, with no model at all. It just asks: *among all PubChem structures within 10 ppm of the answer's mass, how popular is the answer?*
 
@@ -99,7 +101,7 @@ ax.legend(frameon=False, loc='upper left'); plt.tight_layout(); plt.show()"""),
 md("""## What this means
 1. **Spectral-library molecules sit at the very top of their windows.** Popularity alone almost solves them, which is why any validation built on them (holding out library molecules, `enveda-np-examples`, MassSpecGym-style splits) rewards a strong prior.
 2. **Molecules without public spectra are ordinary PubChem entries.** For them popularity is close to noise, and a large prior weight pushes the answer *down* behind famous isomers.
-**For your own CV:** score any prior on a split whose answers have *no* public spectra. One option is to report the gain on both splits and treat the true effect as lying somewhere in between, much closer to the second if the test is mostly class 2/3. My leaderboard (0.176 with and without the prior, at weight 0.25 on a z-scored spectral score) agrees with the pessimistic side.
+**For your own CV:** score any prior on a split whose answers have *no* public spectra. One option is to report the gain on both splits and treat the true effect as lying somewhere in between, much closer to the second if the test is mostly class 2/3. On my leaderboard the prior (weight 0.25 on a z-scored spectral score) is worth +0.075, real but far below the +0.50 my library-based validation predicted. Use a prior, keep its weight modest, and don't tune it on library molecules.
 
 *If this saved you some submissions, an upvote helps others find it.*"""),
 ]

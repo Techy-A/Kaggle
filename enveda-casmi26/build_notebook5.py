@@ -24,7 +24,9 @@ Fingerprint likelihood alone (no cosine, no prior), answer reachable only throug
 
 (Measured offline with `compare_models.py` in the model dataset; both models were trained without these 740 structures.)
 
-This notebook ranks PubChem + COCONUT + training candidates with v2, puts confident cosine library hits (≥ 0.7) first, and uses **no popularity prior**."""),
+This notebook ranks PubChem + COCONUT + training candidates with v2, puts confident cosine library hits (≥ 0.7) first, and adds a modest prior: **z(fingerprint) + 0.25 × popularity + 1 × natural-product flag**.
+
+**Public LB: 0.221** (my previous best 0.176). The prior matters here: the same v2 run *without* it scored 0.146. With ~10,000 PubChem candidates per molecule, the fingerprint model alone lets too many obscure isomers through. Validation still overstates the prior hugely (see part 4), so keep its weight modest."""),
 code("""import glob, subprocess, sys, time
 from pathlib import Path
 
@@ -78,7 +80,7 @@ del structs, fps, tr, coco, cm"""),
 md("## 2. Rank and submit\n`pipeline.run` builds the cosine library, fingerprints every PubChem candidate in each molecule's 10 ppm window, scores and de-duplicates by InChIKey14 (the metric's identity)."),
 code("""from pipeline import run
 sub = run(DATA / 'train.parquet', DATA / 'test.parquet', '/kaggle/working/structures.parquet',
-          '/kaggle/working/fps.npy', CODE / 'fpnet_v2_full.pt', PUBCHEM, POP, w_pop=0.0, w_np=0.0, gate=0.7,
+          '/kaggle/working/fps.npy', CODE / 'fpnet_v2_full.pt', PUBCHEM, POP, w_pop=0.25, w_np=1.0, gate=0.7,
           hidden=2048)
 sub.to_csv('submission.csv', index=False)
 print(sub.shape)
