@@ -52,6 +52,12 @@ def main(path, work, pc_dir, pop_dir, *models):
     masses, keys = structs.mass.to_numpy(), structs.ik14.to_numpy()
     pc = PubChemTier(pc_dir)
     pc_ik14 = np.load(f'{pop_dir}/pc_ik14.npy', mmap_mode='r')
+    pc_lsid = np.load(f'{pop_dir}/pc_lsid.npy', mmap_mode='r')
+    pc_lpmid = np.load(f'{pop_dir}/pc_lpmid.npy', mmap_mode='r')
+    pc_npf = np.load(f'{pop_dir}/pc_np.npy', mmap_mode='r')
+    from pipeline import pool_priors
+    s_pop, s_np = pool_priors(structs, pop_dir)
+    saved = []                                            # per-molecule features, for tuning ranking rules
 
     store = SpectrumStore.from_frame(queries)
     nets = []
@@ -79,9 +85,15 @@ def main(path, work, pc_dir, pop_dir, *models):
                 lo, hi = np.searchsorted(masses, [m * (1 - 1e-5), m * (1 + 1e-5)])
                 ids = np.concatenate([keys[lo:hi], np.asarray(pc_ik14[plo:phi]).astype(str)])
                 rows = spectra.index.to_numpy()
+                feat = dict(key=key, split=spectra.split.iloc[0], ids=ids, fp={},
+                            pop=np.concatenate([s_pop[lo:hi], np.asarray(pc_lsid[plo:phi], np.float32)
+                                                + np.asarray(pc_lpmid[plo:phi], np.float32)]),
+                            natural=np.concatenate([s_np[lo:hi], np.asarray(pc_npf[plo:phi]) > 0]))
+                saved.append(feat)
                 for name, nbytes, logits in nets:
                     fp = np.concatenate([fp_loglik(logits[rows], fps_v2[lo:hi, :nbytes]),
                                          fp_loglik(logits[rows], pc_fps[start:start + phi - plo, :nbytes])])
+                    feat['fp'][name] = (fp / len(spectra)).astype(np.float32)
                     best = pd.Series(fp).groupby(ids).max()   # one score per identity
                     covered = key in best.index
                     rank = int((best > best[key]).sum()) + 1 if covered else None
@@ -89,6 +101,7 @@ def main(path, work, pc_dir, pop_dir, *models):
                                         candidates=len(best), rr=(1 / rank if covered and rank <= 25 else 0.0),
                                         top1=covered and rank == 1, top25=covered and rank <= 25))
             print(f'{min(b + 40, len(groups))}/{len(groups)} molecules {time.time() - t:.0f}s', flush=True)
+    pd.to_pickle(saved, f'{work}/compare_features.pkl')   # own output, read by tune_prior.py
     res = pd.DataFrame(results)
     res.to_csv(f'{work}/compare_models.csv', index=False)
     print(res.groupby(['split', 'model']).agg(molecules=('rr', 'size'), answer_in_pool=('covered', 'mean'),
