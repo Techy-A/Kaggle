@@ -4,7 +4,7 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 
 | | |
 |---|---|
-| **Public leaderboard** | 0.176 (fingerprint model + cosine gate); 0.150 (cosine only) |
+| **Public leaderboard** | **0.221** (fingerprint v2 + PubChem + prior); 0.176 (v1); 0.150 (cosine only) |
 | **Notebook 1** | [CASMI26: Validation That Behaves Like the Test](https://www.kaggle.com/code/aryanawasthiteykik/casmi26-validation-that-behaves-like-the-test) |
 | **Notebook 2** | CASMI26: Finding Molecules Not in Any Library (spectrum → fingerprint model) |
 | **Notebook 4** | CASMI26: The Popularity-Prior Trap (why priors look perfect on library-molecule validation) |
@@ -36,6 +36,16 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 7. **Why the prior fooled the validation.** Ranked by PubChem popularity alone, the answer is #1 in its 10 ppm window for 67% of `enveda-np-examples` molecules, 18% of public-library molecules, and ~0% of `enveda-180` molecules without public spectra (top 25: 99% / 53% / 0.7%). Class-2 molecules have no public spectra by definition, so they look like the last group.
 
 8. **v2 fingerprint model (Morgan + MACCS) doubles PubChem-only MRR offline but scored 0.146 on the LB** (v2, PubChem + COCONUT + train, cosine gate 0.7, *no* prior). Offline, on 490 held-out `enveda-180` structures without public spectra: MRR 0.157 → 0.318. **Correction to finding 6 / notebook 4:** "0.176 with and without the prior" compared runs that also differed in candidates (COCONUT-only vs + PubChem), so it doesn't isolate the prior. A v2 + prior run is the clean comparison.
+
+9. **v2 + prior: 0.221 (best).** Same model and candidates as finding 8, with the prior (0.25 × popularity + 1 × natural-product flag on z-scored fingerprint likelihood): 0.146 → 0.221. So the prior is worth +0.075 on the LB, much less than the +0.50 the library-based validation suggested, but real. Notebook 4 and its conclusions were corrected accordingly.
+
+| Run | Model | Candidates | Prior | Public LB |
+|---|---|---|---|---|
+| 1 | cosine | library | – | 0.150 |
+| 2 | v1 fingerprint | COCONUT + train | – | 0.176 |
+| 3 | v1 fingerprint | + PubChem | yes | 0.176 |
+| 4 | v2 fingerprint | + PubChem | no | 0.146 |
+| 5 | v2 fingerprint | + PubChem | yes | **0.221** |
 
 ## Layout
 
