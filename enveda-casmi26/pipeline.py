@@ -54,8 +54,18 @@ def pool_priors(structs, pop_dir):
     return pop, natural | (structs.source == 'coconut').to_numpy()
 
 
+def ranker_order(booster, ids, fp, cos, pop, natural, gate):
+    """Indices of distinct candidates: confident library matches (cosine >= gate) first, then the learned ranker."""
+    from learned_ranker import FEATURES, candidate_frame
+    first = [i for i in np.argsort(-cos, kind='stable') if cos[i] >= gate]
+    df = candidate_frame(ids, fp, pop, natural)
+    df['score'] = booster.predict(df[FEATURES])
+    pos = {k: i for i, k in enumerate(ids)}                    # first row index of each identity
+    return first + [pos[k] for k in df.sort_values('score', ascending=False).id]
+
+
 def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_dir,
-        w_pop=0.25, w_np=1.0, gate=0.7, n_out=25, hidden=1536):
+        w_pop=0.25, w_np=1.0, gate=0.7, n_out=25, hidden=1536, ranker_path=None):
     import torch
     t0 = time.time()
     test = pd.read_parquet(test_path).reset_index(drop=True)
@@ -95,6 +105,10 @@ def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_d
     del res
     print(f'PubChem candidates {len(pc_fps):,} fingerprinted {time.time() - t0:.0f}s', flush=True)
 
+    booster = None
+    if ranker_path:
+        import lightgbm as lgb
+        booster = lgb.Booster(model_file=str(ranker_path))
     out = {}
     for (mol, spectra), (start, plo, phi) in zip(groups, windows):
         n = phi - plo
@@ -112,7 +126,9 @@ def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_d
         if len(ids) == 0:
             continue
         guesses, seen = [], set()
-        for i in prior_order(fp, cosv, pop, natural, w_pop, w_np, gate):
+        order = (ranker_order(booster, ids, fp, cosv, pop, natural, gate) if booster is not None
+                 else prior_order(fp, cosv, pop, natural, w_pop, w_np, gate))
+        for i in order:
             if not smi[i] or ids[i] in seen:        # skip unparsable rows and duplicate InChIKey14s
                 continue
             seen.add(ids[i])
