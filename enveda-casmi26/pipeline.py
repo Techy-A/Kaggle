@@ -54,13 +54,31 @@ def pool_priors(structs, pop_dir):
     return pop, natural | (structs.source == 'coconut').to_numpy()
 
 
-def ranker_order(booster, ids, fp, cos, pop, natural, gate):
-    """Indices of distinct candidates: confident library matches (cosine >= gate) first, then the learned ranker."""
-    from learned_ranker import FEATURES, candidate_frame
+def ranker_order(booster, ids, fp, cos, pop, natural, gate, smi=None, spectra=None):
+    """Indices of distinct candidates: confident library matches (cosine >= gate) first, then the learned ranker.
+
+    If the booster was trained with fragmentation features, the strongest candidates (top 40 by fit plus
+    top 10 by popularity, chosen exactly as in frag_features.py) are fragmented against this molecule's peaks.
+    """
+    from learned_ranker import FEATURES, FRAG_FEATURES, add_frag_features, candidate_frame
     first = [i for i in np.argsort(-cos, kind='stable') if cos[i] >= gate]
     df = candidate_frame(ids, fp, pop, natural)
-    df['score'] = booster.predict(df[FEATURES])
     pos = {k: i for i, k in enumerate(ids)}                    # first row index of each identity
+    features = list(FEATURES)
+    if 'frag_int' in booster.feature_name():
+        from fragments import explain_scores, fragment_masses, molecule_peaks
+        chosen = list(dict.fromkeys(list(df.nlargest(40, 'fp').id) + list(df.nlargest(10, 'pop').id)))
+        mz, it = molecule_peaks(spectra)
+        positive = (spectra.ionization_mode == 'positive').mean() >= 0.5
+        rows = []
+        for cid in chosen:
+            if smi[pos[cid]]:
+                f1, f2 = fragment_masses(smi[pos[cid]])
+                rows.append((0, cid, *explain_scores(mz, it, f1, f2, positive)))
+        df['qid'] = 0
+        df = add_frag_features(df, pd.DataFrame(rows, columns=['qid', 'id', 'frag_int', 'frag_peaks']))
+        features += FRAG_FEATURES
+    df['score'] = booster.predict(df[features])
     return first + [pos[k] for k in df.sort_values('score', ascending=False).id]
 
 
@@ -126,7 +144,7 @@ def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_d
         if len(ids) == 0:
             continue
         guesses, seen = [], set()
-        order = (ranker_order(booster, ids, fp, cosv, pop, natural, gate) if booster is not None
+        order = (ranker_order(booster, ids, fp, cosv, pop, natural, gate, smi, spectra) if booster is not None
                  else prior_order(fp, cosv, pop, natural, w_pop, w_np, gate))
         for i in order:
             if not smi[i] or ids[i] in seen:        # skip unparsable rows and duplicate InChIKey14s

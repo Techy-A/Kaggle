@@ -45,6 +45,17 @@ def molecule_frame(f, model, qid):
 
 
 FEATURES = ['fp_z', 'fp_gap', 'fp_rank', 'pop', 'pop_z', 'pop_rank', 'pop_gap', 'nat', 'n_cands']
+FRAG_FEATURES = ['frag_int', 'frag_peaks', 'frag_int_gap', 'frag_int_rank', 'frag_peaks_gap']
+
+
+def add_frag_features(df, frag):
+    """Merge fragmentation scores (only the strongest candidates have them; others stay NaN) and relative terms."""
+    df = df.merge(frag, on=['qid', 'id'], how='left')
+    g = df.groupby('qid')
+    df['frag_int_gap'] = df.frag_int - g.frag_int.transform('max')
+    df['frag_peaks_gap'] = df.frag_peaks - g.frag_peaks.transform('max')
+    df['frag_int_rank'] = g.frag_int.rank(ascending=False, pct=True)
+    return df
 
 
 def mrr(df, score_col):
@@ -59,32 +70,47 @@ def mrr(df, score_col):
     return out
 
 
+def cv_scores(df, features, seed=0):
+    oof = np.full(len(df), np.nan)
+    for tr, va in GroupKFold(n_splits=5).split(df, groups=df.qid):
+        a = df.iloc[tr].sort_values('qid')
+        ranker = make_ranker(seed)
+        ranker.fit(a[features], a.label, group=a.groupby('qid', sort=True).size().to_numpy())
+        oof[va] = ranker.predict(df.iloc[va][features])
+    return oof
+
+
+def make_ranker(seed=0):
+    return lgb.LGBMRanker(objective='lambdarank', n_estimators=300, learning_rate=0.05, num_leaves=15,
+                          min_child_samples=50, subsample=0.8, subsample_freq=1, colsample_bytree=0.8,
+                          lambdarank_truncation_level=25, random_state=seed, verbose=-1)
+
+
 def main(work, model='fpnet_v2h'):
+    import os
     feats = pd.read_pickle(f'{work}/compare_features.pkl')
     df = pd.concat([molecule_frame(f, model, i) for i, f in enumerate(feats)], ignore_index=True)
-    df['oof'] = np.nan
-    qids = df.qid.to_numpy()
-    for tr, va in GroupKFold(n_splits=5).split(df, groups=qids):
-        a, b = df.iloc[tr].sort_values('qid'), df.iloc[va]
-        ranker = lgb.LGBMRanker(objective='lambdarank', n_estimators=300, learning_rate=0.05, num_leaves=15,
-                                min_child_samples=50, subsample=0.8, subsample_freq=1, colsample_bytree=0.8,
-                                lambdarank_truncation_level=25, verbose=-1)
-        ranker.fit(a[FEATURES], a.label, group=a.groupby('qid', sort=True).size().to_numpy())
-        df.loc[df.index[va], 'oof'] = ranker.predict(b[FEATURES])
-    res = pd.DataFrame({'fingerprint only': mrr(df, 'fp_z'), 'hand prior (0.10 pop, 1 np)': mrr(df, 'prior'),
-                        'learned ranker (5-fold OOF)': mrr(df, 'oof')}).T
+    use_frag = os.path.exists(f'{work}/frag_features.parquet')
+    if use_frag:
+        df = add_frag_features(df, pd.read_parquet(f'{work}/frag_features.parquet'))
+    df['oof'] = cv_scores(df, FEATURES)
+    cols = {'fingerprint only': mrr(df, 'fp_z'), 'hand prior (0.10 pop, 1 np)': mrr(df, 'prior'),
+            'learned ranker (5-fold OOF)': mrr(df, 'oof')}
+    if use_frag:
+        df['oof_frag'] = cv_scores(df, FEATURES + FRAG_FEATURES)
+        cols['learned ranker + fragmentation'] = mrr(df, 'oof_frag')
+    res = pd.DataFrame(cols).T
     res['mean'] = res.mean(axis=1)
-    print(f'{df.qid.nunique()} molecules, top-{TOP} by fit + top-50 by popularity, answer kept in {df.groupby("qid").label.max().mean():.0%}')
+    print(f'{df.qid.nunique()} molecules, top-{TOP} by fit + top-50 by popularity, '
+          f'answer kept in {df.groupby("qid").label.max().mean():.0%}')
     print(res.round(3).to_string())
-    full = lgb.LGBMRanker(objective='lambdarank', n_estimators=300, learning_rate=0.05, num_leaves=15,
-                          min_child_samples=50, subsample=0.8, subsample_freq=1, colsample_bytree=0.8,
-                          lambdarank_truncation_level=25, verbose=-1)
+    features = FEATURES + (FRAG_FEATURES if use_frag else [])
     d = df.sort_values('qid')
-    full.fit(d[FEATURES], d.label, group=d.groupby('qid', sort=True).size().to_numpy())
-    imp = pd.Series(full.booster_.feature_importance('gain'), index=FEATURES).sort_values(ascending=False)
+    full = make_ranker()
+    full.fit(d[features], d.label, group=d.groupby('qid', sort=True).size().to_numpy())
+    imp = pd.Series(full.booster_.feature_importance('gain'), index=features).sort_values(ascending=False)
     print('feature importance (gain):', (imp / imp.sum()).round(3).to_dict())
-    full.booster_.save_model(f'{work}/learned_ranker.txt')
-
+    full.booster_.save_model(f'{work}/learned_ranker{"_frag" if use_frag else ""}.txt')
 
 if __name__ == '__main__':
     main(*sys.argv[1:3])
