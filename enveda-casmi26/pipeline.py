@@ -38,10 +38,10 @@ def fp_and_smiles_maccs(smiles):
     return fp_and_smiles(smiles, maccs=True)
 
 
-def prior_order(fp, cos, pop, natural, w_pop, w_np, gate):
+def prior_order(fp, cos, pop, natural, w_pop, w_np, gate, extra=0.0):
     """Confident library matches first (cosine >= gate); the rest by z-scored fingerprint likelihood + prior."""
     z = (fp - fp.mean()) / (fp.std() + 1e-9)
-    score = np.where(cos >= gate, 1e6 + cos, z + w_pop * pop + w_np * natural)
+    score = np.where(cos >= gate, 1e6 + cos, z + w_pop * pop + w_np * natural + extra)
     return np.argsort(-score, kind='stable')
 
 
@@ -52,6 +52,30 @@ def pool_priors(structs, pop_dir):
     pop = pp['pop'].fillna(0).to_numpy(np.float32)
     natural = (pp[['np_coconut', 'np_lotus', 'np_npatlas']].fillna(0).sum(1) > 0).to_numpy()
     return pop, natural | (structs.source == 'coconut').to_numpy()
+
+
+def frag_z(ids, fp, pop, smi, spectra, n_fit=40, n_pop=10, missing=-3.0):
+    """Per-row z-scored fragmentation explain score; candidates outside the fragmented set get `missing`.
+
+    The fragmented set is the top n_fit identities by fingerprint fit plus the top n_pop by popularity,
+    matching frag_features.py, where the weight was tuned.
+    """
+    from fragments import explain_scores, fragment_masses, molecule_peaks
+    best = pd.DataFrame({'id': ids, 'fp': fp, 'pop': pop}).groupby('id', sort=False).max()
+    chosen = list(dict.fromkeys(list(best.nlargest(n_fit, 'fp').index) + list(best.nlargest(n_pop, 'pop').index)))
+    pos = {k: i for i, k in reversed(list(enumerate(ids)))}
+    mz, it = molecule_peaks(spectra)
+    positive = (spectra.ionization_mode == 'positive').mean() >= 0.5
+    scores = {}
+    for cid in chosen:
+        if smi[pos[cid]]:
+            f1, f2 = fragment_masses(smi[pos[cid]])
+            scores[cid] = explain_scores(mz, it, f1, f2, positive)[0]
+    if not scores:
+        return np.zeros(len(ids))
+    v = np.array(list(scores.values()))
+    mu, sd = v.mean(), v.std() + 1e-9
+    return np.array([(scores[k] - mu) / sd if k in scores else missing for k in ids])
 
 
 def ranker_order(booster, ids, fp, cos, pop, natural, gate, smi=None, spectra=None):
@@ -83,7 +107,7 @@ def ranker_order(booster, ids, fp, cos, pop, natural, gate, smi=None, spectra=No
 
 
 def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_dir,
-        w_pop=0.25, w_np=1.0, gate=0.7, n_out=25, hidden=1536, ranker_path=None):
+        w_pop=0.25, w_np=1.0, gate=0.7, n_out=25, hidden=1536, ranker_path=None, w_frag=0.0):
     import torch
     t0 = time.time()
     test = pd.read_parquet(test_path).reset_index(drop=True)
@@ -144,8 +168,13 @@ def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_d
         if len(ids) == 0:
             continue
         guesses, seen = [], set()
-        order = (ranker_order(booster, ids, fp, cosv, pop, natural, gate, smi, spectra) if booster is not None
-                 else prior_order(fp, cosv, pop, natural, w_pop, w_np, gate))
+        if booster is not None:
+            order = ranker_order(booster, ids, fp, cosv, pop, natural, gate, smi, spectra)
+        elif w_frag:
+            order = prior_order(fp, cosv, pop, natural, w_pop, w_np, gate,
+                                extra=w_frag * frag_z(ids, fp, pop, smi, spectra))
+        else:
+            order = prior_order(fp, cosv, pop, natural, w_pop, w_np, gate)
         for i in order:
             if not smi[i] or ids[i] in seen:        # skip unparsable rows and duplicate InChIKey14s
                 continue

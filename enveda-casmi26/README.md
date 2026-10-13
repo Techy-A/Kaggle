@@ -57,6 +57,15 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 
 14. **Fragmentation features (`fragments.py`, `frag_features.py`): the biggest single gain so far.** Every 1- and 2-bond cut of a candidate's heavy-atom graph gives fragment masses; matched as ions (+-2 H shifts, 10 ppm) against the molecule's merged peaks, they give an explained-intensity score. Computed for the strongest 50 candidates per molecule (chosen by features, not labels). Ranker OOF MRR@25: S1 0.783 -> 0.816, **S2 0.307 -> 0.467** (the split popularity cannot help). The fragmentation gap is now the most important feature.
 
+15. **Both ranker probes scored below the hand prior on the LB:** learned ranker 0.172, ranker + fragmentation 0.199 (hand prior 0.222). Likely cause: the ranker was trained on features from the held-out model (`fpnet_v2h`) but inference used the full-data model (`fpnet_v2_full`), whose likelihoods sit on a different scale, so the absolute gap features (`fp_gap`, `pop_gap`) shift. Two fixes are queued: the ranker with `fpnet_v2h` at inference, and a scale-free alternative.
+16. **Hand prior + fragmentation z-score (`pipeline.frag_z`, `w_frag`).** Fragmentation is scored for the top 40 candidates by fit plus the top 10 by popularity, z-scored within the molecule (unscored candidates get -3) and added to the prior. Validation MRR@25 (S1 / S2):
+
+| Prior | No fragmentation | + 0.5 x frag z |
+|---|---|---|
+| pop 0.25, np 1.0 | 0.770 / 0.220 | **0.795 / 0.448** |
+
+Because every term is z-scored within the molecule, a model swap can't shift it the way it shifts the ranker's gap features.
+
 ## Layout
 
 | File | Purpose |
