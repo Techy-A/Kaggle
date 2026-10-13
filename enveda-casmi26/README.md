@@ -53,6 +53,8 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 
 12. **Re-rank ablation on the fork: no effect.** β 0 (re-rank off) 0.437, top-guess-protected 0.437, β 0.15 0.437, β 0.3 0.437. The fork itself scores 0.437 in this account (the source reports 0.436–0.440; GPU stages are not bit-reproducible). A fingerprint re-rank inside the final 25 does not move any public-LB answer, so it is dropped; v2 (plain fork) is the safe final pick.
 
+13. **Learned ranker (LightGBM LambdaRank, `learned_ranker.py`).** Research first: the 0.440 public pipeline already has learned rankers (four LightGBM boosters, plus two in a second engine) and a same-formula GLACIER/ICEBERG re-rank, and its published ranker rows carry no candidate identities, so our fingerprint feature can't be added to it. The ranker is therefore built on our own pipeline: one row per InChIKey14, features from fingerprint fit (z, gap, rank), popularity (raw, z, gap, rank), natural-product flag and window size; 5-fold CV grouped by molecule on 740 PubChem-only validation molecules. OOF MRR@25: S1 0.779 / S2 0.313, against 0.666 / 0.299 for the hand prior and 0.256 / 0.318 for fingerprint only. Submitted as a probe against 0.222.
+
 ## Layout
 
 | File | Purpose |
@@ -63,6 +65,7 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 | `fingerprints.py` | Morgan fingerprints for the candidate pool (training structures + COCONUT) |
 | `fpmodel.py` | Spectrum featurisation, the MLP, training (`prep` / `train`), fingerprint likelihood, cosine gate |
 | `evaluate.py` | Per-class comparison of cosine, fingerprint and gated ranking |
+| `learned_ranker.py` | LightGBM LambdaRank over fingerprint / popularity features, grouped CV, saved booster |
 | `predict.py` | Writes `submission.csv` with the gated ranking |
 | `build_notebook2.py` | Generates `notebooks/notebook_fingerprint.ipynb` |
 | `kernel-metadata*.json` | Kaggle notebook metadata |
