@@ -78,11 +78,13 @@ def frag_z(ids, fp, pop, smi, spectra, n_fit=40, n_pop=10, missing=-3.0):
     return np.array([(scores[k] - mu) / sd if k in scores else missing for k in ids])
 
 
-def ranker_order(booster, ids, fp, cos, pop, natural, gate, smi=None, spectra=None):
+def ranker_order(booster, ids, fp, cos, pop, natural, gate, smi=None, spectra=None, cfp=None, an_ctx=None):
     """Indices of distinct candidates: confident library matches (cosine >= gate) first, then the learned ranker.
 
     If the booster was trained with fragmentation features, the strongest candidates (top 40 by fit plus
     top 10 by popularity, chosen exactly as in frag_features.py) are fragmented against this molecule's peaks.
+    With analog features, the same candidates are compared (Morgan Tanimoto, `cfp` row-aligned packed fingerprints)
+    with the structures behind the most similar library spectra (`an_ctx` = (AnalogLibrary, hit_fp)).
     """
     from learned_ranker import FEATURES, FRAG_FEATURES, add_frag_features, candidate_frame
     first = [i for i in np.argsort(-cos, kind='stable') if cos[i] >= gate]
@@ -102,6 +104,13 @@ def ranker_order(booster, ids, fp, cos, pop, natural, gate, smi=None, spectra=No
         df['qid'] = 0
         df = add_frag_features(df, pd.DataFrame(rows, columns=['qid', 'id', 'frag_int', 'frag_peaks']))
         features += FRAG_FEATURES
+        if 'an_max' in booster.feature_name():
+            from analogs import AN_FEATURES, add_analog_features, molecule_analogs
+            lib, hit_fp = an_ctx
+            cands = [c for c in chosen if smi[pos[c]]]
+            an = molecule_analogs(lib, spectra, cands, cfp[[pos[c] for c in cands], :256], hit_fp)
+            df = add_analog_features(df, an.assign(qid=0))
+            features += AN_FEATURES
     df['score'] = booster.predict(df[features])
     return first + [pos[k] for k in df.sort_values('score', ascending=False).id]
 
@@ -151,6 +160,14 @@ def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_d
     if ranker_path:
         import lightgbm as lgb
         booster = lgb.Booster(model_file=str(ranker_path))
+    an_ctx = None
+    if booster is not None and 'an_max' in booster.feature_name():
+        from analogs import AnalogLibrary
+        an_lib = AnalogLibrary.build(train_path)
+        row_of = pd.Series(np.arange(len(keys)), index=keys)
+        row_of = row_of[~row_of.index.duplicated()].to_dict()
+        an_ctx = (an_lib, lambda k: fps[row_of[k], :256] if k in row_of else None)
+        print(f'analog library {an_lib.matrix.shape[0]:,} spectra {time.time() - t0:.0f}s', flush=True)
     out = {}
     for (mol, spectra), (start, plo, phi) in zip(groups, windows):
         n = phi - plo
@@ -169,7 +186,8 @@ def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_d
             continue
         guesses, seen = [], set()
         if booster is not None:
-            order = ranker_order(booster, ids, fp, cosv, pop, natural, gate, smi, spectra)
+            cfp = np.concatenate([fps[lo:hi], pc_fps[start:start + n]]) if an_ctx else None
+            order = ranker_order(booster, ids, fp, cosv, pop, natural, gate, smi, spectra, cfp, an_ctx)
         elif w_frag:
             order = prior_order(fp, cosv, pop, natural, w_pop, w_np, gate,
                                 extra=w_frag * frag_z(ids, fp, pop, smi, spectra))
