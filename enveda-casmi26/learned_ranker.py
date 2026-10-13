@@ -93,24 +93,31 @@ def main(work, model='fpnet_v2h'):
     use_frag = os.path.exists(f'{work}/frag_features.parquet')
     if use_frag:
         df = add_frag_features(df, pd.read_parquet(f'{work}/frag_features.parquet'))
+    use_an = use_frag and os.path.exists(f'{work}/analog_features.parquet')
+    if use_an:
+        from analogs import AN_FEATURES, add_analog_features
+        df = add_analog_features(df, pd.read_parquet(f'{work}/analog_features.parquet'))
     df['oof'] = cv_scores(df, FEATURES)
     cols = {'fingerprint only': mrr(df, 'fp_z'), 'hand prior (0.10 pop, 1 np)': mrr(df, 'prior'),
             'learned ranker (5-fold OOF)': mrr(df, 'oof')}
     if use_frag:
         df['oof_frag'] = cv_scores(df, FEATURES + FRAG_FEATURES)
         cols['learned ranker + fragmentation'] = mrr(df, 'oof_frag')
+    if use_an:
+        df['oof_an'] = cv_scores(df, FEATURES + FRAG_FEATURES + AN_FEATURES)
+        cols['learned ranker + fragmentation + analogs'] = mrr(df, 'oof_an')
     res = pd.DataFrame(cols).T
     res['mean'] = res.mean(axis=1)
     print(f'{df.qid.nunique()} molecules, top-{TOP} by fit + top-50 by popularity, '
           f'answer kept in {df.groupby("qid").label.max().mean():.0%}')
     print(res.round(3).to_string())
-    features = FEATURES + (FRAG_FEATURES if use_frag else [])
+    features = FEATURES + (FRAG_FEATURES if use_frag else []) + (AN_FEATURES if use_an else [])
     d = df.sort_values('qid')
     full = make_ranker()
     full.fit(d[features], d.label, group=d.groupby('qid', sort=True).size().to_numpy())
     imp = pd.Series(full.booster_.feature_importance('gain'), index=features).sort_values(ascending=False)
     print('feature importance (gain):', (imp / imp.sum()).round(3).to_dict())
-    full.booster_.save_model(f'{work}/learned_ranker{"_frag" if use_frag else ""}.txt')
+    full.booster_.save_model(f'{work}/learned_ranker{"_frag" if use_frag else ""}{"_an" if use_an else ""}.txt')
 
 if __name__ == '__main__':
     main(*sys.argv[1:3])
