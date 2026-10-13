@@ -1,13 +1,14 @@
 """Compare fingerprint models on splits where the answer is reachable only through PubChem.
 
-Usage: python compare_models.py <train.parquet> <work_dir> <pubchem_dir> <popularity_dir> name:fps_bytes:hidden ...
-   e.g. fpnet_v1h:256:1536 fpnet_v2h:277:2048
+Usage: python compare_models.py <train.parquet> <work_dir> <pubchem_dir> <popularity_dir> name:fps_bytes:hidden[:depth] ...
+   e.g. fpnet_v1h:256:1536 fpnet_v2h:277:2048 fpnet_v3h:277:4096:3
 
 S1 'np-examples': the 250 timsTOF natural products (all have public spectra, so popularity flatters them).
 S2 'enveda-180 holdout': 500 timsTOF structures with no public spectra, held out of training (class-2-like).
 In both, every answer is removed from the training-structure tier, and models rank all candidates by
 fingerprint likelihood alone (no cosine, no prior). Candidates are de-duplicated by InChIKey14.
 """
+import os
 import sys
 import time
 from multiprocessing import Pool
@@ -62,13 +63,17 @@ def main(path, work, pc_dir, pop_dir, *models):
     store = SpectrumStore.from_frame(queries)
     nets = []
     for spec in models:
-        name, nbytes, hidden = spec.split(':')
-        model = make_model(int(nbytes) * 8, hidden=int(hidden))
+        name, nbytes, hidden, *depth = spec.split(':')
+        model = make_model(int(nbytes) * 8, hidden=int(hidden), depth=int(depth[0]) if depth else 2)
         model.load_state_dict(torch.load(f'{work}/{name}.pt', map_location='cpu'))
         nets.append((name, int(nbytes), predict_logits(model, store, np.arange(len(queries)))))
         del model
 
     groups = list(queries.groupby('inchikey14'))
+    if os.environ.get('CASMI_LIMIT'):                     # smoke runs: the first N/2 molecules of each split
+        half = int(os.environ['CASMI_LIMIT']) // 2
+        groups = [g for split in sorted(queries.split.unique())
+                  for g in [g for g in groups if g[1].split.iloc[0] == split][:half]]
     results, t = [], time.time()
     with Pool() as p:
         for b in range(0, len(groups), 40):                 # batches keep memory small

@@ -100,12 +100,14 @@ def prep(train_path, work, max_ppm=20, batch_size=100_000):
 
 # ---------------------------------------------------------------- model
 
-def make_model(n_out, hidden=1536, dropout=0.2):
+def make_model(n_out, hidden=1536, dropout=0.2, depth=2):
+    """MLP: depth x (Linear, LayerNorm, GELU, Dropout), then the output layer. depth=2 is the v1/v2 model."""
     import torch.nn as nn
-    return nn.Sequential(
-        nn.Linear(N_IN, hidden), nn.LayerNorm(hidden), nn.GELU(), nn.Dropout(dropout),
-        nn.Linear(hidden, hidden), nn.LayerNorm(hidden), nn.GELU(), nn.Dropout(dropout),
-        nn.Linear(hidden, n_out))
+    layers, width = [], N_IN
+    for _ in range(depth):
+        layers += [nn.Linear(width, hidden), nn.LayerNorm(hidden), nn.GELU(), nn.Dropout(dropout)]
+        width = hidden
+    return nn.Sequential(*layers, nn.Linear(hidden, n_out))
 
 
 def train(work, exclude_validation=False, epochs=4, batch=512, lr=1e-3, max_per_struct=8, seed=0,

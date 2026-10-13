@@ -59,4 +59,4 @@ def main(path, work, pc_dir, pop_dir, model='fpnet_v2h'):
 
 
 if __name__ == '__main__':
-    main(*sys.argv[1:5])
+    main(*sys.argv[1:6])

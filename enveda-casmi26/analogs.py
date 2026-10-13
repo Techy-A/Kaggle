@@ -159,7 +159,7 @@ def molecule_analogs(lib, spectra, cands, cand_fps, hit_fp):
                          'hit_sim': sims[0] if len(sims) else 0.0})
 
 
-def main(path, work, pc_dir, pop_dir):
+def main(path, work, pc_dir, pop_dir, fps_file='fps.npy'):
     from multiprocessing import Pool
 
     from casmi import molecule_mass, read_rows
@@ -178,7 +178,7 @@ def main(path, work, pc_dir, pop_dir):
                                           & df.adduct.isin(TEST_ADDUCTS)))
     spectra_of = dict(list(queries.groupby('inchikey14')))
     structs = pd.read_parquet(f'{work}/structures.parquet', columns=['ik14', 'smiles'])
-    struct_fps = np.load(f'{work}/fps.npy', mmap_mode='r')
+    struct_fps = np.load(f'{work}/{fps_file}', mmap_mode='r')        # first 256 bytes: Morgan 2048
     row_of = pd.Series(np.arange(len(structs)), index=structs.ik14)
     row_of = row_of[~row_of.index.duplicated()]
     pool_smiles = structs.set_index('ik14').smiles
@@ -194,7 +194,7 @@ def main(path, work, pc_dir, pop_dir):
             window = dict(zip(np.asarray(pc_ik14[lo:hi]).astype(str)[::-1], pc.smiles(lo, hi)[::-1]))
             smi = [pool_smiles.get(c) if c in pool_smiles.index else window.get(c) for c in cands]
             fps = np.stack(p.map(fp_morgan, smi, chunksize=8))
-            hit_fp = lambda k: struct_fps[row_of[k]] if k in row_of.index else None   # noqa: E731
+            hit_fp = lambda k: struct_fps[row_of[k], :256] if k in row_of.index else None   # noqa: E731
             out.append(molecule_analogs(lib, spectra, cands, fps, hit_fp).assign(qid=qid))
             if qid % 100 == 0:
                 print(f'{qid}/{len(feats)} {time.time() - t:.0f}s', flush=True)
@@ -203,4 +203,4 @@ def main(path, work, pc_dir, pop_dir):
 
 
 if __name__ == '__main__':
-    main(*sys.argv[1:5])
+    main(*sys.argv[1:6])
