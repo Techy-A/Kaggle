@@ -116,7 +116,9 @@ def ranker_order(booster, ids, fp, cos, pop, natural, gate, smi=None, spectra=No
 
 
 def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_dir,
-        w_pop=0.25, w_np=1.0, gate=0.7, n_out=25, hidden=1536, ranker_path=None, w_frag=0.0):
+        w_pop=0.25, w_np=1.0, gate=0.7, n_out=25, hidden=1536, ranker_path=None, w_frag=0.0, depth=2,
+        deadline=None):
+    """deadline: time.time() after which remaining molecules are left without guesses (placeholder 'C')."""
     import torch
     t0 = time.time()
     test = pd.read_parquet(test_path).reset_index(drop=True)
@@ -138,7 +140,7 @@ def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_d
     pc_npf = np.load(f'{pop_dir}/pc_np.npy', mmap_mode='r')
 
     maccs = fps.shape[1] == 277              # the fingerprint layout follows the pool file
-    model = make_model(fps.shape[1] * 8, hidden=hidden)
+    model = make_model(fps.shape[1] * 8, hidden=hidden, depth=depth)
     model.load_state_dict(torch.load(model_path, map_location='cpu'))
     logits = predict_logits(model, SpectrumStore.from_frame(test), np.arange(len(test)))
 
@@ -170,6 +172,9 @@ def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_d
         print(f'analog library {an_lib.matrix.shape[0]:,} spectra {time.time() - t0:.0f}s', flush=True)
     out = {}
     for (mol, spectra), (start, plo, phi) in zip(groups, windows):
+        if deadline and time.time() > deadline:
+            print(f'deadline reached after {len(out)} of {len(groups)} molecules', flush=True)
+            break
         n = phi - plo
         m = molecule_mass(spectra)
         lo, hi = np.searchsorted(masses, [m * (1 - PPM * 1e-6), m * (1 + PPM * 1e-6)])
