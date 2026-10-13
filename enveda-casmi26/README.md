@@ -51,6 +51,8 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 
 11. **0.440 public fork + v2 fingerprint re-rank (β 0.3): 0.437.** Inside the source's own run-to-run range (0.436–0.440), so no measurable gain. Variants queued: β 0 (clean baseline), β 0.15, and top-guess-protected (only ranks 2–25 re-ranked). The official metric (read in full) scores the first correct guess only, so re-ordering cannot "poison" a row.
 
+12. **Re-rank ablation on the fork: no effect.** β 0 (re-rank off) 0.437, top-guess-protected 0.437, β 0.15 0.437, β 0.3 0.437. The fork itself scores 0.437 in this account (the source reports 0.436–0.440; GPU stages are not bit-reproducible). A fingerprint re-rank inside the final 25 does not move any public-LB answer, so it is dropped; v2 (plain fork) is the safe final pick.
+
 ## Layout
 
 | File | Purpose |
