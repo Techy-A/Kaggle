@@ -55,6 +55,8 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 
 13. **Learned ranker (LightGBM LambdaRank, `learned_ranker.py`).** Research first: the 0.440 public pipeline already has learned rankers (four LightGBM boosters, plus two in a second engine) and a same-formula GLACIER/ICEBERG re-rank, and its published ranker rows carry no candidate identities, so our fingerprint feature can't be added to it. The ranker is therefore built on our own pipeline: one row per InChIKey14, features from fingerprint fit (z, gap, rank), popularity (raw, z, gap, rank), natural-product flag and window size; 5-fold CV grouped by molecule on 740 PubChem-only validation molecules. OOF MRR@25: S1 0.779 / S2 0.313, against 0.666 / 0.299 for the hand prior and 0.256 / 0.318 for fingerprint only. Submitted as a probe against 0.222.
 
+14. **Fragmentation features (`fragments.py`, `frag_features.py`): the biggest single gain so far.** Every 1- and 2-bond cut of a candidate's heavy-atom graph gives fragment masses; matched as ions (+-2 H shifts, 10 ppm) against the molecule's merged peaks, they give an explained-intensity score. Computed for the strongest 50 candidates per molecule (chosen by features, not labels). Ranker OOF MRR@25: S1 0.783 -> 0.816, **S2 0.307 -> 0.467** (the split popularity cannot help). The fragmentation gap is now the most important feature.
+
 ## Layout
 
 | File | Purpose |
@@ -66,6 +68,7 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 | `fpmodel.py` | Spectrum featurisation, the MLP, training (`prep` / `train`), fingerprint likelihood, cosine gate |
 | `evaluate.py` | Per-class comparison of cosine, fingerprint and gated ranking |
 | `learned_ranker.py` | LightGBM LambdaRank over fingerprint / popularity features, grouped CV, saved booster |
+| `fragments.py`, `frag_features.py` | In-silico 1/2-bond fragmentation and explained-intensity features |
 | `predict.py` | Writes `submission.csv` with the gated ranking |
 | `build_notebook2.py` | Generates `notebooks/notebook_fingerprint.ipynb` |
 | `kernel-metadata*.json` | Kaggle notebook metadata |
