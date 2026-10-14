@@ -4,7 +4,7 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 
 | | |
 |---|---|
-| **Public leaderboard** | **0.221** (fingerprint v2 + PubChem + prior); 0.176 (v1); 0.150 (cosine only) |
+| **Public leaderboard** | own pipeline **0.272** (GPU v3 + ranker with fragmentation + analogs); fork of the 0.440 public notebook 0.437 |
 | **Notebook 1** | [CASMI26: Validation That Behaves Like the Test](https://www.kaggle.com/code/aryanawasthiteykik/casmi26-validation-that-behaves-like-the-test) |
 | **Notebook 2** | CASMI26: Finding Molecules Not in Any Library (spectrum → fingerprint model) |
 | **Notebook 4** | CASMI26: The Popularity-Prior Trap (why priors look perfect on library-molecule validation) |
@@ -65,6 +65,19 @@ My work for the Kaggle competition [Enveda CASMI 2026 – Molecule ID From Mass 
 | pop 0.25, np 1.0 | 0.770 / 0.220 | **0.795 / 0.448** |
 
 Because every term is z-scored within the molecule, a model swap can't shift it the way it shifts the ranker's gap features.
+
+17. **Leaderboard, 14 Oct: the model fix and analogs both carry over.** Same candidates, gate 0.7:
+
+| Run | Public LB |
+|---|---|
+| hand prior (0.25 pop / 1 np) | 0.222 |
+| ranker + fragmentation, mismatched model (finding 15) | 0.199 |
+| ranker + fragmentation, `fpnet_v2h` at inference | 0.216 |
+| hand prior + 0.5 x fragmentation z | 0.245 |
+| ranker + fragmentation + analogs, `fpnet_v2h` | 0.256 |
+| **GPU v3 model (3 x 4,096, 64 spectra/structure, 25 epochs) + ranker retrained on v3 features** | **0.272** |
+
+The v3 model and its ranker come from the GPU training notebook (`build_notebook_train.py`, `train_gpu.py`); the submission notebook only runs inference.
 
 ## Layout
 
