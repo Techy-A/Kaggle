@@ -79,6 +79,8 @@ Because every term is z-scored within the molecule, a model swap can't shift it 
 
 The v3 model and its ranker come from the GPU training notebook (`build_notebook_train.py`, `train_gpu.py`); the submission notebook only runs inference.
 
+18. **Fork + fusion with our engine: 0.438** (plain fork 0.437). `fork_fusion_cell.py` runs our pipeline (v2 engine, ranker with fragmentation + analogs) in a time-guarded subprocess after the fork and merges the lists by reciprocal-rank fusion over metric identities (beta 0.5, K 3, the fork's first guess protected). A small gain, about one partial rank change on ~130 public molecules. Next: the same fusion with the GPU v3 engine (0.272 alone), and beta 1.0.
+
 ## Layout
 
 | File | Purpose |
