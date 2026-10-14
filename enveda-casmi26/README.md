@@ -81,6 +81,15 @@ The v3 model and its ranker come from the GPU training notebook (`build_notebook
 
 18. **Fork + fusion with our engine: 0.438** (plain fork 0.437). `fork_fusion_cell.py` runs our pipeline (v2 engine, ranker with fragmentation + analogs) in a time-guarded subprocess after the fork and merges the lists by reciprocal-rank fusion over metric identities (beta 0.5, K 3, the fork's first guess protected). A small gain, about one partial rank change on ~130 public molecules. Next: the same fusion with the GPU v3 engine (0.272 alone), and beta 1.0.
 
+19. **GPU v3 model, offline (training notebook log, T4, 2.8 h end to end).** 3 x 4,096 hidden, up to 64 spectra per structure (1.81M spectra), 25 epochs, ~82 s per epoch; GPU featurisation matches the CPU one to 1.2e-7. Fingerprint likelihood alone, answers only via PubChem:
+
+| Split | v2 MRR@25 | **v3 MRR@25** | v2 -> v3 top-1 | v2 -> v3 top-25 |
+|---|---|---|---|---|
+| S1 (250 natural products) | 0.262 | **0.439** | 17% -> 32% | 53% -> 71% |
+| S2 (490 without public spectra) | 0.318 | **0.514** | 21% -> 39% | 64% -> 80% |
+
+Ranker OOF MRR@25 with v3 features (S1 / S2): learned ranker 0.818 / 0.502, + fragmentation 0.847 / 0.627, **+ analogs 0.854 / 0.660** (v2: 0.842 / 0.521). The LB moved less (0.256 -> 0.272), so the remaining public-LB gap is mostly outside the ranking these splits measure (candidate coverage, class-1 handling).
+
 ## Layout
 
 | File | Purpose |
