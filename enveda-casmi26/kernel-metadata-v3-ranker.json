@@ -1,6 +1,6 @@
 {
-  "id": "aryanawasthiteykik/casmi26-gpu-fingerprint-model-fragmentation-ranker",
-  "title": "CASMI26: GPU Fingerprint Model + Fragmentation Ranker",
+  "id": "aryanawasthiteykik/casmi26-gpu-fingerprint-fragmentation-ranker",
+  "title": "CASMI26: GPU Fingerprint + Fragmentation Ranker",
   "code_file": "notebooks/notebook_v3_ranker.ipynb",
   "language": "python",
   "kernel_type": "notebook",
