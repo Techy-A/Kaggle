@@ -15,6 +15,7 @@ Goal: **Kaggle Expert**. Rule: every mistake gets written down once and never re
 
 ## Competitions
 - [[Competitions/CASMI26|Enveda CASMI 2026]]: molecule ID from MS/MS (MRR@25)
+- [[Competitions/Name That LLM|Name That LLM]]: which of 18 LLMs wrote a paragraph (balanced accuracy)
 
 ## How to use this vault
 1. Before any new experiment, search [[What Does Not Work]] first.
