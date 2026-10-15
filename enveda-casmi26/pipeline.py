@@ -117,8 +117,12 @@ def ranker_order(booster, ids, fp, cos, pop, natural, gate, smi=None, spectra=No
 
 def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_dir,
         w_pop=0.25, w_np=1.0, gate=0.7, n_out=25, hidden=1536, ranker_path=None, w_frag=0.0, depth=2,
-        deadline=None):
-    """deadline: time.time() after which remaining molecules are left without guesses (placeholder 'C')."""
+        deadline=None, gen_path=None, n_gen=3):
+    """deadline: time.time() after which remaining molecules are left without guesses (placeholder 'C').
+
+    gen_path: also generate candidates from the top analogs (generate.py) and write, per molecule, the n_gen
+    best-fitting generated structures that are not already candidates (plus the molecule's best cosine) to this CSV.
+    """
     import torch
     t0 = time.time()
     test = pd.read_parquet(test_path).reset_index(drop=True)
@@ -170,6 +174,22 @@ def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_d
         row_of = row_of[~row_of.index.duplicated()].to_dict()
         an_ctx = (an_lib, lambda k: fps[row_of[k], :256] if k in row_of else None)
         print(f'analog library {an_lib.matrix.shape[0]:,} spectra {time.time() - t0:.0f}s', flush=True)
+    generated = {}
+    if gen_path:
+        from generate import generate_many
+        if an_ctx is None:
+            from analogs import AnalogLibrary
+            an_lib = AnalogLibrary.build(train_path)
+        else:
+            an_lib = an_ctx[0]
+        smiles_of = dict(zip(keys, smiles))
+        tasks = []
+        for mol, spectra in groups:
+            hk, _ = an_lib.hits(spectra)
+            tasks.append((mol, [smiles_of[k] for k in hk if smiles_of.get(k)], molecule_mass(spectra)))
+        generated = generate_many(tasks)
+        print(f'generated {sum(map(len, generated.values())):,} structures {time.time() - t0:.0f}s', flush=True)
+    gen_rows = []
     out = {}
     for (mol, spectra), (start, plo, phi) in zip(groups, windows):
         if deadline and time.time() > deadline:
@@ -187,6 +207,17 @@ def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_d
         pop = np.concatenate([s_pop[lo:hi], np.asarray(pc_lsid[plo:phi], np.float32)
                               + np.asarray(pc_lpmid[plo:phi], np.float32)])
         natural = np.concatenate([s_np[lo:hi], np.asarray(pc_npf[plo:phi]) > 0])
+        if generated.get(mol):
+            known = set(ids)
+            new = [(k, g) for k, g in generated[mol].items() if k not in known]
+            if new:
+                from fingerprints import fp_packed, fp_packed_v2
+                gfp = np.stack([(fp_packed_v2 if maccs else fp_packed)(g) for _, g in new])
+                gscore = fp_loglik(lg, gfp) / len(spectra)
+                best_cos = float(cosv.max()) if len(cosv) else 0.0
+                for r, j in enumerate(np.argsort(-gscore)[:n_gen]):
+                    gen_rows.append((mol, r + 1, new[j][1], float(gscore[j]),
+                                     float(gscore[j] - fp.max()) if len(fp) else 0.0, best_cos))
         if len(ids) == 0:
             continue
         guesses, seen = [], set()
@@ -206,6 +237,9 @@ def run(train_path, test_path, structs_path, fps_path, model_path, pc_dir, pop_d
             if len(guesses) == n_out:
                 break
         out[mol] = ';'.join(guesses)
+    if gen_path:
+        pd.DataFrame(gen_rows, columns=['molecule_id', 'gen_rank', 'smiles', 'fp', 'fp_gap_to_pool', 'best_cos']
+                     ).to_csv(gen_path, index=False)
     sub = pd.DataFrame({'molecule_id': all_ids})
     sub['smiles'] = sub.molecule_id.map(out).fillna('C').replace('', 'C')
     print(f'done {time.time() - t0:.0f}s, molecules without candidates: {(sub.smiles == "C").sum()}')

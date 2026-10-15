@@ -112,6 +112,21 @@ def generate(seed_smiles, target_mass, ppm=10.0, depth=2, max_seeds=20, beam=300
     return hits
 
 
+def _generate_task(task):
+    mol, seeds, mass = task
+    try:
+        return mol, generate(seeds, mass)
+    except Exception:
+        return mol, {}
+
+
+def generate_many(tasks, processes=4):
+    """{molecule: {inchikey14: smiles}} for (molecule, seed_smiles, neutral_mass) tasks, in parallel."""
+    from multiprocessing import Pool
+    with Pool(processes, maxtasksperchild=25) as p:
+        return dict(p.map(_generate_task, tasks, chunksize=1))
+
+
 def _feasibility_one(task):
     key, seeds, mass = task
     t = time.time()
