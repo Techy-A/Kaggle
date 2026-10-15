@@ -104,12 +104,12 @@ sub.to_csv('/kaggle/working/our_submission.csv', index=False)
         _g = _pd.read_csv('/kaggle/working/our_generated.csv')
         _g = _g[(_g.gen_rank == 1) & (_g.best_cos < GEN_MAX_COS)]
         _gen = dict(zip(_g.molecule_id, _g.smiles))
-    _out, _changed, _added, _inserted = [], 0, 0, 0
+    _out, _out_nogen, _changed, _added, _inserted = [], [], 0, 0, 0
     for _mid, _smi in zip(_src.molecule_id, _src.smiles):
         _a = [x for x in _smi.split(';') if x]
         _b = [x for x in _ours.get(_mid, '').split(';') if x and x != 'C']
         if not _a or not _b:
-            _out.append(_smi); continue
+            _out.append(_smi); _out_nogen.append(_smi); continue
         _score, _rep, _order = {}, {}, []
         for _i, _x in enumerate(_a):
             _k = _ident(_x) or f'src:{_x}'
@@ -125,6 +125,7 @@ sub.to_csv('/kaggle/working/our_submission.csv', index=False)
         _top = _order[0]
         _ranked = sorted(_order, key=lambda k: (-(1e9 if PROTECT_TOP1 and k == _top else _score[k])))[:25]
         _new = [_rep[k] for k in _ranked]
+        _out_nogen.append(';'.join(_new))
         _gs = _gen.get(_mid)
         if _gs and _ident(_gs) and _ident(_gs) not in set(_ranked):
             _new = (_new[:GEN_POS - 1] + [_gs] + _new[GEN_POS - 1:])[:25]
@@ -135,6 +136,8 @@ sub.to_csv('/kaggle/working/our_submission.csv', index=False)
     _res = _pd.DataFrame({'molecule_id': _src.molecule_id, 'smiles': _out})
     assert len(_res) == len(_src) and _res.smiles.ne('').all()
     _res.to_csv('submission.csv', index=False)
+    _pd.DataFrame({'molecule_id': _src.molecule_id, 'smiles': _out_nogen}).to_csv('submission_fusion_only.csv',
+                                                                                   index=False)
     print(f'fusion: {_changed} of {len(_res)} lists changed, {_added} new candidates from our engine, '
           f'{len(_ours)} molecules ranked by our engine, {_inserted} generated candidates inserted at {GEN_POS}')
 except Exception:
