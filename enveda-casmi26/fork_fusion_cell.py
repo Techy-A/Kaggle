@@ -9,10 +9,17 @@ Fusion per molecule, over metric identities (stereo-free InChIKey first block):
     score = 1/(K + rank_source) + BETA/(K + rank_ours),  K = 3
 Source SMILES are kept for identities both lists share. With PROTECT_TOP1 the source's first guess stays first.
 On any error, or when our engine has no list for a molecule, the source list is kept unchanged.
+
+Class-3 candidates: our engine also mutates the structures behind the most similar library spectra (generate.py,
+22 natural-product transformations, mass-filtered). When no library spectrum matches the molecule confidently
+(best cosine < GEN_MAX_COS), its best-fitting generated structure is inserted at position GEN_POS. On validation
+(natural products, answer removed from every database) the answer is generated for 42% of molecules and is the
+best-fitting generated structure for 63% of those.
 """
 import glob as _g, json as _json, os as _os, subprocess as _sp, sys as _s, time as _t, traceback as _tb
 import pandas as _pd
 OUR_BETA, OUR_K, PROTECT_TOP1 = 0.5, 3.0, True
+GEN_POS, GEN_MAX_COS = 2, 0.7               # GEN_POS = 0 disables generated candidates
 LIMIT_S = 8.5 * 3600                      # stop our engine this long after the notebook started
 _src = _pd.read_csv('submission.csv', dtype=str, keep_default_na=False)
 _src.to_csv('submission_before_fusion.csv', index=False)
@@ -66,7 +73,8 @@ del structs, fps, tr, coco, cm
 sub = run({_os.path.join(COMP, 'train.parquet')!r}, {_os.path.join(COMP, 'test.parquet')!r},
           '/kaggle/working/our_structs.parquet', '/kaggle/working/our_fps.npy', {_model!r},
           {_os.path.dirname(_first('pc_smiles.npy'))!r}, {_os.path.dirname(_first('pc_lsid.npy'))!r},
-          gate=0.7, hidden={_hidden}, depth={_depth}, ranker_path={_ranker!r}, deadline=deadline)
+          gate=0.7, hidden={_hidden}, depth={_depth}, ranker_path={_ranker!r}, deadline=deadline,
+          gen_path='/kaggle/working/our_generated.csv' if {GEN_POS} else None)
 sub.to_csv('/kaggle/working/our_submission.csv', index=False)
 '''
     open('/kaggle/working/our_engine.py', 'w').write(_runner)
@@ -91,7 +99,12 @@ sub.to_csv('/kaggle/working/our_submission.csv', index=False)
         k = _Chem.MolToInchiKey(m)
         return k[:14] if k else None
 
-    _out, _changed, _added = [], 0, 0
+    _gen = {}
+    if GEN_POS and _os.path.exists('/kaggle/working/our_generated.csv'):
+        _g = _pd.read_csv('/kaggle/working/our_generated.csv')
+        _g = _g[(_g.gen_rank == 1) & (_g.best_cos < GEN_MAX_COS)]
+        _gen = dict(zip(_g.molecule_id, _g.smiles))
+    _out, _changed, _added, _inserted = [], 0, 0, 0
     for _mid, _smi in zip(_src.molecule_id, _src.smiles):
         _a = [x for x in _smi.split(';') if x]
         _b = [x for x in _ours.get(_mid, '').split(';') if x and x != 'C']
@@ -112,6 +125,10 @@ sub.to_csv('/kaggle/working/our_submission.csv', index=False)
         _top = _order[0]
         _ranked = sorted(_order, key=lambda k: (-(1e9 if PROTECT_TOP1 and k == _top else _score[k])))[:25]
         _new = [_rep[k] for k in _ranked]
+        _gs = _gen.get(_mid)
+        if _gs and _ident(_gs) and _ident(_gs) not in set(_ranked):
+            _new = (_new[:GEN_POS - 1] + [_gs] + _new[GEN_POS - 1:])[:25]
+            _inserted += 1
         _changed += _new != _a[:25]
         _added += len(set(_new) - set(_a))
         _out.append(';'.join(_new))
@@ -119,7 +136,7 @@ sub.to_csv('/kaggle/working/our_submission.csv', index=False)
     assert len(_res) == len(_src) and _res.smiles.ne('').all()
     _res.to_csv('submission.csv', index=False)
     print(f'fusion: {_changed} of {len(_res)} lists changed, {_added} new candidates from our engine, '
-          f'{len(_ours)} molecules ranked by our engine')
+          f'{len(_ours)} molecules ranked by our engine, {_inserted} generated candidates inserted at {GEN_POS}')
 except Exception:
     _tb.print_exc()
     _src.to_csv('submission.csv', index=False)
