@@ -3,7 +3,7 @@ tags: [kaggle, playbook]
 ---
 # What Works
 
-Back to [[Home]]. Every entry has evidence. *LB* = public leaderboard.
+Back to [[Kaggle Home]]. Every entry has evidence. *LB* = public leaderboard.
 
 ## Strategy
 - **Start from the strongest public notebook, reproduced exactly.** The best public notebook (0.441–0.443) beat everything we built from scratch (0.272) by a wide margin. Fork first, then improve. #lb-proven #casmi26

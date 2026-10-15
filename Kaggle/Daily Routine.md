@@ -3,7 +3,7 @@ tags: [kaggle, routine]
 ---
 # Daily Routine
 
-Back to [[Home]].
+Back to [[Kaggle Home]].
 
 - [ ] 05:30 IST: submissions reset. The planned runs go in (scheduled the evening before).
 - [ ] Check the bell icon and reply to every comment.

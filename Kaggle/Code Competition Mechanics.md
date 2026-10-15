@@ -3,7 +3,7 @@ tags: [kaggle, mechanics]
 ---
 # Code Competition Mechanics
 
-Back to [[Home]].
+Back to [[Kaggle Home]].
 
 ## Submissions
 - **5 per day**, reset at **00:00 UTC = 05:30 IST**. Plan them the evening before.

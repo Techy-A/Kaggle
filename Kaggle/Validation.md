@@ -3,7 +3,7 @@ tags: [kaggle, validation]
 ---
 # Validation
 
-Back to [[Home]].
+Back to [[Kaggle Home]].
 
 - **Build splits that match the test's hard part.** In CASMI26 that means molecules with **no public spectra**, answers reachable only through PubChem (S2). Library molecules (S1) flatter popularity priors.
 - **Accept a change only if it helps the hardest split.** Gains on easy splits often vanish on the LB.
