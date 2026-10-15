@@ -22,6 +22,8 @@ Back to [[Kaggle Home]]. Read this before every new experiment.
 - **Generated class-3 candidates at rank 2** (mutating the closest library analogs): 42% of answers generated offline, but **−0.001** on the LB. The test's novel molecules seem to be further from the libraries than the validation relatives were. #lb-proven #casmi26
 - **Popularity prior tuned on library molecules**: +0.50 MRR offline, only +0.075 on the LB. Library validation molecules are famous by construction. #casmi26
 
+- **Train-set structure assumed to hold in the test** (Name That LLM: one passage per model per prompt): CV 0.342 → 0.433, LB 0.345 → **0.335**. Check the data description for statements like "counts are not equal" before exploiting structure. #lb-proven #ntl
+
 ## Offline gains that shrink ~4x on the LB
 - Ranker + fragmentation + analogs: +0.14 offline on S2 vs **+0.016–0.04** on the LB. The public LB is ~130 molecules, about half of them class 3 (unreachable by re-ranking). #casmi26
 
