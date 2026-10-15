@@ -99,6 +99,8 @@ Ranker OOF MRR@25 with v3 features (S1 / S2): learned ranker 0.818 / 0.502, + fr
 
 The transformations are natural-product chemistry, so they rarely reach the synthetic `enveda-180` compounds, but for natural products (the hidden test's kind) the answer is among a handful of generated structures 42% of the time. Caveat: library relatives of these molecules may be closer than those of truly novel ones. Next: rank generated candidates end to end in a class-3 simulation (answer removed from every pool).
 
+21. **LB, 15 Oct.** A copy of the Dual-Band 0.441 notebook *without its pinned Docker image* (it ran on Python 3.13) scored 0.427 with our v3 merge, and 0.426 with merge + generated candidates at rank 2. So generation added nothing measurable on the public molecules: one hit at rank 2 would be worth about +0.004, and the -0.001 is consistent with one answer pushed from rank 2 to 3. On the 0.437 fork, the v3 merge scored 0.436 at beta 0.5 and 0.430 at beta 1.0 (the v2 merge scored 0.438). The merge is neutral at best, and more weight on the weaker engine hurts. Next: exact copies of the public 0.441 (v7c) and 0.443 (Antriksh Arya, v7c + engine-2 rank-2 insert) notebooks on their pinned images, with before/after-merge/after-generation outputs submitted from the same version.
+
 ## Layout
 
 | File | Purpose |
