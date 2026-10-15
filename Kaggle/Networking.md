@@ -17,7 +17,7 @@ Back to [[Kaggle Home]].
 ## People
 - **Antriksh Arya**: 57th, author of the 0.443 public notebook (v7c + engine-2 rank-2 insert). Insight: class 3 needs candidate *generation*; re-ranking has a low ceiling.
 - **Bull**: writes the validation and CV threads; class-share estimates.
-- **Kino Lutor**: teammate (merge sent 15 Oct). Works on the E007 pipeline with LambdaRank; does careful controlled experiments.
+- **Kino Lutor**: teammate (teams merged 15 Oct; we share 5 submissions/day). Works on the E007 pipeline with LambdaRank; does careful controlled experiments.
 - **Ahmed Berat Özer**: author of the v4n engine and v7c fraggap (0.441).
 
 ## Teaming
