@@ -20,6 +20,7 @@ import glob as _g, json as _json, os as _os, subprocess as _sp, sys as _s, time 
 import pandas as _pd
 OUR_BETA, OUR_K, PROTECT_TOP1 = 0.5, 3.0, True
 GEN_POS, GEN_MAX_COS = 2, 0.7               # GEN_POS = 0 disables generated candidates
+CONS_TOP, CONS_DEPTH = 3, 10               # agreement-only promotion (submission_consensus.csv)
 LIMIT_S = 8.5 * 3600                      # stop our engine this long after the notebook started
 _src = _pd.read_csv('submission.csv', dtype=str, keep_default_na=False)
 _src.to_csv('submission_before_fusion.csv', index=False)
@@ -104,12 +105,22 @@ sub.to_csv('/kaggle/working/our_submission.csv', index=False)
         _g = _pd.read_csv('/kaggle/working/our_generated.csv')
         _g = _g[(_g.gen_rank == 1) & (_g.best_cos < GEN_MAX_COS)]
         _gen = dict(zip(_g.molecule_id, _g.smiles))
-    _out, _out_nogen, _changed, _added, _inserted = [], [], 0, 0, 0
+    _out, _out_nogen, _out_cons, _changed, _added, _inserted, _promoted = [], [], [], 0, 0, 0, 0
     for _mid, _smi in zip(_src.molecule_id, _src.smiles):
         _a = [x for x in _smi.split(';') if x]
         _b = [x for x in _ours.get(_mid, '').split(';') if x and x != 'C']
         if not _a or not _b:
-            _out.append(_smi); _out_nogen.append(_smi); continue
+            _out.append(_smi); _out_nogen.append(_smi); _out_cons.append(_smi); continue
+        # agreement-only promotion: nothing new enters, the source's first guess stays first; a source candidate
+        # at ranks 3-CONS_DEPTH that is among our engine's top CONS_TOP moves to rank 2
+        _ours_top = {_ident(x) for x in _b[:CONS_TOP]} - {None}
+        _ak = [_ident(x) for x in _a]
+        _c = list(_a)
+        for _i in range(2, min(CONS_DEPTH, len(_c))):
+            if _ak[_i] is not None and _ak[_i] in _ours_top and _ak[_i] != _ak[0]:
+                _c.insert(1, _c.pop(_i)); _promoted += 1
+                break
+        _out_cons.append(';'.join(_c[:25]))
         _score, _rep, _order = {}, {}, []
         for _i, _x in enumerate(_a):
             _k = _ident(_x) or f'src:{_x}'
@@ -138,6 +149,9 @@ sub.to_csv('/kaggle/working/our_submission.csv', index=False)
     _res.to_csv('submission.csv', index=False)
     _pd.DataFrame({'molecule_id': _src.molecule_id, 'smiles': _out_nogen}).to_csv('submission_fusion_only.csv',
                                                                                    index=False)
+    _pd.DataFrame({'molecule_id': _src.molecule_id, 'smiles': _out_cons}).to_csv('submission_consensus.csv',
+                                                                                  index=False)
+    print(f'consensus: {_promoted} source candidates promoted to rank 2 (submission_consensus.csv)')
     print(f'fusion: {_changed} of {len(_res)} lists changed, {_added} new candidates from our engine, '
           f'{len(_ours)} molecules ranked by our engine, {_inserted} generated candidates inserted at {GEN_POS}')
 except Exception:
