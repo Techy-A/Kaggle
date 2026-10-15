@@ -13,6 +13,10 @@ Back to [[Kaggle Home]].
 - Public "best scores" are a **maximum over many runs**. Expect a reproduction to land a little lower.
 - **Teams share the 5/day.** The merge deadline is usually a week before the end.
 
+## Team rules (CASMI26, from 16 Oct)
+- Submit only entries with a **sure-shot 0.441+** expectation: exact pinned copies of proven public notebooks, or zero-risk tweaks on them. Experiments go through validation first.
+- Use at most **3 of the 5 daily team slots**; **2 are reserved for Kino**.
+
 ## Runtime
 - Submission notebook ≤ 9 h. Training notebooks (not submitted) can run up to 12 h on GPU (30 GPU-h per week).
 - The commit run of the fork lineage uses a **smoke switch** (12 molecules when the visible test is detected), so commits are quick; the full run happens only when scoring.
