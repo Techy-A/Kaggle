@@ -7,7 +7,7 @@ merge_deadline: 2026-12-07
 ---
 # Enveda CASMI 2026: molecule ID from MS/MS
 
-Back to [[Home]]. Full experiment log: `enveda-casmi26/README.md` in the repo.
+Back to [[Kaggle Home]]. Full experiment log: `enveda-casmi26/README.md` in the repo.
 
 ## Leaderboard history
 | Date | Run | Public LB |

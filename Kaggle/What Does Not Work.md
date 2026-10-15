@@ -3,7 +3,7 @@ tags: [kaggle, playbook, mistakes]
 ---
 # What Does Not Work
 
-Back to [[Home]]. Read this before every new experiment.
+Back to [[Kaggle Home]]. Read this before every new experiment.
 
 ## Mistakes that cost submissions #mistake
 | Mistake | Cost | Rule from now on |

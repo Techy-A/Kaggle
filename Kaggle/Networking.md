@@ -3,7 +3,7 @@ tags: [kaggle, community]
 ---
 # Networking
 
-Back to [[Home]].
+Back to [[Kaggle Home]].
 
 ## What works
 - **1–2 comments a day, each with data, code or a precise answer.** Never "great work!".
