@@ -90,6 +90,15 @@ The v3 model and its ranker come from the GPU training notebook (`build_notebook
 
 Ranker OOF MRR@25 with v3 features (S1 / S2): learned ranker 0.818 / 0.502, + fragmentation 0.847 / 0.627, **+ analogs 0.854 / 0.660** (v2: 0.842 / 0.521). The LB moved less (0.256 -> 0.272), so the remaining public-LB gap is mostly outside the ranking these splits measure (candidate coverage, class-1 handling).
 
+20. **Analog-seeded generation (`generate.py`), feasibility.** For each validation molecule (its own spectra removed from the library), the 20 structures behind the most similar library spectra are mutated with 22 common natural-product transformations (O/N-(de)methylation, hydroxylation, (de)glycosylation, (de)acetylation, reduction/desaturation, ester hydrolysis, +-CH2, sulfation, prenylation), up to two steps; only products within 10 ppm of the molecule's mass are kept:
+
+| Split | Answer generated | Median products | Median time |
+|---|---|---|---|
+| S1 (250 natural products) | **42%** | 16 | 3.3 s |
+| S2 (490 synthetic `enveda-180`) | 1.8% | 4 | 2.5 s |
+
+The transformations are natural-product chemistry, so they rarely reach the synthetic `enveda-180` compounds, but for natural products (the hidden test's kind) the answer is among a handful of generated structures 42% of the time. Caveat: library relatives of these molecules may be closer than those of truly novel ones. Next: rank generated candidates end to end in a class-3 simulation (answer removed from every pool).
+
 ## Layout
 
 | File | Purpose |
