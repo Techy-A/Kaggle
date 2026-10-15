@@ -104,9 +104,11 @@ def generate(seed_smiles, target_mass, ppm=10.0, depth=2, max_seeds=20, beam=300
                     k = Chem.MolToInchiKey(flat)[:14]
                     if k:
                         hits.setdefault(k, smi)
-                nxt.append((abs(mass - target_mass), p))
-        nxt.sort(key=lambda x: x[0])
-        frontier = [p for _, p in nxt[:beam]]
+                nxt.append((abs(mass - target_mass), smi))
+            if len(nxt) > 4 * beam:                  # keep memory flat: only the closest-to-target survive
+                nxt = sorted(nxt)[:beam]
+        frontier = [Chem.MolFromSmiles(smi) for _, smi in sorted(nxt)[:beam]]
+        frontier = [m for m in frontier if m is not None]
     return hits
 
 
@@ -143,8 +145,11 @@ def main(path, work):
         seeds = [smiles_of[k] for k in hk if k in smiles_of.index and k != key]
         tasks.append((key, seeds, molecule_mass(spectra)))
     print(f'{len(tasks)} molecules, seeds ready {time.time() - t0:.0f}s', flush=True)
-    with Pool() as p:
-        rows = p.map(_feasibility_one, tasks, chunksize=4)
+    import gc
+    del lib, queries, smiles_of, feats
+    gc.collect()                                     # workers must not inherit (and copy) the spectral library
+    with Pool(4, maxtasksperchild=25) as p:
+        rows = p.map(_feasibility_one, tasks, chunksize=1)
     res = pd.DataFrame(rows, columns=['key', 'n_generated', 'answer_generated', 'seconds'])
     res['split'] = res.key.map(answers)
     res.to_csv(f'{work}/generate_feasibility.csv', index=False)
