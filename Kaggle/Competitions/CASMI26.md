@@ -47,3 +47,6 @@ See [[What Works]] and [[What Does Not Work]] (tag `#casmi26`).
 ## Standing, 16 Oct 17:00 UTC
 - Rank 63/3427 at 0.451, inside **silver** (top 5% = rank 171, cutoff 0.447). Gold needs top 17 (0.456). Bronze cutoff is 0.443 (rank 342).
 - The V22 variants (rel100, E2R3) haven't been submitted yet.
+
+## Publishing rule (user, 16 Oct)
+- Make the 0.451 V22 pinned copy public **only once the team is at 0.453+**. Never publish the current best.
