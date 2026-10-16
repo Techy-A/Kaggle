@@ -24,6 +24,7 @@ Back to [[Kaggle Home]]. Full experiment log: `enveda-casmi26/README.md` in the 
 | 15 Oct | Kino: E007 + LambdaRank + tail fill | 0.440 |
 | 16 Oct | **Exact pinned copy of Antriksh Arya's 0.443** | **0.443** (team best; inside the bronze zone, ~rank 253–308 of 3,397, bronze line 0.442 at rank 339, silver 0.446) |
 | 16 Oct | Exact pinned copy of Ahmed's v7c | 0.441 |
+| 16 Oct | 0.443 + agreement-only promotion | 0.439 |
 
 ## Public notebooks (real scores)
 - 0.443: Antriksh Arya, v7c + engine-2 rank-2 insert (pinned image `2757e0…`)
