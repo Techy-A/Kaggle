@@ -21,6 +21,9 @@ Back to [[Kaggle Home]]. Full experiment log: `enveda-casmi26/README.md` in the 
 | 14 Oct | **Fork + own-engine merge (v2)** | **0.438** (best) |
 | 15 Oct | Fork + v3 merge (beta 0.5 / 1.0) | 0.436 / 0.430 |
 | 15 Oct | Unpinned Dual-Band + merge (/ + generation) | 0.427 / 0.426 |
+| 15 Oct | Kino: E007 + LambdaRank + tail fill | 0.440 |
+| 16 Oct | **Exact pinned copy of Antriksh Arya's 0.443** | **0.443** (team best; inside the bronze zone, ~rank 253–308 of 3,397, bronze line 0.442 at rank 339, silver 0.446) |
+| 16 Oct | Exact pinned copy of Ahmed's v7c | 0.441 |
 
 ## Public notebooks (real scores)
 - 0.443: Antriksh Arya, v7c + engine-2 rank-2 insert (pinned image `2757e0…`)

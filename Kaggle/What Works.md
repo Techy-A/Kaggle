@@ -6,6 +6,7 @@ tags: [kaggle, playbook]
 Back to [[Kaggle Home]]. Every entry has evidence. *LB* = public leaderboard.
 
 ## Strategy
+- **Exact, pinned reproductions of the best public notebooks reproduce their scores**: Antriksh's 0.443 → 0.443, Ahmed's v7c 0.441 → 0.441 (same Docker image, same datasets, no edits). Unpinned copies lost 0.014. #lb-proven #casmi26
 - **Start from the strongest public notebook, reproduced exactly.** The best public notebook (0.441–0.443) beat everything we built from scratch (0.272) by a wide margin. Fork first, then improve. #lb-proven #casmi26
 - **Check a notebook's *real* score, not its title.** Titles overclaim. Real scores come from Kaggle's kernel list (`bestPublicScore` from `kernels.KernelsService/ListKernels`). #casmi26
 - **Read the official metric code in full.** It told us that reordering after the first correct guess can't hurt, and that identity = InChIKey first block (stereo removed, tautomer-canonical). #casmi26
