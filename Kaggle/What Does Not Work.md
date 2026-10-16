@@ -26,6 +26,8 @@ Back to [[Kaggle Home]]. Read this before every new experiment.
 
 - **Train-set structure assumed to hold in the test** (Name That LLM: one passage per model per prompt): CV 0.342 → 0.433, LB 0.345 → **0.335**. Check the data description for statements like "counts are not equal" before exploiting structure. #lb-proven #ntl
 
+- **Agreement-only promotion** (a base candidate at ranks 3–10 that our engine also has in its top 3 moves to rank 2) on the 0.443 base: **0.439 (−0.004)**. Our engine's agreement isn't a reliable signal, and moving items to rank 2 displaces the base's own rank-2 insert. Our engine stays out of final lists. #lb-proven #casmi26
+
 ## Offline gains that shrink ~4x on the LB
 - Ranker + fragmentation + analogs: +0.14 offline on S2 vs **+0.016–0.04** on the LB. The public LB is ~130 molecules, about half of them class 3 (unreachable by re-ranking). #casmi26
 
