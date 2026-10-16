@@ -22,6 +22,7 @@ Back to [[Kaggle Home]]. Full experiment log: `enveda-casmi26/README.md` in the 
 | 15 Oct | Fork + v3 merge (beta 0.5 / 1.0) | 0.436 / 0.430 |
 | 15 Oct | Unpinned Dual-Band + merge (/ + generation) | 0.427 / 0.426 |
 | 15 Oct | Kino: E007 + LambdaRank + tail fill | 0.440 |
+| 16 Oct | Kino: unchanged V22 copy (rel>150, no E2R3) | 0.451 (confirms V22 is stable) |
 | 16 Oct | **Exact pinned copy of Antriksh Arya's 0.443** | **0.443** (team best; inside the bronze zone, ~rank 253–308 of 3,397, bronze line 0.442 at rank 339, silver 0.446) |
 | 16 Oct | Exact pinned copy of Ahmed's v7c | 0.441 |
 | 16 Oct | 0.443 + agreement-only promotion | 0.439 |
@@ -41,3 +42,8 @@ Back to [[Kaggle Home]]. Full experiment log: `enveda-casmi26/README.md` in the 
 
 ## Lessons
 See [[What Works]] and [[What Does Not Work]] (tag `#casmi26`).
+
+
+## Standing, 16 Oct 17:00 UTC
+- Rank 63/3427 at 0.451, inside **silver** (top 5% = rank 171, cutoff 0.447). Gold needs top 17 (0.456). Bronze cutoff is 0.443 (rank 342).
+- The V22 variants (rel100, E2R3) haven't been submitted yet.
