@@ -8,7 +8,8 @@ Back to [[Kaggle Home]].
 ## Submissions
 - **5 per day**, reset at **00:00 UTC = 05:30 IST**. Plan them the evening before.
 - A submission **re-runs the notebook on the hidden test**. The fork-based pipelines take **6–8 h to score**.
-- `competitions submit -k OWNER/KERNEL -v VERSION -f FILE -m MSG`. Any output file of that version can be submitted, which gives free A/Bs from one notebook.
+- `competitions submit -k OWNER/KERNEL -v VERSION -f submission.csv -m MSG`. **Some competitions (CASMI26) only accept a file named `submission.csv`**, so an A/B needs one kernel version per variant.
+- At most **2 GPU notebook runs at a time** per account.
 - GPU stages aren't bit-reproducible: the same code scored 0.437 and 0.440. On ~130 public molecules one molecule ≈ **0.008**. Don't chase ±0.002.
 - Public "best scores" are a **maximum over many runs**. Expect a reproduction to land a little lower.
 - **Teams share the 5/day.** The merge deadline is usually a week before the end.

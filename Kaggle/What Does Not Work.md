@@ -14,6 +14,8 @@ Back to [[Kaggle Home]]. Read this before every new experiment.
 | Pushed a new kernel version while the previous one was running | Run cancelled | Wait for COMPLETE before pushing |
 | Title longer than 50 characters in `kernel-metadata.json` | 400 Bad Request | Keep titles ≤ 50 characters |
 | Kernel `id` that didn't match the slug Kaggle created | 409 Conflict | Use the slug Kaggle prints after the first push |
+| Planned A/B by submitting other output files with `-f` (CASMI26 only accepts a file named `submission.csv`) | 3 submissions rejected; a morning lost to re-runs | Each variant writes its own `submission.csv` in its own kernel version |
+| Pushed a 3rd GPU kernel while 2 were running | "Maximum batch GPU session count of 2" | At most 2 GPU runs at a time; queue the rest |
 | Unquoted heredoc containing backticks | Shell executed them; text lost | Use `<<'EOF'` |
 
 ## Ideas that didn't move the LB
