@@ -25,11 +25,16 @@ Back to [[Kaggle Home]]. Full experiment log: `enveda-casmi26/README.md` in the 
 | 16 Oct | **Exact pinned copy of Antriksh Arya's 0.443** | **0.443** (team best; inside the bronze zone, ~rank 253–308 of 3,397, bronze line 0.442 at rank 339, silver 0.446) |
 | 16 Oct | Exact pinned copy of Ahmed's v7c | 0.441 |
 | 16 Oct | 0.443 + agreement-only promotion | 0.439 |
+| 16 Oct | **Exact pinned copy of easonyanyan's V22** | **0.451**: team best, ~rank 32–54 of 3,407; silver line 0.446 (rank 170), gold ~rank 16 |
 
 ## Public notebooks (real scores)
 - 0.443: Antriksh Arya, v7c + engine-2 rank-2 insert (pinned image `2757e0…`)
 - 0.443: saddamaditya, forensics-lab apex dossier
 - 0.441: Ahmed v7c fraggap (pinned 3.12 image `37c64f…`), Dual-Band, MetFrag-lite, …
+
+## Final picks (plan)
+- 57257429: V22 copy, 0.451
+- 57248900: 0.443 copy, a different lineage, as a hedge
 
 ## In flight
 - 16 Oct: 0.443 base / + merge / + merge + generation / agreement-only promotion. See [[What Works]] for the agreement idea once it's measured.
