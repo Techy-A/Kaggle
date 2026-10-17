@@ -190,6 +190,12 @@ for _k, _v in list(globals().items()):
     except Exception as _e:
         print('BENCH snapshot skip', _k, repr(_e)[:80])
 print('BENCH snapshot', len(BENCH_SNAP), 'globals')
+import pickle as _pk
+try:
+    _pk.dump(BENCH_SNAP, open('/kaggle/working/bench_snap.pkl', 'wb'), protocol=4)
+    print('BENCH snapshot saved', os.path.getsize('/kaggle/working/bench_snap.pkl') // 2**20, 'MB')
+except Exception as _e:
+    print('BENCH snapshot not saved', repr(_e)[:120])
 '''
 
 SCORE_CELL = r'''"""BENCH: score every stage snapshot (main pass) against the hidden answers."""
@@ -236,7 +242,7 @@ for _name, _spec in BENCH_VARIANTS.items():
     try:
         for _k, _v in _BMAIN.items():
             globals()[_k] = _copy.deepcopy(_v)
-        for _idx in sorted(BENCH_CELLS, key=int) + (['e2r3'] if _spec.get('e2r3') else []):
+        for _idx in [i for i in sorted(BENCH_CELLS, key=int) if i not in _spec.get('skip', [])] + (['e2r3'] if _spec.get('e2r3') else []):
             _src = BENCH_CELLS[_idx] if _idx != 'e2r3' else BENCH_E2R3
             for _old, _new in _spec.get('edits', {}).get(str(_idx), []):
                 assert _src.count(_old) == 1, (_name, _idx, _old)
@@ -258,6 +264,7 @@ VARIANTS = {
     'rel100': {'edits': {'25': [['(rel > 150.0)', '(rel > 100.0)']]}},
     'rel250': {'edits': {'25': [['(rel > 150.0)', '(rel > 250.0)']]}},
     'e2r3': {'e2r3': True},
+    'no_e2r2': {'skip': ['37']},
 }
 
 
@@ -311,7 +318,7 @@ def main():
         'Built by enveda-casmi26/bench/build_bench.py from the V22 pinned copy; all credits as in the cells below.\n']}
     out = [title] + cells[:13] + [code(bench)] + cells[13:25] + [code(SNAP_CELL)] + cells[25:38] + [code(SCORE_CELL)]
     out.append(code('BENCH_E2R3 = ' + repr(e2r3) + '\n' + REPLAY_CELL.replace('__CELLS__', repr(replay))
-                    .replace('__VARIANTS__', json.dumps(VARIANTS))))
+                    .replace('__VARIANTS__', repr(VARIANTS))))
     nb['cells'] = out
     os.makedirs(a.out_dir, exist_ok=True)
     json.dump(nb, open(os.path.join(a.out_dir, 'notebook.ipynb'), 'w'), indent=1)
