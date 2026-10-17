@@ -84,22 +84,8 @@ pd.DataFrame({'molecule_id': sorted(ANS.molecule_id), 'smiles': ';'.join(['CCO']
     os.path.join(BENCH_DIR, 'sample_submission.csv'), index=False)
 ANS.drop(columns='h').to_csv('/kaggle/working/bench_answers.csv', index=False)
 print(f'BENCH train rows kept {_kept:,}; pseudo-test {len(NPQ)} spectra / {NPQ.molecule_id.nunique()} molecules', flush=True)
-# class-3 answers out of the v4 pool (engine 1 and the PubChem channel's pool window)
-_BP = '/kaggle/working/bench_pool'; os.makedirs(_BP, exist_ok=True)
-_pm = pd.read_parquet(os.path.join(POOL_DIR, 'pool_meta.parquet'))
-_keep = ~_pm.key.isin(DROP3).values
-np.save(os.path.join(_BP, 'keep_mask.npy'), _keep)
-_pm = _pm[_keep].reset_index(drop=True); _pm['pid'] = np.arange(len(_pm)); _pm.to_parquet(os.path.join(_BP, 'pool_meta.parquet'), index=False)
-np.save(os.path.join(_BP, 'pool_fp.npy'), np.load(os.path.join(POOL_DIR, 'pool_fp.npy'), mmap_mode='r')[_keep])
-_off = np.load(os.path.join(POOL_DIR, 'pool_frag_off.npy')); _fm = np.load(os.path.join(POOL_DIR, 'pool_frag_mass.npy'), mmap_mode='r')
-_rows = np.flatnonzero(_keep); _len = (_off[1:] - _off[:-1])[_rows]
-np.save(os.path.join(_BP, 'pool_frag_off.npy'), np.concatenate([[0], np.cumsum(_len)]).astype(_off.dtype))
-np.save(os.path.join(_BP, 'pool_frag_mass.npy'), np.concatenate([np.asarray(_fm[_off[r]:_off[r + 1]]) for r in _rows]))
-for _f in ['fp_bits.npy', 'train_structs.parquet', 'train_fp_sel.npy']:
-    if not os.path.exists(os.path.join(_BP, _f)):
-        os.symlink(os.path.join(POOL_DIR, _f), os.path.join(_BP, _f))
-print(f'BENCH pool {len(_keep):,} -> {int(_keep.sum()):,} structures', flush=True)
-POOL_DIR = _BP
+# class-3 answers stay in the pool files (engine-1 feature caches are row-aligned to them); they are hidden
+# from engine 1's candidate window (cell 19 patch, the author's own drop_pid mechanism) and from the PubChem gate.
 json.dump(sorted(DROP3), open('/kaggle/working/bench_drop3.json', 'w'))
 json.dump([[ik, s] for ik, s in zip(ANS[ANS.cls == 2].inchikey14, ANS[ANS.cls == 2].normalized_smiles)],
           open('/kaggle/working/bench_add2.json', 'w'))
@@ -167,9 +153,27 @@ FULL_OLD = "_FULL = glob.glob('/kaggle/input/**/casmi26-fpnet-full1/**/fpnet_ful
 FULL_NEW = ("_FULL = [] if os.environ.get('BENCH_LEAKFREE') == '1' else "
             "glob.glob('/kaggle/input/**/casmi26-fpnet-full1/**/fpnet_full1.pt', recursive=True)   # v4m (BENCH)")
 
-POP_OLD = "assert len(POOL_POP) == len(P.key), (len(POOL_POP), len(P.key))"
-POP_NEW = ("if os.path.exists(os.path.join(POOL_DIR, 'keep_mask.npy')):   # BENCH: pool rows dropped for class 3\n"
-           "    POOL_POP = POOL_POP[np.load(os.path.join(POOL_DIR, 'keep_mask.npy'))]\n" + POP_OLD)
+WIN_OLD = "L = Library('work'); P = Pool('work')\n"
+WIN_NEW = WIN_OLD + """if os.environ.get('BENCH_DROP3'):   # BENCH: class-3 answers never enter engine 1's candidate window
+    _bd3 = set(json.load(open(os.environ['BENCH_DROP3'])))
+    _bdp = np.flatnonzero(pd.Series(P.key).isin(_bd3).values)
+    _bw0 = P.window
+    def _bench_window(target, ppm, _w0=_bw0, _d=_bdp):
+        c = _w0(target, ppm)
+        return c[~np.isin(c, _d)]
+    P.window = _bench_window
+    print('BENCH engine-1 window hides', len(_bdp), 'pool rows', flush=True)
+"""
+
+# PubChem runner: the gate's best pool f.z must not see class-3 answers (single-quoted literal: escape quotes)
+GATE_OLD = "    pfp = np.load(os.path.join(POOL_DIR, \\'pool_fp.npy\\'), mmap_mode=\\'r\\')\\n"
+GATE_NEW = (GATE_OLD +
+            "    _bk = pd.read_parquet(os.path.join(POOL_DIR, \\'pool_meta.parquet\\'), columns=[\\'key\\']).key.values\\n"
+            "    _bd3 = set(json.load(open(os.environ[\\'BENCH_DROP3\\']))) if os.environ.get(\\'BENCH_DROP3\\') else set()\\n"
+            "    _bdm = np.isin(_bk, list(_bd3)); print(\\'BENCH gate hides\\', int(_bdm.sum()), \\'pool rows\\', flush=True)\\n")
+BEST_OLD = "            best = float((F @ z.astype(np.float64)).max())\\n"
+BEST_NEW = ("            _sc = F @ z.astype(np.float64); _sc[_bdm[a:b]] = -np.inf\\n"
+            "            best = float(_sc.max()) if np.isfinite(_sc).any() else float(\\'nan\\')\\n")
 
 SNAP_CELL = r'''"""BENCH: snapshot of the state before cell 25 (everything after it is CPU-only and replayable)."""
 import copy as _copy, types as _types
@@ -219,6 +223,7 @@ for _p in ['baseline_submission.csv', 'submission_reference.csv', 'submission_e0
         BENCH_RESULTS['main'][_p] = bench_score(_p)
         print('BENCH main', _p, {k: (round(v, 4) if isinstance(v, float) else v) for k, v in BENCH_RESULTS['main'][_p].items() if k != 'rr'}, flush=True)
 json.dump(BENCH_RESULTS, open('/kaggle/working/bench_results.json', 'w'))
+print('BENCH_JSON ' + json.dumps({'main': BENCH_RESULTS['main']}), flush=True)
 '''
 
 REPLAY_CELL = r'''"""BENCH: replay cells 25-37 (CPU only) per variant from the pre-25 snapshot, score each final submission."""
@@ -244,6 +249,8 @@ for _name, _spec in BENCH_VARIANTS.items():
     except Exception:
         print('BENCH variant FAILED', _name); _tb.print_exc()
     json.dump(BENCH_RESULTS, open('/kaggle/working/bench_results.json', 'w'))
+    if _name in BENCH_RESULTS:
+        print('BENCH_JSON ' + json.dumps({_name: BENCH_RESULTS[_name]}), flush=True)
 '''
 
 VARIANTS = {
@@ -290,7 +297,9 @@ def main():
     assert s.count(V17_OLD) == 1
     cells[16]['source'] = s.replace(V17_OLD, V17_NEW).splitlines(True)
     patch(cells, 19, FULL_OLD, FULL_NEW)
-    patch(cells, 21, POP_OLD, POP_NEW)
+    patch(cells, 19, WIN_OLD, WIN_NEW)
+    patch(cells, 16, GATE_OLD, GATE_NEW)
+    patch(cells, 16, BEST_OLD, BEST_NEW)
     replay = {str(i): src_of(cells[i]) for i in range(25, 38) if cells[i]['cell_type'] == 'code'}
     e2r3 = src_of(json.load(open(E2R3_FROM))['cells'][-1])
     assert 'E2R3' in e2r3
