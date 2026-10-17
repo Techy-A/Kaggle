@@ -147,3 +147,9 @@ Of the 46 generated, 39 aren't ranked first.
 - Classes 1/2 cost almost nothing: one class-1 molecule drops from rank 1 to rank 2.
 - B20 takes about 1.7× the engine-1 time, which is fine within 9 h.
 - **Next:** V22 + B20 (`aryanawasthiteykik/casmi26-v22-gen20`, cell 19 only). The first push was blocked by the 2-GPU-session limit while the benches run.
+
+## Bench v3 (17 Oct, done 8 pm IST)
+- Main pass identical to run 2 (final 0.519; class 3 0.151, 7 top-1), so the bench is **deterministic**.
+- The calibration replays failed: a V22 cell overwrote the replay loop's `_spec` global (name clash), and the snapshot pickle failed on a pandas itertuples row.
+- Both are fixed in build_bench.py (`_bq_*` names, per-key pickling).
+- Next: `casmi26-bench-unseen-g20` = unseen pseudo-test + gen20 + fixed replays. Its main pass compared with unseen v1 gives an honest gen20 vs V22 comparison, and its replays give the calibration.
