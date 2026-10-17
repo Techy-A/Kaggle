@@ -29,3 +29,6 @@ Back to [[Kaggle Home]]. Every entry has evidence. *LB* = public leaderboard.
 
 ## Community
 - **Data-backed comments get replies from top players.** Our validation-trap numbers started conversations with 57th-place Antriksh Arya. See [[Networking]].
+
+- **Read the diff, not the title (CASMI26, 17 Oct).** The public 'v14seeds' notebooks claimed a seed bag, but only their max_depth 6->7 change actually runs. Trace public LB gains to the lines that execute.
+- **A council (researcher + evidence presenter, then advocate vs skeptic, then a judge) is worth running before spending slots.** It killed rel100 using public evidence before we wasted a slot.
