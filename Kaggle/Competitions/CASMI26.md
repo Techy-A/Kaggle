@@ -164,3 +164,8 @@ Of the 46 generated, 39 aren't ranked first.
 - **Class 3 is hopeless on drug-like molecules:** 3 of 192 in the list, nearest candidates mostly at Tanimoto < 0.55. Engine 1's natural-product edit rules don't fit synthetic library chemistry. The real test is natural products (host), so this set is out of domain for generation but the right control for "does a change hurt class 2".
 - **Next:** unseen-g20 (V22 + gen20 + fixed replays) checks that gen20 doesn't hurt class 2 and gives the calibration replays.
 - **17 Oct: Kino re-ran depth 7 from his account and got 0.447**, against our 0.451 for the same notebook code. Either his copy isn't pinned to the original image (unpinned copies cost about 0.014 before), or **run-to-run noise is about ±0.004**. Either way, public-LB differences of 0.001–0.004 between variants are inside the noise.
+- **User decision (17 Oct, 9:50 pm IST): 'yes, conditional'.** Submit V22 + gen20 at 5:35 am IST on 18 Oct, once, only if all of these hold:
+  - the gen20 run is COMPLETE;
+  - the unseen-g20 bench shows class-2 MRR ≥ 0.25 and class 3 not below V22;
+  - the team is under 3 CASMI submissions that UTC day;
+  - it hasn't been submitted before.
