@@ -50,3 +50,10 @@ See [[What Works]] and [[What Does Not Work]] (tag `#casmi26`).
 
 ## Publishing rule (user, 16 Oct)
 - Make the 0.451 V22 pinned copy public **only once the team is at 0.453+**. Never publish the current best.
+
+## Council evidence, 17 Oct (see the council report when the verdict is in)
+- **rel100 has negative public evidence:** seyitkaangunes's sweep on the E006 base gave rel>250 0.442, rel>150 0.446, rel>100 0.444. Held until the user decides.
+- **E2R3:** no direct LB evidence. Engine 2 rescues only about 3 public molecules (antriksharya probes). Held.
+- **Depth 7 is the lead:** the v14seeds/Gluzdov "seed bag" seeds are dead code, and only max_depth 6->7 in the engine-2 HGB rankers runs. It gained +0.003 (0.441->0.444) and +0.004 (0.446->0.450) on two bases, and no 0.451 notebook has it. Built as push_v22_depth7 (kernel aryanawasthiteykik/casmi26-v22-depth7, not pushed yet).
+- **Noise:** the public LB is about 124 molecules (one rank-1 hit is about 0.008), and GPU reruns of the same code differ by about ±0.003.
+- **Dead ends measured publicly:** ungated FRIGID rank-2 (-0.009), JESTR (-0.022), CFM-ID LOTUS (0 to -0.018), stepped-CE GLACIER (-0.004), MSEntropy (0), ChEBI+LIPID MAPS in another pipeline (-0.005).

@@ -118,3 +118,8 @@ The transformations are natural-product chemistry, so they rarely reach the synt
 | `kernel-metadata*.json` | Kaggle notebook metadata |
 
 The competition data (CC BY-NC 4.0) is not redistributed here. Download it from Kaggle into `data/`.
+
+
+## 17 Oct
+- Team scores: V22 pinned copy 0.451 (us, and again by Kino); agreement-promotion variant 0.439.
+- variants/v22_depth7.ipynb: V22 with engine-2 max_depth 7 (the only live change in the public v14seeds notebooks). Not submitted yet.
