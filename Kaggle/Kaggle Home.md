@@ -21,3 +21,6 @@ Goal: **Kaggle Expert**. Rule: every mistake gets written down once and never re
 1. Before any new experiment, search [[What Does Not Work]] first.
 2. After every leaderboard result, add one line to [[What Works]] or [[What Does Not Work]] with the number.
 3. Tag entries with the competition (`#casmi26`) and the type (`#lb-proven`, `#offline-only`, `#mistake`).
+
+## Preferences
+- **Always give times in IST** (UTC+5:30), never UTC.
