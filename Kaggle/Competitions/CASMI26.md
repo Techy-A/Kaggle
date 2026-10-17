@@ -169,3 +169,29 @@ Of the 46 generated, 39 aren't ranked first.
   - the unseen-g20 bench shows class-2 MRR ≥ 0.25 and class 3 not below V22;
   - the team is under 3 CASMI submissions that UTC day;
   - it hasn't been submitted before.
+
+## Unseen-g20 bench (17 Oct, done 11:40 pm IST): V22 + gen20 on the leak-free unseen set, plus calibration replays
+| Final list | V22 (unseen v1) | **V22 + gen20** |
+|---|---|---|
+| Class 2 MRR | 0.256 | **0.260** |
+| Class 2 hit@25 | 55 | 56 |
+| Class 3 MRR | 0.005 | **0.013** |
+| Class 3 top-1 / hit@25 | 0 / 3 | 1 / 6 |
+
+**gen20 helps, or at least doesn't hurt, on molecules no model has seen.** Both submission conditions pass.
+
+**Calibration** (replays of cells 25–37 from the snapshot, on the gen20 base). replay_v22 equals the main pass exactly, so the replay is deterministic.
+
+| Variant | Bench all | Bench c2 | Public LB |
+|---|---|---|---|
+| rel100 | 0.1137 | 0.265 | 0.445 (worse) ✗ |
+| no_e2r2 | 0.1132 | 0.262 | – |
+| **V22 (rel150)** | 0.1119 | 0.260 | **0.451** |
+| E2R3 | 0.1090 | 0.254 | 0.450 (worse) ✓ |
+| rel250 | 0.1047 | 0.241 | 0.445 (worse) ✓ |
+
+**Verdict: partially calibrated (2 of 3 directions right).**
+- The bench gets E2R3 and rel250 right but rel100 wrong.
+- Reason: its class 2 is *all PubChem-only*, so loosening the PubChem gate always helps here. In the real test, many answers sit in the pool (class 1 and COCONUT class 2), and promoted PubChem guesses displace them.
+- **So don't trust this bench for PubChem-gate decisions.** Use it for engine/generation changes and as a class-2 'do no harm' check.
+- The snapshot was saved this time (381 MB), so later replays can run without a GPU.
