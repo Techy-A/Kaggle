@@ -39,3 +39,4 @@ Back to [[Kaggle Home]]. Read this before every new experiment.
 - **Tuning the CASMI26 PubChem gate below 150:** rel>100 scored 0.444 vs 0.446 for 150 (public sweep).
 - **Grouping CV by the wrong key:** grouping a ranker CV by G alone merged two queries per group and gave a false 'neutral' result. Group by the real query id.
 - **Ungated de novo (FRIGID) candidates at rank 2:** -0.009 on the LB.
+- CASMI26 rel>100 on V22: **0.445** vs 0.451 (17 Oct). Confirms the public sweep.

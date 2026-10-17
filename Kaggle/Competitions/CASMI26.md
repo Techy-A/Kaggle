@@ -70,3 +70,5 @@ See [[What Works]] and [[What Does Not Work]] (tag `#casmi26`).
 | Zenodo Enveda-180 extras, ICEBERG NIST atlas, GLACIER fine-tune | reject (no gain expected / NIST disqualification risk / weeks of work) | 0.15 |
 - Score rule for depth 7: >= 0.452 means it becomes the new base and a final pick; 0.451 is a tie and the user decides; <= 0.450 means stop the depth line, no re-runs for noise.
 - The local dummy test.parquet is all enveda-180 library hits, so it is useless as a validation set.
+
+- **17 Oct: Kino's V22 + rel100 scored 0.445** (-0.006 vs V22). The council predicted it (20% chance to beat 0.451). The PubChem gate stays at 150. #lb-proven
