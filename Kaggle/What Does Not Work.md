@@ -35,3 +35,7 @@ Back to [[Kaggle Home]]. Read this before every new experiment.
 - `api.kaggle.com` is blocked from the cloud container: use the `kaggle_www.py` wrapper (endpoint `https://www.kaggle.com/api`).
 - `kaggleusercontent.com` is blocked, so kernel outputs and logs can't be downloaded. Ask the user to paste the log, or put the key numbers into a public notebook.
 - Publishing or first-forking other people's notebooks via the API may be blocked: the user does *Copy & Edit* in the UI.
+
+- **Tuning the CASMI26 PubChem gate below 150:** rel>100 scored 0.444 vs 0.446 for 150 (public sweep).
+- **Grouping CV by the wrong key:** grouping a ranker CV by G alone merged two queries per group and gave a false 'neutral' result. Group by the real query id.
+- **Ungated de novo (FRIGID) candidates at rank 2:** -0.009 on the LB.

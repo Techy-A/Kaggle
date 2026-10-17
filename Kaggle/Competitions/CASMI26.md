@@ -57,3 +57,16 @@ See [[What Works]] and [[What Does Not Work]] (tag `#casmi26`).
 - **Depth 7 is the lead:** the v14seeds/Gluzdov "seed bag" seeds are dead code, and only max_depth 6->7 in the engine-2 HGB rankers runs. It gained +0.003 (0.441->0.444) and +0.004 (0.446->0.450) on two bases, and no 0.451 notebook has it. Built as push_v22_depth7 (kernel aryanawasthiteykik/casmi26-v22-depth7, not pushed yet).
 - **Noise:** the public LB is about 124 molecules (one rank-1 hit is about 0.008), and GPU reruns of the same code differ by about ±0.003.
 - **Dead ends measured publicly:** ungated FRIGID rank-2 (-0.009), JESTR (-0.022), CFM-ID LOTUS (0 to -0.018), stepped-CE GLACIER (-0.004), MSEntropy (0), ChEBI+LIPID MAPS in another pipeline (-0.005).
+
+## Council verdict, 17 Oct (judge after a 2-round debate; the user is the jury)
+| Motion | Ruling | P(beats 0.451) |
+|---|---|---|
+| V22 + engine-2 max_depth 7 (single change) | **submit next** | 0.55 |
+| V22 + rel100 | reject (public sweep peaks at 150) | 0.20 |
+| E2R3 | later, only on a scored depth-7 base | 0.25 |
+| Bigger NP catalogue (NPAtlas/LOTUS) | later; first a CPU count of new structures | 0.25 |
+| Real seed bag | reject (seed models highly correlated) | – |
+| Gated FRIGID class-3 channel | research track, offline only | 0.15 |
+| Zenodo Enveda-180 extras, ICEBERG NIST atlas, GLACIER fine-tune | reject (no gain expected / NIST disqualification risk / weeks of work) | 0.15 |
+- Score rule for depth 7: >= 0.452 means it becomes the new base and a final pick; 0.451 is a tie and the user decides; <= 0.450 means stop the depth line, no re-runs for noise.
+- The local dummy test.parquet is all enveda-180 library hits, so it is useless as a validation set.
