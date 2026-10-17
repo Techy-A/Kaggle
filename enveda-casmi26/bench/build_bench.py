@@ -220,11 +220,14 @@ for _k, _v in list(globals().items()):
         print('BENCH snapshot skip', _k, repr(_e)[:80])
 print('BENCH snapshot', len(BENCH_SNAP), 'globals')
 import pickle as _pk
-try:
-    _pk.dump(BENCH_SNAP, open('/kaggle/working/bench_snap.pkl', 'wb'), protocol=4)
-    print('BENCH snapshot saved', os.path.getsize('/kaggle/working/bench_snap.pkl') // 2**20, 'MB')
-except Exception as _e:
-    print('BENCH snapshot not saved', repr(_e)[:120])
+_bsafe = {}
+for _k, _v in BENCH_SNAP.items():
+    try:
+        _pk.dumps(_v, protocol=4); _bsafe[_k] = _v
+    except Exception:
+        pass
+_pk.dump(_bsafe, open('/kaggle/working/bench_snap.pkl', 'wb'), protocol=4)
+print('BENCH snapshot saved', len(_bsafe), 'of', len(BENCH_SNAP), 'globals,', os.path.getsize('/kaggle/working/bench_snap.pkl') // 2**20, 'MB')
 '''
 
 SCORE_CELL = r'''"""BENCH: score every stage snapshot (main pass) against the hidden answers."""
@@ -265,27 +268,27 @@ REPLAY_CELL = r'''"""BENCH: replay cells 25-37 (CPU only) per variant from the p
 import copy as _copy, shutil as _sh, traceback as _tb
 BENCH_CELLS = __CELLS__
 BENCH_VARIANTS = __VARIANTS__
-_BMAIN = {k: _copy.deepcopy(v) for k, v in BENCH_SNAP.items()}
-for _name, _spec in BENCH_VARIANTS.items():
-    _t0 = time.time()
+_BQ_MAIN = {k: _copy.deepcopy(v) for k, v in BENCH_SNAP.items()}
+for _bq_name, _bq_spec in BENCH_VARIANTS.items():
+    _bq_t0 = time.time()
     try:
-        for _k, _v in _BMAIN.items():
-            globals()[_k] = _copy.deepcopy(_v)
-        for _idx in [i for i in sorted(BENCH_CELLS, key=int) if i not in _spec.get('skip', [])] + (['e2r3'] if _spec.get('e2r3') else []):
-            _src = BENCH_CELLS[_idx] if _idx != 'e2r3' else BENCH_E2R3
-            for _old, _new in _spec.get('edits', {}).get(str(_idx), []):
-                assert _src.count(_old) == 1, (_name, _idx, _old)
-                _src = _src.replace(_old, _new)
-            exec(compile(_src, f'<bench {_name} cell {_idx}>', 'exec'), globals())
-        BENCH_RESULTS[_name] = bench_score('submission.csv')
-        _sh.copy('submission.csv', f'/kaggle/working/bench_sub_{_name}.csv')
-        print('BENCH variant', _name, f'{time.time() - _t0:.0f}s',
-              {k: (round(v, 4) if isinstance(v, float) else v) for k, v in BENCH_RESULTS[_name].items() if k != 'rr'}, flush=True)
+        for _bq_k, _bq_v in _BQ_MAIN.items():
+            globals()[_bq_k] = _copy.deepcopy(_bq_v)
+        for _bq_idx in [i for i in sorted(BENCH_CELLS, key=int) if i not in _bq_spec.get('skip', [])] + (['e2r3'] if _bq_spec.get('e2r3') else []):
+            _bq_src = BENCH_CELLS[_bq_idx] if _bq_idx != 'e2r3' else BENCH_E2R3
+            for _bq_old, _bq_new in _bq_spec.get('edits', {}).get(str(_bq_idx), []):
+                assert _bq_src.count(_bq_old) == 1, (_bq_name, _bq_idx, _bq_old)
+                _bq_src = _bq_src.replace(_bq_old, _bq_new)
+            exec(compile(_bq_src, f'<bench {_bq_name} cell {_bq_idx}>', 'exec'), globals())
+        BENCH_RESULTS[_bq_name] = bench_score('submission.csv')
+        _sh.copy('submission.csv', f'/kaggle/working/bench_sub_{_bq_name}.csv')
+        print('BENCH variant', _bq_name, f'{time.time() - _bq_t0:.0f}s',
+              {k: (round(v, 4) if isinstance(v, float) else v) for k, v in BENCH_RESULTS[_bq_name].items() if k != 'rr'}, flush=True)
     except Exception:
-        print('BENCH variant FAILED', _name); _tb.print_exc()
+        print('BENCH variant FAILED', _bq_name); _tb.print_exc()
     json.dump(BENCH_RESULTS, open('/kaggle/working/bench_results.json', 'w'))
-    if _name in BENCH_RESULTS:
-        print('BENCH_JSON ' + json.dumps({_name: BENCH_RESULTS[_name]}), flush=True)
+    if _bq_name in BENCH_RESULTS:
+        print('BENCH_JSON ' + json.dumps({_bq_name: BENCH_RESULTS[_bq_name]}), flush=True)
 '''
 
 VARIANTS = {
@@ -318,6 +321,7 @@ def main():
     ap.add_argument('--leakfree', default='1')
     ap.add_argument('--tag', default='')
     ap.add_argument('--pseudo', default='np', choices=['np', 'unseen'])
+    ap.add_argument('--gen', type=int, default=0, help='engine-1 generation parents (0 = V22 default 6)')
     a = ap.parse_args()
     nb = json.load(open(os.path.join(a.v22_dir, 'notebook.ipynb')))
     md = json.load(open(os.path.join(a.v22_dir, 'kernel-metadata.json')))
@@ -337,6 +341,9 @@ def main():
     patch(cells, 19, WIN_OLD, WIN_NEW)
     patch(cells, 16, GATE_OLD, GATE_NEW)
     patch(cells, 16, BEST_OLD, BEST_NEW)
+    if a.gen:
+        patch(cells, 19, 'E = Engine(L, P, tfp, EngineCfg(generate=True), bank)',
+              f'E = Engine(L, P, tfp, EngineCfg(generate=True, gen_n_analog={a.gen}, gen_max_per_parent=100, gen_max_total={25 * a.gen}), bank)   # BENCH gen')
     replay = {str(i): src_of(cells[i]) for i in range(25, 38) if cells[i]['cell_type'] == 'code'}
     e2r3 = src_of(json.load(open(E2R3_FROM))['cells'][-1])
     assert 'E2R3' in e2r3
