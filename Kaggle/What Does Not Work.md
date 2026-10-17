@@ -41,3 +41,4 @@ Back to [[Kaggle Home]]. Read this before every new experiment.
 - **Ungated de novo (FRIGID) candidates at rank 2:** -0.009 on the LB.
 - CASMI26 rel>100 on V22: **0.445** vs 0.451 (17 Oct). Confirms the public sweep.
 - CASMI26 E2R3 (engine-2 second pick at rank 3) on V22: **0.450** vs 0.451 (17 Oct).
+- CASMI26 depth 7 on V22: 0.451, a tie. Its public +0.003/+0.004 on older bases did not stack on V22's engine-2 changes.

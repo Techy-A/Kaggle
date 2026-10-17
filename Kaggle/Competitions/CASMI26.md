@@ -80,3 +80,4 @@ See [[What Works]] and [[What Does Not Work]] (tag `#casmi26`).
    - Until about **17 Nov**: experimental submissions are allowed when they're backed by the bench or the council (still 3 team slots a day, 2 kept for Kino).
    - After 17 Nov: sure-shot only, and the picks get locked towards the mid-December deadline.
 3. Still open: if depth 7 ties at 0.451, does it replace the 0.443 as final pick 2? The judge says yes.
+- **17 Oct: V22 + depth 7 scored 0.451**, an exact tie with V22. The council gave it 55% to beat 0.451. Under the judge's rule a tie is the user's call on replacing the 0.443 as final pick 2 (the judge recommends replacing it). Depth 7 changes engine 2's top-1 on about 9% of molecules, so it is a genuinely different submission with the same public score: a useful hedge for the private split.
