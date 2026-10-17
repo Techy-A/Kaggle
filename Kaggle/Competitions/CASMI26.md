@@ -72,3 +72,4 @@ See [[What Works]] and [[What Does Not Work]] (tag `#casmi26`).
 - The local dummy test.parquet is all enveda-180 library hits, so it is useless as a validation set.
 
 - **17 Oct: Kino's V22 + rel100 scored 0.445** (-0.006 vs V22). The council predicted it (20% chance to beat 0.451). The PubChem gate stays at 150. #lb-proven
+- **17 Oct: Kino's V22 + rank-3 insert (E2R3) scored 0.450** (-0.001, a noise-level tie). The council predicted about 0 (25%). Shelved; retest only on a depth-7 base.
