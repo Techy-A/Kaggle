@@ -1,0 +1,105 @@
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+v17 popularity prior 0.25 200 /kaggle/input/datasets/dmitriigluzdov/casmi26-pubchem-popularity-prior
+rdkit wheel: ['/kaggle/input/datasets/metric/rdkit-2026-3-3-wheel/rdkit-2026.3.3-cp312-cp312-manylinux_2_28_x86_64.whl']
+ 
+rdkit 2026.03.3
+V4CODE /kaggle/input/datasets/ahmedberatozer/casmi26-v4b-models/code 
+V4MOD /kaggle/input/datasets/ahmedberatozer/casmi26-v4b-models 
+V3CODE /kaggle/input/datasets/ahmedberatozer/casmi26-v3-models/code 
+POOL /kaggle/input/datasets/ahmedberatozer/casmi26-v2-pool 
+PC /kaggle/input/datasets/ahmedberatozer/casmi26-pubchem-tier 
+COMP /kaggle/input/competitions/enveda-CASMI26-molecule-id-mass-spectra
+64 files match MANIFEST.json; families ['derivation', 'frag2', 'analog_struct', 'model_views', 'fragnet'] 49s
+Simulator RDKit wheel: /kaggle/input/datasets/ahmedberatozer/casmi26-iceberg/wheels/rdkit-2025.3.6-cp312-cp312-manylinux_2_28_x86_64.whl.ice
+E004_PREFLIGHT {"runtime_input_path": "/kaggle/input/competitions/enveda-CASMI26-molecule-id-mass-spectra", "python": "3.12.13", "rdkit": "2026.03.3", "gpu": "cpu (gen sweep)"}
+RERUN False | sig 654e030e4173780e945252b4a5adf70b | COMP /kaggle/working/smoke_comp | ICE_BUDGET 300
+BENCH answers 250: class3 130, class2 50, class1 70; spectra dropped for 189 ik14 (twins incl.); class-3 keys 138
+BENCH train rows kept 2,497,474; pseudo-test 1184 spectra / 250 molecules
+BENCH ready 303s | COMP /kaggle/working/bench_comp | POOL_DIR /kaggle/input/datasets/ahmedberatozer/casmi26-v2-pool
+rg 0: 130969 spectra, 8040441 peaks, total peaks 8040441, 14s
+rg 1: 131072 spectra, 7943857 peaks, total peaks 15984298, 19s
+rg 2: 131072 spectra, 7940932 peaks, total peaks 23925230, 24s
+rg 3: 131072 spectra, 7902093 peaks, total peaks 31827323, 29s
+rg 4: 131072 spectra, 7987759 peaks, total peaks 39815082, 34s
+rg 5: 131072 spectra, 7932300 peaks, total peaks 47747382, 39s
+rg 6: 131072 spectra, 7917009 peaks, total peaks 55664391, 45s
+rg 7: 131072 spectra, 7907716 peaks, total peaks 63572107, 50s
+rg 8: 130002 spectra, 8425648 peaks, total peaks 71997755, 55s
+rg 9: 126312 spectra, 10687844 peaks, total peaks 82685599, 59s
+rg 10: 126116 spectra, 6704034 peaks, total peaks 89389633, 62s
+rg 11: 125175 spectra, 10648758 peaks, total peaks 100038391, 70s
+rg 12: 128513 spectra, 4240347 peaks, total peaks 104278738, 76s
+rg 13: 130374 spectra, 4355139 peaks, total peaks 108633877, 79s
+rg 14: 130327 spectra, 4323379 peaks, total peaks 112957256, 81s
+rg 15: 130277 spectra, 4357582 peaks, total peaks 117314838, 84s
+rg 16: 123967 spectra, 3418332 peaks, total peaks 120733170, 87s
+rg 17: 126165 spectra, 3133778 peaks, total peaks 123866948, 90s
+rg 18: 123835 spectra, 3141556 peaks, total peaks 127008504, 92s
+rg 19: 47938 spectra, 4286765 peaks, total peaks 131295269, 93s
+rg 20: 0 spectra, 0 peaks, total peaks 131295269, 94s
+spectra 2497474 peaks 131295269 sid<0: 0 nm nan: 329
+done 97s
+casmi from /kaggle/input/datasets/ahmedberatozer/casmi26-v4b-models/code/casmi/__init__.py
+cache built 453s
+[Library] 2,497,474 spectra, 275,810 structures, 131,295,269 peaks (1.7s)
+[Pool] 710,701 structures, nbits 10226, frag yes (24.7s)
+BENCH engine-1 window hides 130 pool rows
+engine FP bank: fpnet_0 (A) FALLBACK
+[Engine] reps 443,544 (0.6s)
+derivation prior self-test mismatches: 0
+engine ready; ranker features 160 boosters 4 536s
+v19 pool popularity re-rank, mu 0.15 pool 710701
+  25/170 molecules 730s
+  50/170 molecules 951s
+  75/170 molecules 1184s
+  100/170 molecules 1429s
+  125/170 molecules 1625s
+  150/170 molecules 1841s
+  170/170 molecules 1965s
+errors 0 | popularity re-ranked lists 169
+GENSWEEP_JSON {"base": {"cfg": {"gen_n_analog": 6, "gen_min_sim": 0.3, "gen_max_per_parent": 60, "gen_max_total": 150}, "secs": 1429, "c1": {"n": 22, "mrr": 0.9772727272727273, "top1": 21, "hit25": 22, "hit60": 22, "mean_gen": 22.681818181818183}, "c2": {"n": 18, "mrr": 0.8925925925925926, "top1": 15, "hit25": 18, "hit60": 18, "mean_gen": 11.555555555555555}, "c3": {"n": 130, "mrr": 0.31153846153846154, "top1": 38, "hit25": 46, "hit60": 46, "mean_gen": 13.261538461538462}}}
+v19 pool popularity re-rank, mu 0.15 pool 710701
+  25/170 molecules 2159s
+  50/170 molecules 2484s
+  75/170 molecules 2766s
+  100/170 molecules 3091s
+  125/170 molecules 3346s
+  150/170 molecules 3703s
+  170/170 molecules 3853s
+errors 0 | popularity re-ranked lists 169
+GENSWEEP_JSON {"A12": {"cfg": {"gen_n_analog": 12, "gen_min_sim": 0.3, "gen_max_per_parent": 80, "gen_max_total": 300}, "secs": 1888, "c1": {"n": 22, "mrr": 0.9772727272727273, "top1": 21, "hit25": 22, "hit60": 22, "mean_gen": 24.318181818181817}, "c2": {"n": 18, "mrr": 0.8925925925925926, "top1": 15, "hit25": 18, "hit60": 18, "mean_gen": 15.166666666666666}, "c3": {"n": 130, "mrr": 0.38785103785103786, "top1": 47, "hit25": 59, "hit60": 59, "mean_gen": 17.26923076923077}}}
+v19 pool popularity re-rank, mu 0.15 pool 710701
+  25/170 molecules 4123s
+  50/170 molecules 4559s
+  75/170 molecules 4910s
+  100/170 molecules 5366s
+  125/170 molecules 5723s
+  150/170 molecules 6161s
+  170/170 molecules 6325s
+errors 0 | popularity re-ranked lists 169
+GENSWEEP_JSON {"B20": {"cfg": {"gen_n_analog": 20, "gen_min_sim": 0.3, "gen_max_per_parent": 100, "gen_max_total": 500}, "secs": 2472, "c1": {"n": 22, "mrr": 0.9545454545454546, "top1": 20, "hit25": 22, "hit60": 22, "mean_gen": 26.136363636363637}, "c2": {"n": 18, "mrr": 0.8912037037037037, "top1": 15, "hit25": 18, "hit60": 18, "mean_gen": 20.333333333333332}, "c3": {"n": 130, "mrr": 0.4297011322011322, "top1": 51, "hit25": 69, "hit60": 69, "mean_gen": 20.56923076923077}}}
+v19 pool popularity re-rank, mu 0.15 pool 710701
+  25/170 molecules 6675s
+  50/170 molecules 7181s
+  75/170 molecules 7646s
+  100/170 molecules 8314s
+  125/170 molecules 8784s
+  150/170 molecules 9395s
+  170/170 molecules 9576s
+errors 0 | popularity re-ranked lists 169
+GENSWEEP_JSON {"C30": {"cfg": {"gen_n_analog": 30, "gen_min_sim": 0.2, "gen_max_per_parent": 120, "gen_max_total": 800}, "secs": 3251, "c1": {"n": 22, "mrr": 0.9545454545454546, "top1": 20, "hit25": 22, "hit60": 22, "mean_gen": 29.045454545454547}, "c2": {"n": 18, "mrr": 0.8903903903903905, "top1": 15, "hit25": 17, "hit60": 18, "mean_gen": 26.5}, "c3": {"n": 130, "mrr": 0.44022613384604337, "top1": 52, "hit25": 72, "hit60": 72, "mean_gen": 23.76153846153846}}}
+/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+[NbConvertApp] Writing 53953 bytes to __notebook__.ipynb
+[NbConvertApp] Converting notebook __notebook__.ipynb to html
+[NbConvertApp] Writing 408879 bytes to __results__.html

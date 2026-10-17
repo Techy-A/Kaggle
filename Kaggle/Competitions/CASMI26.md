@@ -133,3 +133,17 @@ Of the 84 it didn't generate:
 Of the 46 generated, 39 aren't ranked first.
 
 **Next:** CPU-only Kaggle sweep (`aryanawasthiteykik/casmi26-gen-sweep`, no GPU quota) of gen_n_analog 6/12/20/30 with larger product caps. It measures generation recall and engine-1 rank per class.
+
+## Generator sweep (17 Oct, CPU, engine 1 only, np pseudo-test)
+| Setting | Class-3 hit@25 (of 130) | Class-3 top-1 | Class-3 MRR (engine 1) | Class 1 MRR | Class 2 MRR | CPU time |
+|---|---|---|---|---|---|---|
+| base (6 parents / 60 / 150) | 46 | 38 | 0.312 | 0.977 | 0.893 | 24 min |
+| A12 (12 / 80 / 300) | 59 | 47 | 0.388 | 0.977 | 0.893 | 31 min |
+| **B20 (20 / 100 / 500)** | **69** | **51** | **0.430** | 0.955 | 0.891 | 41 min |
+| C30 (30 / 120 / 800, min_sim 0.2) | 72 | 52 | 0.440 | 0.955 | 0.890 | 54 min |
+
+- Generation recall is structural, so it's trustworthy: **+23 novel answers generated with B20**.
+- Top-1 counts are inflated by the engine-1 FPNet leak, so the real gain is smaller.
+- Classes 1/2 cost almost nothing: one class-1 molecule drops from rank 1 to rank 2.
+- B20 takes about 1.7× the engine-1 time, which is fine within 9 h.
+- **Next:** V22 + B20 (`aryanawasthiteykik/casmi26-v22-gen20`, cell 19 only). The first push was blocked by the 2-GPU-session limit while the benches run.
