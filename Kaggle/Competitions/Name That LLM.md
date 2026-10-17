@@ -36,3 +36,16 @@ Back to [[Kaggle Home]]. Code in the repo: `name-that-llm/`. Team: with Kino Lut
 - Its trick: a third Qwen3-8B LoRA with a 5-way within-Claude head, plus "Claude gates" (when the blend predicts a Claude model, Claude-only models choose which one).
 
 - **17 Oct: 0.552 copy scored 0.552, rank 33 of 1,032.** With more than 1,000 teams the medal lines are percentages: bronze top 10% (rank 103, 0.547 now), silver top 5% (rank 51, 0.550 now), gold top 12 (0.555 now). 14 teams are above us and 23 are tied at 0.552.
+
+## 17 Oct night: merge experiment
+- zbigniewkirchner ntl-v6 (0.552) and lightningv08 0-551 (0.551) both extend Lucas v3 (0.549) with non-overlapping additions:
+  - zb: lora3 (Qwen3-8B LoRA with a Claude head) plus within-Claude gates, about 50 lines;
+  - lv: v3 run as a script, then a TabPFN complement (0.1 weight) and punctuation rules.
+- The merge (`aryanawasthiteykik/ntl-merge-tabpfn-claude-gates`, built by name-that-llm/merge/build_merge.py):
+  - lv shell, with lucas_reference.py replaced by the zb main code;
+  - the zb code saves its Claude-gate scores;
+  - the gate is re-applied last, after the TabPFN mix and punctuation rules.
+- Datasets are the union of both (all public).
+- Submitted once when its run completes (the user asked for a few NTL submissions).
+- Hoped-for result: the two gains stack, about +0.002–0.004, which would be the silver line (0.554).
+- Note: Lucas's own latest version already adds family gates and more proxy-generation datasets. Its score is unknown (bestPublicScore is still 0.549).

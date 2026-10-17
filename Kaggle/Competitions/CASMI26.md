@@ -195,3 +195,4 @@ Of the 46 generated, 39 aren't ranked first.
 - Reason: its class 2 is *all PubChem-only*, so loosening the PubChem gate always helps here. In the real test, many answers sit in the pool (class 1 and COCONUT class 2), and promoted PubChem guesses displace them.
 - **So don't trust this bench for PubChem-gate decisions.** Use it for engine/generation changes and as a class-2 'do no harm' check.
 - The snapshot was saved this time (381 MB), so later replays can run without a GPU.
+- **17 Oct, 11:53 pm IST: V22 + gen20 submitted (57321705).** All conditions passed: unseen-g20 bench class 2 0.260 vs 0.256 and class 3 0.013 vs 0.005, and the team was at 4 of 5 that UTC day.
