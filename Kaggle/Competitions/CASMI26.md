@@ -196,3 +196,19 @@ Of the 46 generated, 39 aren't ranked first.
 - **So don't trust this bench for PubChem-gate decisions.** Use it for engine/generation changes and as a class-2 'do no harm' check.
 - The snapshot was saved this time (381 MB), so later replays can run without a GPU.
 - **17 Oct, 11:53 pm IST: V22 + gen20 submitted (57321705).** All conditions passed: unseen-g20 bench class 2 0.260 vs 0.256 and class 3 0.013 vs 0.005, and the team was at 4 of 5 that UTC day.
+
+## gen20 result (landed 18 Oct, by 4:38 am IST): 0.441, worse
+- **V22 + gen20 (57321705): public 0.441**, against V22's 0.451. The forecast was 0.451–0.452. That is −0.010, 2.5 times the ±0.004 noise floor, so it's a real loss, not noise.
+- **Standing:**
+  - Our best stays 0.451, rank 102 of 3,500 (silver).
+  - Medal lines: gold (top 17) 0.459, silver (top 175) 0.451, bronze (top 350) 0.451.
+  - Silver and bronze both sit at 0.451, so a large group of teams is tied with the public notebook score. Our silver rests on tie order, and any private reshuffle of the tie group decides it.
+- **Why the bench was wrong (most likely):**
+  - The unseen bench has **no class-1 molecules** (answers with library spectra), and its class 2/3 gains were tiny (class 2 0.260 vs 0.256, class 3 0.013 vs 0.005 on 320 molecules).
+  - gen20 generates up to 500 candidates instead of 150, and those can push correct library and COCONUT answers out of the top ranks in the real test.
+  - So the bench measured a small gain where gen20 helps and was blind to where it hurts.
+- **Lessons:**
+  - (1) A bench that leaves out a test class can't approve a change that touches every class. Add a class-1 slice before trusting the bench for generation changes.
+  - (2) Gains below about 0.005 on the bench are not evidence.
+  - (3) Final picks stay V22 (0.451) and V22 + depth 7 (0.451). **gen20 is dropped.**
+

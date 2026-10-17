@@ -10,10 +10,10 @@ Back to [[Kaggle Home]].
 - After each result, update the running bias.
 - Adjust the next predictions by the running bias.
 
-**Running bias, as of 18 Oct (02:35 IST):**
-- New changes: **about 0.002 too optimistic** (mean of rel100, E2R3, depth 7 and the NTL merge: −0.004, −0.001, −0.002, −0.001).
+**Running bias, as of 18 Oct (4:40 am IST):**
+- New changes: **about 0.004 too optimistic** on average, median 0.002. Misses: rel100 −0.004, E2R3 −0.001, depth 7 −0.002, NTL merge −0.001, gen20 −0.012. gen20 is the outlier: a bench-backed change that lost 0.010 on the LB.
 - Exact copies: unbiased (3 of 3 within ±0.001).
-- Bias-adjusted ranges: 1 of 1 hit (the merge).
+- Bias-adjusted ranges: 1 of 2 hit (the merge hit; gen20 missed by 0.010).
 
 | Date | Comp | Submission | Type | Predicted | Actual | Miss (actual − predicted) |
 |---|---|---|---|---|---|---|
@@ -25,7 +25,7 @@ Back to [[Kaggle Home]].
 | 17 Oct | CASMI | V22 + depth 7, rerun by Kino | same code | 0.451 | 0.447 | −0.004 (noise or pinning) |
 | 17 Oct | NTL | 0.556 public copy | exact copy | 0.556 | **0.556** | 0.000 |
 | 17 Oct | NTL | merge (TabPFN + Claude gates, with punctuation) | new combination | 0.551 (bias-adjusted 0.549–0.551) | 0.550 | −0.001 (inside the adjusted range) |
-| 17 Oct | CASMI | V22 + gen20 | our own change | 0.453, **bias-adjusted 0.451–0.452** | pending | |
+| 17 Oct | CASMI | V22 + gen20 | our own change | 0.453, **bias-adjusted 0.451–0.452** | **0.441** | **−0.012** (−0.010 vs the adjusted range): far outside the noise floor |
 | 18 Oct | NTL | 0.556 + Sinkhorn α 0.25 | combination of two public tricks | 0.557, **bias-adjusted 0.556** | pending | |
 
 **Noise floor:** the same CASMI code scored 0.451 and 0.447 on two runs. Treat any single-submission difference under about 0.004 as noise.
