@@ -13,6 +13,7 @@ Goal: **Kaggle Expert**. Rule: every mistake gets written down once and never re
 - [[Networking]]: discussions, comments, teaming
 - [[Daily Routine]]
 - [[Study Guide/00 Study Guide Home|Study Guide]]: advanced-DS topics with figures, an 8-week plan and the [[Study Guide/10 Competition Playbook|competition playbook]]
+- [[Study Guide/reports/Kaggle grandmaster handbook|Kaggle Grandmaster Handbook]]: the full path to GM, with hacks, compute and plans for our competitions
 
 ## Competitions
 - [[Competitions/CASMI26|Enveda CASMI 2026]]: molecule ID from MS/MS (MRR@25)
