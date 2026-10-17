@@ -25,4 +25,5 @@ Goal: **Kaggle Expert**. Rule: every mistake gets written down once and never re
 3. Tag entries with the competition (`#casmi26`) and the type (`#lb-proven`, `#offline-only`, `#mistake`).
 
 ## Preferences
+- **Compute is free only:** Kaggle GPU (30 h/week per account), Kaggle CPU sessions, free Colab T4 as overflow (`colab/colab_runner.ipynb` runs any of our Kaggle job kernels unchanged and uploads the outputs to a private dataset). No paid GPUs.
 - **Always give times in IST** (UTC+5:30), never UTC.
