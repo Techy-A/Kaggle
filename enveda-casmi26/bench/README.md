@@ -8,7 +8,7 @@
 |---|---|---|
 | 1 | 28%, 70 molecules | only the query spectra |
 | 2 | 20%, 50 molecules | every spectrum of the structure and its tautomer twins; the structure stays a candidate (re-added to engine 2's pool) |
-| 3 | 52%, 130 molecules | additionally removed from the v4 pool (engine 1 + the PubChem gate window), COCONUT + ChEBI/LMSD (engine 2), and the PubChem channel |
+| 3 | 52%, 130 molecules | additionally hidden from engine 1's candidate window (its own `drop_pid` mechanism, extended to a set), from the PubChem gate's best-pool score, from COCONUT + ChEBI/LMSD (engine 2) and from the PubChem channel |
 
 Generated candidates are not filtered, because generating the answer is a real skill.
 
@@ -42,6 +42,17 @@ The bench is trusted only if it ranks these the same way.
 - 250 answers (130/50/70);
 - 0 np rows and 0 class-2/3 spectra left;
 - all 70 class-1 structures keep their other spectra;
-- 130 pool rows dropped, and all 130 class-3 answers were in the pool beforehand;
+- all 130 class-3 answers are in the v4 pool;
 - frag/fp re-indexing verified;
 - about 7 min on 4 CPUs.
+
+**Run 1 (17 Oct)** failed in cell 19. The fe_v4 feature caches (`res/frag2`, `analog_struct`, `fragnet`) are row-aligned to the v4 pool, so the pool files can't be filtered.
+- Fix: pool files unchanged; the class-3 answers are hidden from `P.window` instead.
+- Engine 2 and the PubChem channel ran correctly before the crash:
+  - 126 of 130 class-3 answers dropped from COCONUT/bio;
+  - 2 class-2 answers re-added (the other 48 were already in COCONUT/bio);
+  - leak-free FPNets loaded;
+  - 355,926 ranker rows without the np panel.
+- Timings: engine 2 about 43 min, PubChem channel about 36 min.
+
+Kernel outputs (kaggleusercontent.com) are blocked from the sandbox, so the bench prints `BENCH_JSON` lines into the run log and `extract_log.py` collects them.
