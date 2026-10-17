@@ -153,3 +153,13 @@ Of the 46 generated, 39 aren't ranked first.
 - The calibration replays failed: a V22 cell overwrote the replay loop's `_spec` global (name clash), and the snapshot pickle failed on a pandas itertuples row.
 - Both are fixed in build_bench.py (`_bq_*` names, per-key pickling).
 - Next: `casmi26-bench-unseen-g20` = unseen pseudo-test + gen20 + fixed replays. Its main pass compared with unseen v1 gives an honest gen20 vs V22 comparison, and its replays give the calibration.
+
+## Unseen bench v1 (17 Oct, 8:45 pm IST): V22 unchanged on 320 Enveda-180 structures absent from train (leak-free)
+| Class | n | MRR | Top-1 | Hit@25 | Answer in the PubChem list | Lost in fusion |
+|---|---|---|---|---|---|---|
+| 2 (reachable only through PubChem) | 128 | **0.257** | 24 | 55 | 66 | **11** |
+| 3 (hidden everywhere) | 192 | **0.005** | 0 | 3 | – | – |
+
+- **Class 2 has a concrete leak point.** The PubChem channel *has* the answer for 66 of 128, but only 55 survive into the final 25. The other 11 are dropped by the gated merge, about +0.034 on the bench. A further 62 aren't in PubChem's top 25 at all.
+- **Class 3 is hopeless on drug-like molecules:** 3 of 192 in the list, nearest candidates mostly at Tanimoto < 0.55. Engine 1's natural-product edit rules don't fit synthetic library chemistry. The real test is natural products (host), so this set is out of domain for generation but the right control for "does a change hurt class 2".
+- **Next:** unseen-g20 (V22 + gen20 + fixed replays) checks that gen20 doesn't hurt class 2 and gives the calibration replays.
