@@ -172,7 +172,7 @@ Model-attribution papers fine-tune embedding classifiers and show near-perfect c
 ### Gaps
 - Sun et al.'s per-class confusion matrices (Appendix B.1) were not extracted, so per-model error shares for chat APIs are not listed.
 - M4GT-Bench Task 2 per-detector accuracy/F1 numbers were not extracted from tables (only the qualitative ranking of hard generators).
-- I found no primary text-domain (non-code) study that isolates same-release pairs such as GPT-4o vs GPT-4o-mini. A TextPulse web preprint claims version-specific "modelolects" but is not peer-reviewed ([TextPulse](https://textpulse.ai/research/modelolect)) and was not verified.
+- I found no primary text-domain (non-code) study that isolates same-release pairs such as GPT-4o vs GPT-4o-mini. A TextPulse web preprint claims version-specific "modelolects" but is not peer-reviewed ([TextPulse](https://textpulse.ai/research/modelometry)) and was not verified.
 
 ---
 

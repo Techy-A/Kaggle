@@ -25,6 +25,7 @@ Back to [[Kaggle Home]].
 | 08 | [[08 Cheminformatics & MS]] | InChIKey14, tautomers, derive rules | tautomers |
 | 09 | [[09 ML Engineering & Reproducibility]] | pinning, the 0.451 vs 0.447 rerun, Kaggle limits | none |
 | 10 | [[10 Competition Playbook]] | **the decision rules**, one page | none |
+| 11 | [[reports/Building and introspecting great models\|Building & introspecting great models]] (research report) | how top practitioners do error analysis, introspection, data audits and final picks, plus action tables for CASMI and NTL | none |
 
 ## Eight-week plan (weeks start Monday)
 This plan fits the [[Daily Routine]]: one Kaggle Learn lesson and 10 O'Reilly pages a day, plus **one study block of about 45 min** taken from this guide.
