@@ -120,3 +120,16 @@ V22 on 250 np-examples, answers hidden per class.
 - Engine comparisons and fusion-weight conclusions are **not valid** on this bench. Within-pipeline post-processing replays are still to be calibrated (bench v3).
 
 **Fix in progress:** a leak-free pseudo-test from the Enveda-180 Zenodo release, using structures absent from train.parquet (about 800 timsTOF molecules). They're drug-like, not natural products, but no model has seen them.
+
+## Near-miss analysis (17 Oct, bench run 2, structure-only, so it isn't affected by the model leak)
+Of the 130 class-3 molecules:
+- **100** are reachable by engine 1's *own* derive rulebook (≤2 steps) from one of the top-6 most similar training structures (94 have such a parent at Tanimoto ≥ 0.7);
+- engine 1 actually generated only **46**.
+
+Of the 84 it didn't generate:
+- **55 are reachable from a better parent**. This is a *parent-selection* problem: engine 1 uses only its top-6 spectral analogs as parents (gen_n_analog=6, ≤60 products per parent, ≤150 in total);
+- 29 are unreachable (rulebook gap or far parent; the formula deltas are scattered).
+
+Of the 46 generated, 39 aren't ranked first.
+
+**Next:** CPU-only Kaggle sweep (`aryanawasthiteykik/casmi26-gen-sweep`, no GPU quota) of gen_n_analog 6/12/20/30 with larger product caps. It measures generation recall and engine-1 rank per class.
