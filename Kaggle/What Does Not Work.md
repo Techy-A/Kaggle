@@ -44,3 +44,4 @@ Back to [[Kaggle Home]]. Read this before every new experiment.
 - CASMI26 depth 7 on V22: 0.451, a tie. Its public +0.003/+0.004 on older bases did not stack on V22's engine-2 changes.
 - Adding NPAtlas to CASMI26 candidates: only 485 of 36k structures are new to the V22 pool (17 Oct count). Not worth a slot.
 - Comparing raw InChIKeys to decide 'new molecule': 6,175 'new' by raw key vs 485 by the metric's tautomer-canonical key. Always use the metric identity.
+- **Validating on molecules the models saw in other libraries.** All 250 enveda-np-examples structures have about 170 other spectra each in train, so every model trained on train.parquet knows them. A 'class-3 simulation' on them flatters any leaky model. Pick pseudo-test molecules absent from train entirely.

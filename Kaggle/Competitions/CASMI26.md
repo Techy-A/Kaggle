@@ -82,3 +82,41 @@ See [[What Works]] and [[What Does Not Work]] (tag `#casmi26`).
 3. Still open: if depth 7 ties at 0.451, does it replace the 0.443 as final pick 2? The judge says yes.
 - **17 Oct: V22 + depth 7 scored 0.451**, an exact tie with V22. The council gave it 55% to beat 0.451. Under the judge's rule a tie is the user's call on replacing the 0.443 as final pick 2 (the judge recommends replacing it). Depth 7 changes engine 2's top-1 on about 9% of molecules, so it is a genuinely different submission with the same public score: a useful hedge for the private split.
 - **17 Oct: NPAtlas coverage check (council motion M4 gate).** NPAtlas has 36,454 natural products, 34,587 of them in the test mass range. Only **485** are missing from V22's v4 pool (train + COCONUT) by the metric's own identity: 6,175 differ by raw InChIKey, but nearly all of those are tautomer or representation duplicates. Some of the 485 are also reachable through the PubChem channel. **Verdict: an NPAtlas catalogue is not worth building.** Candidate *coverage from databases* is basically saturated, so the gap is molecules that are in no database at all.
+
+## Bench run 2 (17 Oct): first error breakdown
+V22 on 250 np-examples, answers hidden per class.
+
+**MRR by stage:**
+
+| Stage | MRR |
+|---|---|
+| after fusion | 0.525 |
+| E006 control | 0.529 |
+| E006 output | 0.528 |
+| final (+E2R2) | **0.519** |
+
+**Per class, final:**
+
+| Class | MRR | Top-1 | In top 25 |
+|---|---|---|---|
+| 1 | 0.967 | 66/70 | 70/70 |
+| 2 | 0.849 | 39/50 | 50/50 |
+| 3 | **0.151** | **7/130** | 51/130 |
+
+**Loss buckets:**
+- *missing* is 79 molecules (all class 3): +0.316 MRR if all were fixed. 42 of them are near misses (nearest candidate at Tanimoto ≥ 0.7).
+- *ranked* is 59 molecules: +0.165.
+- *fusion* is 0.
+
+**Class-3 recall by source:**
+- engine 1 base: 46 of 130, nearly all *generated* derivatives, because the answers are hidden from the pool;
+- engine 2: 6;
+- PubChem channel: 0.
+
+**Leak caveat:**
+- Engine 1 alone puts the class-3 answer first 38 times (MRR 0.31 vs 0.15 final), and on class 2 it scores 0.95 vs 0.85 final. So on the bench, every later stage seems to *hurt*.
+- That contradicts the LB, where each layer gained.
+- Cause: **all 250 np structures have other-library spectra in train** (median 168 each). Engine 1's FPNet A, v4b ranker and fe models have seen them, while engine 2 was given leak-free models. The bench therefore favours engine 1.
+- Engine comparisons and fusion-weight conclusions are **not valid** on this bench. Within-pipeline post-processing replays are still to be calibrated (bench v3).
+
+**Fix in progress:** a leak-free pseudo-test from the Enveda-180 Zenodo release, using structures absent from train.parquet (about 800 timsTOF molecules). They're drug-like, not natural products, but no model has seen them.
