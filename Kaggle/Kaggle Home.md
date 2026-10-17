@@ -6,7 +6,7 @@ tags: [kaggle, index]
 Goal: **Kaggle Expert**. Rule: every mistake gets written down once and never repeated.
 
 ## Notes
-- [[What Works]]: proven by a leaderboard score or a clean A/B
+- [[What Works]] · [[Notebook Lineages]]: proven by a leaderboard score or a clean A/B
 - [[What Does Not Work]]: tried, measured, failed (with numbers)
 - [[Code Competition Mechanics]]: submissions, runtimes, environments, gotchas
 - [[Validation]]: building CV that predicts the LB
