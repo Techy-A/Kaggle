@@ -42,3 +42,5 @@ Back to [[Kaggle Home]]. Read this before every new experiment.
 - CASMI26 rel>100 on V22: **0.445** vs 0.451 (17 Oct). Confirms the public sweep.
 - CASMI26 E2R3 (engine-2 second pick at rank 3) on V22: **0.450** vs 0.451 (17 Oct).
 - CASMI26 depth 7 on V22: 0.451, a tie. Its public +0.003/+0.004 on older bases did not stack on V22's engine-2 changes.
+- Adding NPAtlas to CASMI26 candidates: only 485 of 36k structures are new to the V22 pool (17 Oct count). Not worth a slot.
+- Comparing raw InChIKeys to decide 'new molecule': 6,175 'new' by raw key vs 485 by the metric's tautomer-canonical key. Always use the metric identity.
