@@ -49,3 +49,38 @@ Back to [[Kaggle Home]]. Code in the repo: `name-that-llm/`. Team: with Kino Lut
 - Submitted once when its run completes (the user asked for a few NTL submissions).
 - Hoped-for result: the two gains stack, about +0.002–0.004, which would be the silver line (0.554).
 - Note: Lucas's own latest version already adds family gates and more proxy-generation datasets. Its score is unknown (bestPublicScore is still 0.549).
+
+## NTL research (17 Oct night, research agent)
+**Public notebooks above 0.552**, all forks of zbigniewkirchner v6:
+
+| Notebook | Public LB | Change |
+|---|---|---|
+| obstacledeveloper centered stylegram | **0.556** | prompt-centered LinearSVC twin of the stylegram, *replacing* it on clusters of 2–18 |
+| liurouhan v11 | **0.555** | BALANCE_ALPHA 0.5 → 0.25 only |
+| lightningv08 | 0.554 | centered stylegram + α 0.25 + TabPFN + punctuation |
+
+**No gain:**
+- punctuation veto (0.552; Lucas says −0.003 to −0.005);
+- DeBERTa complement;
+- uncertainty-adaptive Claude gate;
+- Hungarian matching;
+- GPT gate (−0.001).
+
+**Hints from the discussions:**
+- The hidden test has about **2–3 passages per prompt** (not 18). Size-weighted centering `(n-1)/(n+1)` beat hard centering, 0.460 vs 0.427.
+- Use extra Claude data only to choose *which* Claude.
+- About half of all errors stay within the same lab (Gemini Flash versions, GLM ↔ Claude-opus, GPT versions).
+
+**Ranked ideas:**
+1. Centered stylegram + α 0.25 (unpublished combination; est. 0.556–0.559).
+2. Size-weighted centering.
+3. prvsiyan's extended 18-model dataset (new, unused, licence unchecked).
+4. Gemini-Flash / GLM gates.
+5. Token log-prob (Binoculars-style) features.
+
+TabPFN weights are under a non-commercial licence, which is a winner-licence risk.
+
+**Actions (night of 17 Oct):**
+- exact pinned copy of the 0.556 (`ntl-0-556-pinned-copy`), auto-submit;
+- `ntl-556-sinkhorn-alpha-025` (idea 1), pushed when a GPU slot frees, then submitted;
+- the merge experiment (with punctuation, expected weak) is still auto-submitting as an information point.
