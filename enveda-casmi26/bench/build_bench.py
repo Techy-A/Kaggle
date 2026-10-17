@@ -99,6 +99,35 @@ E004_PREFLIGHT['input_ids'] = sorted(ANS.molecule_id); E004_PREFLIGHT['runtime_i
 print(f'BENCH ready {time.time() - _BT0:.0f}s | COMP {COMP} | POOL_DIR {POOL_DIR}', flush=True)
 '''
 
+
+BENCH_CELL_UNSEEN = r"""'''BENCH (unseen): pseudo-test = Enveda-180 Zenodo spectra of structures absent from train.parquet. No model has seen
+them, so V22 runs unchanged (original models, full train library). Class 3 answers are hidden from every candidate
+source; class 2 answers stay reachable (they are PubChem structures). Never submitted.'''
+import json, shutil
+import numpy as np, pandas as pd
+_BT0 = time.time()
+BENCH_DIR = '/kaggle/working/bench_comp'; os.makedirs(BENCH_DIR, exist_ok=True)
+_U = os.path.dirname(find('unseen_test.parquet'))
+_TRAIN = os.path.realpath(os.path.join(COMP, 'train.parquet'))
+shutil.copy(os.path.join(_U, 'unseen_test.parquet'), os.path.join(BENCH_DIR, 'test.parquet'))
+if not os.path.exists(os.path.join(BENCH_DIR, 'train.parquet')):
+    os.symlink(_TRAIN, os.path.join(BENCH_DIR, 'train.parquet'))
+ANS = pd.read_csv(os.path.join(_U, 'unseen_answers.csv'), dtype=str, keep_default_na=False)
+ANS['cls'] = ANS.cls.astype(int)
+pd.DataFrame({'molecule_id': sorted(ANS.molecule_id), 'smiles': ';'.join(['CCO'] * 25)}).to_csv(
+    os.path.join(BENCH_DIR, 'sample_submission.csv'), index=False)
+ANS.to_csv('/kaggle/working/bench_answers.csv', index=False)
+_c3 = ANS[ANS.cls == 3]
+DROP3 = set(_c3.metric_key) | set(_c3.inchikey14)
+json.dump(sorted(DROP3), open('/kaggle/working/bench_drop3.json', 'w'))
+os.environ['BENCH_DROP3'] = '/kaggle/working/bench_drop3.json'
+os.environ['BENCH_LEAKFREE'] = '__LEAKFREE__'
+os.environ['BENCH_DEPTH'] = '__DEPTH__'
+COMP = BENCH_DIR; IS_RERUN = True; ICE_BUDGET = 5400
+E004_PREFLIGHT['input_ids'] = sorted(ANS.molecule_id); E004_PREFLIGHT['runtime_input_path'] = BENCH_DIR
+print(f'BENCH unseen ready {time.time() - _BT0:.0f}s | {len(ANS)} molecules', ANS.cls.value_counts().to_dict(), flush=True)
+"""
+
 # engine-2 patches, applied to the ENG_FILES strings and the runner source inside cell 14
 ENG_PATCH = r'''
 # ---- BENCH patches for engine 2 (class-3 drop, class-2 re-add, ranker rows without the np panel) ----
@@ -288,6 +317,7 @@ def main():
     ap.add_argument('--depth', default='')
     ap.add_argument('--leakfree', default='1')
     ap.add_argument('--tag', default='')
+    ap.add_argument('--pseudo', default='np', choices=['np', 'unseen'])
     a = ap.parse_args()
     nb = json.load(open(os.path.join(a.v22_dir, 'notebook.ipynb')))
     md = json.load(open(os.path.join(a.v22_dir, 'kernel-metadata.json')))
@@ -310,7 +340,7 @@ def main():
     replay = {str(i): src_of(cells[i]) for i in range(25, 38) if cells[i]['cell_type'] == 'code'}
     e2r3 = src_of(json.load(open(E2R3_FROM))['cells'][-1])
     assert 'E2R3' in e2r3
-    bench = BENCH_CELL.replace('__LEAKFREE__', a.leakfree).replace('__DEPTH__', a.depth)
+    bench = (BENCH_CELL if a.pseudo == 'np' else BENCH_CELL_UNSEEN).replace('__LEAKFREE__', a.leakfree).replace('__DEPTH__', a.depth)
     title = {'cell_type': 'markdown', 'metadata': {}, 'source': [
         f'# CASMI26 local test bench{(" (" + a.tag + ")") if a.tag else ""}: V22 on hidden-answer natural products\n', '\n',
         'Never submitted. Runs V22 on the 250 enveda-np-examples natural products as a pseudo-test with the answers '
@@ -325,6 +355,8 @@ def main():
     slug = 'casmi26-bench' + (f'-{a.tag}' if a.tag else '')
     md.update(id=f'aryanawasthiteykik/{slug}', title=f'CASMI26 bench{(" " + a.tag) if a.tag else ""}', is_private=True)
     md.pop('id_no', None)
+    if a.pseudo == 'unseen' and 'aryanawasthiteykik/casmi26-bench-unseen-e180' not in md['dataset_sources']:
+        md['dataset_sources'].append('aryanawasthiteykik/casmi26-bench-unseen-e180')
     json.dump(md, open(os.path.join(a.out_dir, 'kernel-metadata.json'), 'w'), indent=1)
     print('wrote', a.out_dir, len(out), 'cells, kernel', md['id'])
 
