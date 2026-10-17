@@ -73,3 +73,10 @@ See [[What Works]] and [[What Does Not Work]] (tag `#casmi26`).
 
 - **17 Oct: Kino's V22 + rel100 scored 0.445** (-0.006 vs V22). The council predicted it (20% chance to beat 0.451). The PubChem gate stays at 150. #lb-proven
 - **17 Oct: Kino's V22 + rank-3 insert (E2R3) scored 0.450** (-0.001, a noise-level tie). The council predicted about 0 (25%). Shelved; retest only on a depth-7 base.
+
+## Jury decisions (user, 17 Oct)
+1. **GPU budget:** about 15 h of our 30 h a week go to research (bench + the novel-molecule track). The rest goes to safe runs and copies. Kino's 30 h covers NTL copies where possible.
+2. **Strategy: play hard for a month, then play safe.**
+   - Until about **17 Nov**: experimental submissions are allowed when they're backed by the bench or the council (still 3 team slots a day, 2 kept for Kino).
+   - After 17 Nov: sure-shot only, and the picks get locked towards the mid-December deadline.
+3. Still open: if depth 7 ties at 0.451, does it replace the 0.443 as final pick 2? The judge says yes.
