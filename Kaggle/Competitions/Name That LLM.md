@@ -84,3 +84,14 @@ TabPFN weights are under a non-commercial licence, which is a winner-licence ris
 - exact pinned copy of the 0.556 (`ntl-0-556-pinned-copy`), auto-submit;
 - `ntl-556-sinkhorn-alpha-025` (idea 1), pushed when a GPU slot frees, then submitted;
 - the merge experiment (with punctuation, expected weak) is still auto-submitting as an information point.
+
+**Results (landed 18 Oct, by 02:35 IST):**
+- 0.556 exact pinned copy: **0.556**, our new best (was 0.552).
+  - Rank **53 of 1356**: back in **silver**.
+  - Medal lines: gold (top 12) 0.560, silver (top 67) 0.555, bronze (top 135) 0.552.
+  - 59 teams sit at 0.556 or above; 30 are above it.
+  - 26 teams sit at 0.555, just under the silver line. One more step up by the field pushes us out.
+- Merge (TabPFN/punctuation + lora3/Claude gates): **0.550**, below both parents (0.551, 0.552).
+  - Merging two notebooks that share the same base signal doesn't add.
+  - It is out of the finals anyway (TabPFN licence).
+- Next: α 0.25 on the 0.556 line submits at 5:37 am IST (forecast 0.556 after the bias adjustment).

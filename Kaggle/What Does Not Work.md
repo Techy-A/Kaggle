@@ -45,3 +45,4 @@ Back to [[Kaggle Home]]. Read this before every new experiment.
 - Adding NPAtlas to CASMI26 candidates: only 485 of 36k structures are new to the V22 pool (17 Oct count). Not worth a slot.
 - Comparing raw InChIKeys to decide 'new molecule': 6,175 'new' by raw key vs 485 by the metric's tautomer-canonical key. Always use the metric identity.
 - **Validating on molecules the models saw in other libraries.** All 250 enveda-np-examples structures have about 170 other spectra each in train, so every model trained on train.parquet knows them. A 'class-3 simulation' on them flatters any leaky model. Pick pseudo-test molecules absent from train entirely.
+- **Merging two public NTL notebooks that share the same base (lora3/Claude-gate line + TabPFN/punctuation line):** 0.550, below both parents (0.551, 0.552). Merges need diverse signals, not two takes on the same one. #lb-proven #ntl
