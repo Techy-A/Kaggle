@@ -12,6 +12,7 @@ Goal: **Kaggle Expert**. Rule: every mistake gets written down once and never re
 - [[Validation]]: building CV that predicts the LB
 - [[Networking]]: discussions, comments, teaming
 - [[Daily Routine]]
+- [[Study Guide/00 Study Guide Home|Study Guide]]: advanced-DS topics with figures, an 8-week plan and the [[Study Guide/10 Competition Playbook|competition playbook]]
 
 ## Competitions
 - [[Competitions/CASMI26|Enveda CASMI 2026]]: molecule ID from MS/MS (MRR@25)
