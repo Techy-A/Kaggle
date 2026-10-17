@@ -18,7 +18,8 @@ Back to [[Kaggle Home]]. Code in the repo: `name-that-llm/`. Team: with Kino Lut
 | 15 Oct | TF-IDF char 1–5 + word 1–2, logistic regression | 0.342 | **0.345** |
 | 15 Oct | + prompt-group Hungarian assignment (one model per prompt) | 0.433 | 0.335 |
 | 15–16 Oct | Kino: name-that-llm-v5 (6 versions) | – | 0.461–0.492 |
-| 16 Oct | Kino: exact copy of lightningv08 0.531 Qwen-LoRA ensemble (pinned env) | – | **0.532** (rank 110/735) |
+| 16 Oct | Kino: exact copy of lightningv08 0.531 Qwen-LoRA ensemble (pinned env) | – | 0.532 (rank 110/735) |
+| 17 Oct | Us: exact pinned copy of zbigniewkirchner/ntl-v6 | – | **0.552** (rank 33/1,032, silver zone) |
 
 ## Lessons
 - **Prompt-grouped CV tracks the LB for the classifier** (0.342 vs 0.345). Trust it.
@@ -33,3 +34,5 @@ Back to [[Kaggle Home]]. Code in the repo: `name-that-llm/`. Team: with Kino Lut
 - Public notebooks moved overnight: zbigniewkirchner/ntl-v6 **0.552**, lightningv08 0-551 (TabPFN), kirilltym 0.550, lucasboesen 0.549. The planned 0.541 copy is obsolete.
 - Built an exact pinned copy of ntl-v6 (aryanawasthiteykik/ntl-0-552-pinned-copy, image 2757e0..., all inputs public; uses the public Claude-API passages dataset, which the rules allow as free public external data). Pushed from our account after the weekly GPU quota reset. A watcher submits it once with `submission.parquet` when the run completes.
 - Its trick: a third Qwen3-8B LoRA with a 5-way within-Claude head, plus "Claude gates" (when the blend predicts a Claude model, Claude-only models choose which one).
+
+- **17 Oct: 0.552 copy scored 0.552, rank 33 of 1,032.** With more than 1,000 teams the medal lines are percentages: bronze top 10% (rank 103, 0.547 now), silver top 5% (rank 51, 0.550 now), gold top 12 (0.555 now). 14 teams are above us and 23 are tied at 0.552.
