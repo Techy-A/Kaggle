@@ -27,7 +27,7 @@ Variants and their known public LB scores (the calibration targets):
   glm_gate    + GLM+Claude gate on glm9b L8+L3 (lambda 1)                                     LB 0.555
 The sim is trusted only if it orders these the way the LB did; then new ideas are tested against 'base'.
 
-Usage: python 04_blend_sim.py [--draws 10] [--sizes 4 5 6]
+Usage: python 04_blend_sim.py [--draws 10] [--sizes 4 5 6] [--screen] [--v559]
 """
 import argparse
 import glob
@@ -110,6 +110,8 @@ def lora_oof(pattern, n, idx_of, K):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--draws', type=int, default=10)
+    ap.add_argument('--screen', action='store_true')   # also score the 18 Oct screening ideas (plain LM heads, scales, half)
+    ap.add_argument('--v559', action='store_true')   # also score the public 0.559 notebook's changes, one at a time
     ap.add_argument('--sizes', type=int, nargs='+', default=[4, 5, 6])   # passages per prompt; 4-6 reproduces every LB sign, 2-3 does not
     args = ap.parse_args()
 
@@ -148,6 +150,15 @@ def main():
     XA_tr, XA_api = XA[:n], XA[n:]
     y_api = api.model.map({l: i for i, l in enumerate(labels)}).values
     cl_idx = np.array([i for i, l in enumerate(labels) if l.startswith('claude')])
+    if args.v559:   # the 0.559 notebook's family gates: train rows + external rows at weight 0.25, balanced LinearSVC
+        prv = pd.read_csv(os.path.join(HERE, 'data/prvsiyan/passages_clean.csv'))   # CC BY 4.0, no train prompts
+        prv = prv[prv.model.isin(labels) & prv.text.notna()]
+        ext_y = np.concatenate([y_api, prv.model.map({l: i for i, l in enumerate(labels)}).values])
+        XB = sim.stylegram_features(texts.tolist() + api.text.astype(str).tolist() + prv.text.astype(str).tolist())
+        XB_tr, XB_ext = XB[:n], XB[n:]
+        lab_idx = lambda pre: np.array([i for i, l in enumerate(labels) if l.startswith(pre)])
+        FAM = [('claude', lab_idx('claude'), 0.5), ('gpt', lab_idx('gpt'), 1.0), ('gemini', lab_idx('gemini'), 1.0),
+               ('glm', lab_idx('glm'), 0.5)]
 
     fold = np.empty(n, int)
     for k, (_, va) in enumerate(GroupKFold(5).split(X, y, pid)):
@@ -158,7 +169,7 @@ def main():
         tr = fold != k
         m = dict(svc=LinearSVC(C=0.5, random_state=42, max_iter=4000).fit(X[tr], y[tr]),
                  svc_c=LinearSVC(C=0.5, random_state=42, max_iter=4000).fit(sim.center(X[tr], pid[tr]), y[tr]))
-        for key, C in [('debv3l', 0.005), ('electl', 0.005)]:
+        for key, C in [('debv3l', 0.005), ('electl', 0.005)] + ([('q3_8b', 0.0025), ('glm9b', 0.0025)] if args.screen else []):
             sc = StandardScaler().fit(E[key][tr])
             m[key] = lr(C).fit(sc.transform(E[key][tr]), y[tr])
         for key, C in [('q3_8b', 0.0025), ('glm9b', 0.0025), ('debv3l', 0.005)]:   # centered twins
@@ -171,6 +182,11 @@ def main():
         c = tr & np.isin(y, cl_idx)
         m['claude'] = LinearSVC(C=0.5, random_state=42, max_iter=4000).fit(vstack([XA_tr[c], XA_api]),
                                                                              np.concatenate([y[c], y_api]))
+        for fam, fidx, C in (FAM if args.v559 else []):   # API rows are all Claude, so only the Claude gate gets them
+            r, e = tr & np.isin(y, fidx), np.isin(ext_y, fidx)
+            m[f'fam_{fam}'] = LinearSVC(C=C, class_weight='balanced', random_state=42, max_iter=4000).fit(
+                vstack([XB_tr[r], XB_ext[e]]), np.concatenate([y[r], ext_y[e]]),
+                sample_weight=np.r_[np.ones(r.sum()), np.full(e.sum(), 0.25)])
         M.append(m)
         print(f'fold {k} fitted', flush=True)
 
@@ -195,19 +211,25 @@ def main():
         twin = {key: np.zeros((len(rows), K)) for key in ('q3_8b', 'glm9b', 'debv3l')}
         gate = np.zeros((len(rows), K))
         dc = np.zeros((len(rows), len(cl_idx)))
-        std = {key: (E[key][rows] - E[key][rows].mean(0)) / (E[key][rows].std(0) + 1e-6) for key in ('debv3l', 'electl')}
+        fam_s = {f: np.zeros((len(rows), len(fidx))) for f, fidx, _ in (FAM if args.v559 else [])}
+        heads = ('debv3l', 'electl') + (('q3_8b', 'glm9b') if args.screen else ())
+        lm = {key: np.zeros((len(rows), K)) for key in heads[2:]}   # plain LM heads (weight 0 in the 0.556 notebook)
+        std = {key: (E[key][rows] - E[key][rows].mean(0)) / (E[key][rows].std(0) + 1e-6) for key in heads}
         cen = {key: group_center(E[key][rows], G) for key in twin}
         for k in range(5):
             mk = fold[rows] == k
             m = M[k]
             lp_s[mk] = sim.svc_logp(m['svc'], X[rows][mk], K)
             lp_sc[mk] = sim.svc_logp(m['svc_c'], Xc_s[mk], K)
-            for key in ('debv3l', 'electl'):   # test-set standardization, as fit_head
-                lp[key][mk] = np.log(np.clip(m[key].predict_proba(std[key][mk]), 1e-9, 1))
+            for key in heads:   # test-set standardization, as fit_head
+                (lp if key in lp else lm)[key][mk] = np.log(np.clip(m[key].predict_proba(std[key][mk]), 1e-9, 1))
             for key in twin:
                 csc, clf = m[f'{key}_c']
                 twin[key][mk] = np.log(np.clip(clf.predict_proba(csc.transform(cen[key][mk])), 1e-9, 1))
             dc[mk] = m['claude'].decision_function(XA_tr[rows][mk])
+            for f in fam_s:
+                dfn = m[f'fam_{f}'].decision_function(XB_tr[rows][mk])
+                fam_s[f][mk] = np.stack([-dfn, dfn], 1) if dfn.ndim == 1 else dfn
             gsc, gclf = m['gate']
             gate[np.flatnonzero(mk)[:, None], gc_idx[None, :]] = np.log(np.clip(gclf.predict_proba(gsc.transform(E['glm9b'][rows][mk])), 1e-9, 1))
         # LoRA centered twin: centered features x the row's own fold readout
@@ -215,32 +237,66 @@ def main():
         twin['lora'] = np.stack([softmax_log(Zc[i:i + 1] @ lora_ro[r]['center_coef'].T + lora_ro[r]['center_intercept'])[0]
                                  for i, r in enumerate(rows)])
 
-        def blend(style_mode='replace', alpha=0.5, use_gate=False):
+        if args.v559:
+            curly = np.array([any(c in t for c in ('\u2019', '\u201c', '\u201d')) for t in tx])
+            em2 = np.array([t.count('\u2014') >= 2 for t in tx])
+            cg = np.array([l.startswith(('claude', 'glm')) for l in labels])
+            ge = np.array([l.startswith('gemini') for l in labels])
+            shield_pen = -2.5 * (curly[:, None] * cg[None] + em2[:, None] * ge[None])
+
+        def blend(style_mode='replace', alpha=0.5, use_gate=False, lm_w=None, style_x=1.0, twin_x=1.0,
+                  shield=False, fam_gates=False, adapt_claude=False):
             s = lp_s.copy()
             if style_mode == 'replace':
                 s[srows] = lp_sc[srows]
-            L = W['stylegram'] * s + sum(W[key] * lp[key] for key in lp)
+            elif style_mode == 'half':   # same total weight, split between plain and centered
+                s[srows] = 0.5 * lp_s[srows] + 0.5 * lp_sc[srows]
+            L = style_x * W['stylegram'] * s + sum(W[key] * lp[key] for key in lp)
             if style_mode == 'add':
                 L[srows] += W['stylegram'] * lp_sc[srows]
+            for key, w in (lm_w or {}).items():
+                L += w * lm[key]
             for key, w in TWIN_W.items():
-                L[adapt] += w * twin[key][adapt]
+                L[adapt] += twin_x * w * twin[key][adapt]
             P = np.exp(L - L.max(1, keepdims=True))
             P /= P.sum(1, keepdims=True)
             target = (1 - alpha) * P.sum(0) + alpha * np.full(K, len(P) / K)
             for _ in range(50):
                 P *= (target / (P.sum(0) + 1e-12))[None, :]
                 P /= P.sum(1, keepdims=True) + 1e-12
+            if shield:   # the 0.559 notebook's post-Sinkhorn orthographic shield
+                lpz = np.log(np.clip(P, 1e-300, 1)) + shield_pen
+                P = np.exp(lpz - lpz.max(1, keepdims=True))
+                P /= P.sum(1, keepdims=True)
             pred = P.argmax(1)
             if use_gate:
                 isg = np.isin(pred, gc_idx)
                 new = gc_idx[(np.log(np.clip(P[:, gc_idx], 1e-12, 1)) + gate[:, gc_idx]).argmax(1)]
                 pred = np.where(isg, new, pred)
             isc = np.isin(pred, cl_idx)   # within-Claude gate (every LB notebook has it)
-            new = cl_idx[(np.log(np.clip(P[:, cl_idx], 1e-12, 1)) + CLAUDE_GATE_LAM * dc).argmax(1)]
-            return np.where(isc, new, pred)
+            expert = CLAUDE_GATE_LAM * (fam_s['claude'] if fam_gates else dc)
+            if adapt_claude:   # 0.559: shrink the gate when the blend is sure of its Claude pick
+                rk = np.sort(P[:, cl_idx], 1)
+                expert = expert * np.clip(0.25 + 0.75 * rk[:, -2] / np.maximum(rk[:, -1], 1e-12), 0.25, 1.0)[:, None]
+            new = cl_idx[(np.log(np.clip(P[:, cl_idx], 1e-12, 1)) + expert).argmax(1)]
+            pred = np.where(isc, new, pred)
+            for f, fidx, _ in (FAM[1:] if fam_gates else []):   # 0.559: GPT, Gemini, GLM gates at lambda 0.25
+                new = fidx[(np.log(np.clip(P[:, fidx], 1e-12, 1)) + 0.25 * fam_s[f]).argmax(1)]
+                pred = np.where(np.isin(pred, fidx), new, pred)
+            return pred
 
         variants = {'base': blend(), 'no_center': blend('none'), 'add': blend('add'),
                     'alpha025': blend(alpha=0.25), 'glm_gate': blend(use_gate=True)}
+        if args.screen:
+            variants.update({f'glm_w{w:g}': blend(lm_w={'glm9b': w}) for w in (0.1, 0.2, 0.4)})
+            variants.update({'q3_w0.2': blend(lm_w={'q3_8b': 0.2}), 'both_w0.2': blend(lm_w={'glm9b': 0.2, 'q3_8b': 0.2})})
+            variants.update({f'style_x{x:g}': blend(style_x=x) for x in (0.8, 1.25)})
+            variants.update({f'twin_x{x:g}': blend(twin_x=x) for x in (0.67, 1.5)})
+            variants['half'] = blend('half')
+        if args.v559:
+            variants.update({'shield': blend(shield=True), 'fam_gates': blend(fam_gates=True),
+                             'adapt_claude': blend(adapt_claude=True),
+                             'all559': blend(alpha=0.25, shield=True, fam_gates=True, adapt_claude=True)})
         for key, p in variants.items():
             res.setdefault(key, []).append(balanced_accuracy_score(y[rows], p))
         print(f'draw {d}: {len(rows)} passages, twin rows {adapt.sum()}, stylegram rows {srows.sum()} | '
@@ -248,11 +304,13 @@ def main():
 
     lb = {'base': 0.556, 'no_center': 0.552, 'add': 0.550, 'alpha025': 0.556, 'glm_gate': 0.555}
     b = np.array(res['base'])
+    rng = np.random.default_rng(0)
     print(f'\n{args.draws} draws, {args.sizes} passages per prompt (paired deltas vs base; LB delta vs 0.556):')
     for key, s in res.items():
-        s = np.array(s)
-        print(f'  {key:10s} sim {s.mean():.4f}  delta {np.mean(s - b):+.4f} (wins {int((s > b).sum())}/{len(s)}) '
-              f'| LB {lb[key]:.3f} delta {lb[key] - 0.556:+.3f}')
+        dlt = np.array(s) - b
+        pb = np.mean(rng.choice(dlt, (2000, len(dlt))).mean(1) > 0)   # bootstrap over draws
+        print(f'  {key:10s} sim {np.mean(s):.4f}  delta {dlt.mean():+.4f} (wins {int((dlt > 0).sum())}/{len(s)}, '
+              f'P(better) {pb:.2f})' + (f' | LB {lb[key]:.3f} delta {lb[key] - 0.556:+.3f}' if key in lb else ''))
 
 
 if __name__ == '__main__':

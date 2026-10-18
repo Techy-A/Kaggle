@@ -149,3 +149,14 @@ Rebuilds most of the 0.556 blend from honest out-of-fold predictions: the styleg
 - **Calibrated sim = 4–6 per prompt + Claude gate.** Use deltas only: the absolute level is ~0.045 above the LB because members are missing.
 - **Noise:** losers of −0.003 still beat base in 3–4 of 10 draws. To approve a change, use ≥30 draws and P(better) ≥ 0.9, and check it at 8–10 per prompt too.
 - **Speed:** fitting the 5 folds takes ~12 min alone. Running 3 at once without thread limits made each ~3× slower; set OMP_NUM_THREADS when running in parallel.
+
+## Public scan, 18 Oct 5:31 pm IST
+- **New top: 0.559, obstacledeveloper "Local candidate: adaptive centered stylegram"** (35 votes). The code is our 0.556 base plus five changes; its markdown only describes the first:
+  1. Sinkhorn α 0.25 (LB wash for us).
+  2. **Orthographic shield** after Sinkhorn: curly quotes give Claude and GLM −2.5; ≥2 em-dashes give Gemini −2.5. Checked on train: Claude 0/749 and GLM 0/300 passages have curly quotes; Gemini em-dash ≥2 in 0.2%. On prvsiyan's extended data, Claude has curly quotes in 0.2% and GLM in 0%. The Gemini rule is weaker there (7.8%).
+  3. Within-family gates for GPT, Gemini and GLM (λ 0.25), plus a retrained Claude gate. These are balanced LinearSVCs trained on train rows plus external rows at weight 0.25: the Claude API passages, and **prvsiyan's extended dataset (CC BY 4.0, 4,584 clean passages, all 18 models)**.
+  4. An uncertainty-adaptive Claude gate: the gate is shrunk when the blend is sure.
+  5. Its markdown cites Kaggle's data page: **the hidden rerun has ~4,000 passages**.
+- **0.558: josephadamski91 "Apex v4 + 10% ATLAS".** It mixes in an ATLAS attribution model (Qwen3-8B with per-source LoRA, trained on train only) at 10%, before Sinkhorn: 0.549 → 0.551 and 0.556 → 0.558. **It could stack on 0.559.**
+- **Done:** a private exact copy of 0.559 is pushed (`aryanawasthiteykik/ntl-0-559-pinned-copy`), ready for tomorrow's slots. Its sources are Apache 2.0 notebooks and CC BY data (no TabPFN), so it is OK as a finally selected entry.
+- **CASMI:** nothing new above 0.454.
