@@ -28,7 +28,7 @@ Back to [[Kaggle Home]].
 | 17 Oct | CASMI | V22 + gen20 | our own change | 0.453, **bias-adjusted 0.451–0.452** | **0.441** | **−0.012** (−0.010 vs the adjusted range): far outside the noise floor |
 | 18 Oct | NTL | 0.556 + Sinkhorn α 0.25 | combination of two public tricks | 0.557, **bias-adjusted 0.556** | 0.556 | −0.001 (0.000 vs adjusted) |
 | 18 Oct | NTL | 0.556 + centered stylegram evidence added (not replaced), β 1 | our own change (lab simulation) | 0.560, **bias-adjusted 0.556–0.560** (stylegram alone +0.05 vs replace in the 2–3/prompt sim; the blend dilutes it) | **0.550** | **−0.010** (−0.006 vs the adjusted range): the sim scored the stylegram alone; in the blend, adding doubled its weight |
-| 18 Oct | NTL | 0.556 + GLM+Claude gate (GLM-4-9B features, λ 1) | our own change (lab simulation) | 0.558, **bias-adjusted 0.554–0.558** (gate on the full posterior, same scale as the proven Claude gate; the sim gain was measured on the stylegram only) | pending | |
+| 18 Oct | NTL | 0.556 + GLM+Claude gate (GLM-4-9B features, λ 1) | our own change (lab simulation) | 0.558, **bias-adjusted 0.554–0.558** (gate on the full posterior, same scale as the proven Claude gate; the sim gain was measured on the stylegram only) | 0.555 | −0.003 (inside the adjusted range) |
 | 18 Oct | NTL | 0.557 public copy (lightningv08, TabPFN inside) | exact copy | 0.557 | pending | |
 
 **Noise floor:** the same CASMI code scored 0.451 and 0.447 on two runs. Treat any single-submission difference under about 0.004 as noise.
