@@ -96,3 +96,9 @@ TabPFN weights are under a non-commercial licence, which is a winner-licence ris
   - It is out of the finals anyway (TabPFN licence).
 - Next: α 0.25 on the 0.556 line submits at 5:37 am IST (forecast 0.556 after the bias adjustment).
 - **18 Oct, 5:38 am IST: 0.556 + Sinkhorn α 0.25 submitted (57330793).** Forecast 0.556 after the bias adjustment (raw 0.557). It's the first NTL submission of the UTC day.
+- **α 0.25 result (landed by 7:55 am IST, 18 Oct): 0.556, the same as α 0.5.** Lowering the Sinkhorn α doesn't move the public score on this line.
+- **The field moved overnight:**
+  - We're rank 65 of 1,403. The medal lines are gold (top 12) **0.565**, silver (top 70) **0.556**, bronze (top 140) 0.553.
+  - 46 teams are now above 0.556, up from 30, and the leader is at 0.616. Our silver hangs on tie order at the line.
+  - The next real gain has to come from our own work (lab simulation first), not from α.
+
