@@ -24,7 +24,7 @@ Variants and their known public LB scores (the calibration targets):
   glm_gate    + GLM+Claude gate on glm9b L8+L3 (lambda 1)                                     LB 0.555
 The sim is trusted only if it orders these the way the LB did; then new ideas are tested against 'base'.
 
-Usage: python 04_blend_sim.py [--draws 10]
+Usage: python 04_blend_sim.py [--draws 10] [--sizes 2 3]
 """
 import argparse
 import glob
@@ -104,6 +104,7 @@ def lora_oof(pattern, n, idx_of, K):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--draws', type=int, default=10)
+    ap.add_argument('--sizes', type=int, nargs='+', default=[2, 3])   # passages per prompt in the pseudo-test pool
     args = ap.parse_args()
 
     train = pd.read_csv(os.path.join(HERE, 'data/train.csv'))
@@ -161,7 +162,7 @@ def main():
     res = {}
     for d in range(args.draws):
         rng = np.random.default_rng(100 + d)
-        rows = np.concatenate([rng.choice(np.flatnonzero(pid == p), int(rng.choice([2, 3])), replace=False)
+        rows = np.concatenate([rng.choice(np.flatnonzero(pid == p), int(rng.choice(args.sizes)), replace=False)
                                for p in np.unique(pid)])
         tx = texts[rows].tolist()
         G = mixed_clusters(tx, glm_l24[rows])                 # twin clusters (LM heads, LoRA)
@@ -191,7 +192,6 @@ def main():
                 csc, clf = m[f'{key}_c']
                 twin[key][mk] = np.log(np.clip(clf.predict_proba(csc.transform(cen[key][mk])), 1e-9, 1))
             gsc, gclf = m['gate']
-            gate[mk][:, :] = 0
             gate[np.flatnonzero(mk)[:, None], gc_idx[None, :]] = np.log(np.clip(gclf.predict_proba(gsc.transform(E['glm9b'][rows][mk])), 1e-9, 1))
         # LoRA centered twin: centered features x the row's own fold readout
         Zc = group_center(lora_feats[rows], G)
@@ -229,7 +229,7 @@ def main():
 
     lb = {'base': 0.556, 'no_center': 0.552, 'add': 0.550, 'alpha025': 0.556, 'glm_gate': 0.555}
     b = np.array(res['base'])
-    print(f'\n{args.draws} draws, 2-3 passages per prompt (paired deltas vs base; LB delta vs 0.556):')
+    print(f'\n{args.draws} draws, {args.sizes} passages per prompt (paired deltas vs base; LB delta vs 0.556):')
     for key, s in res.items():
         s = np.array(s)
         print(f'  {key:10s} sim {s.mean():.4f}  delta {np.mean(s - b):+.4f} (wins {int((s > b).sum())}/{len(s)}) '
