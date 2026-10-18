@@ -16,7 +16,8 @@ GLM+Claude gate 0.555), because the other members already carry much of the same
                    rows + the public Claude API passages, lambda 1.5; its LoRA Claude head is not in the fold readouts).
 
 Every OOF prediction comes from a model that never saw that passage's prompt (all fold schemes hold out whole prompts),
-so a pseudo-test pool of 2-3 passages per prompt drawn from all 150 prompts behaves like the hidden test.
+so a pseudo-test pool of a few passages per prompt drawn from all 150 prompts behaves like the hidden test. Calibration
+(18 Oct): 2-3 per prompt gets the centering signs wrong; 4-6 per prompt reproduces all five LB signs below.
 
 Variants and their known public LB scores (the calibration targets):
   base        0.556 notebook: stylegram twin REPLACES the plain head on its clustered rows      LB 0.556
@@ -26,7 +27,7 @@ Variants and their known public LB scores (the calibration targets):
   glm_gate    + GLM+Claude gate on glm9b L8+L3 (lambda 1)                                     LB 0.555
 The sim is trusted only if it orders these the way the LB did; then new ideas are tested against 'base'.
 
-Usage: python 04_blend_sim.py [--draws 10] [--sizes 2 3]
+Usage: python 04_blend_sim.py [--draws 10] [--sizes 4 5 6]
 """
 import argparse
 import glob
@@ -109,7 +110,7 @@ def lora_oof(pattern, n, idx_of, K):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--draws', type=int, default=10)
-    ap.add_argument('--sizes', type=int, nargs='+', default=[2, 3])   # passages per prompt in the pseudo-test pool
+    ap.add_argument('--sizes', type=int, nargs='+', default=[4, 5, 6])   # passages per prompt; 4-6 reproduces every LB sign, 2-3 does not
     args = ap.parse_args()
 
     train = pd.read_csv(os.path.join(HERE, 'data/train.csv'))
