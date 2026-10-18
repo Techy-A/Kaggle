@@ -250,3 +250,19 @@ Honest slices only: class 1 from the np bench (70 molecules; the structure keeps
   - **Why it's rejected anyway:** every class-2 answer the pipeline finds on this bench comes only from the PubChem list (66 of 128; 0 from engine 2). So the model learned "trust PubChem more", the rel100 trap (bench up, LB −0.006). Real-test class-2 answers often come from the pool and COCONUT through engine 2.
   - **Rule:** no fusion or PubChem-weighting change is trusted on this bench until it has a class-2 slice whose answers live in engine-2 sources.
 
+## Bench calibration with class 1: gen20 on the np bench (casmi26-bench-g20, done ~2:20 pm IST, 18 Oct)
+| np bench, final list | Class 1 | Class 2 | Class 3 | All |
+|---|---|---|---|---|
+| V22 (run2) | 0.967 | 0.849 | 0.151 | 0.519 |
+| V22 + gen20 | 0.963 | 0.850 | 0.216 | 0.552 |
+
+- **Class 1 barely moved:** one molecule shifted rank, about −0.001 overall. So class-1 damage does not explain gen20's LB −0.010, and this morning's explanation is wrong.
+- **The bench still calls gen20 a win (+0.033), the LB says −0.010.** So the bench is not calibrated for generation changes either.
+- **Open causes:**
+  - (a) noise: −0.010 is about 2.5× the floor;
+  - (b) runtime budgets on the bigger hidden test (gen20 is slower). This can't be checked: Kaggle exposes only the commit-run log, not the hidden-test rerun log;
+  - (c) the bench's class difficulty differs from the test's.
+- **Decision: gated gen20 gets no slot.** There is no trustworthy evidence it helps.
+- **Rule:** generation changes need a leaderboard A/B, not a bench verdict. The bench stays useful for diagnosis (where points are lost), not for approving submissions.
+- **Copies:** the CASMI 0.454 public copy (guhongbin v459) was submitted at 2:26 pm IST (57347521), forecast 0.454.
+
