@@ -212,3 +212,27 @@ Of the 46 generated, 39 aren't ranked first.
   - (2) Gains below about 0.005 on the bench are not evidence.
   - (3) Final picks stay V22 (0.451) and V22 + depth 7 (0.451). **gen20 is dropped.**
 
+## Bench breakdown of V22 (18 Oct, CPU, `bench/breakdown.py`)
+Honest slices only: class 1 from the np bench (70 molecules; the structure keeps its other library spectra, which is what class 1 is), classes 2–3 from the leak-free unseen bench (128 + 192).
+
+| Class | MRR | Top 1 | Ranked 2–25 | Dropped by fusion | Never a candidate |
+|---|---|---|---|---|---|
+| 1 | **0.967** | 66 | 4 | 0 | 0 |
+| 2 | 0.257 | 24 | 31 | 11 | 62 |
+| 3 | 0.005 | 0 | 3 | 0 | 189 (23 near misses, Tc ≥ 0.7) |
+
+**Share of all lost points** (weighted by the test mix 28/20/52):
+- **class-3 never a candidate: 76%**;
+- class-2 never a candidate: 14%;
+- class-2 ranked 2–25 or dropped by fusion: 8%;
+- class 1: 1%.
+
+**Reading:**
+- **Class 1 is essentially solved.** Every point there is already banked, so any change that touches class 1 can only lose. That is exactly how gen20 lost 0.010.
+- The bench's absolute level (0.33 at the test mix) is below the LB's 0.451. Its class 2 is PubChem-only, which is harder than the real test, so compare variants, not levels.
+
+**Next candidate: gated gen20.**
+- Use the wider generation only where engine 1's best library match is weak, i.e. likely class 3.
+- That keeps class 1 untouched while still chasing the 23 class-3 near misses.
+- Bench-testable once the class-1 + gen20 run (casmi26-bench-g20) confirms where gen20 hurt.
+
