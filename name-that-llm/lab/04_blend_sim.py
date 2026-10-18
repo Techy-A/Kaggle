@@ -27,12 +27,13 @@ Variants and their known public LB scores (the calibration targets):
   glm_gate    + GLM+Claude gate on glm9b L8+L3 (lambda 1)                                     LB 0.555
 The sim is trusted only if it orders these the way the LB did; then new ideas are tested against 'base'.
 
-Usage: python 04_blend_sim.py [--draws 10] [--sizes 4 5 6] [--screen] [--v559]
+Usage: python 04_blend_sim.py [--draws 10] [--sizes 4 5 6] [--screen] [--v559] [--ref base]
 """
 import argparse
 import glob
 import importlib.util
 import os
+import re
 
 import numpy as np
 import pandas as pd
@@ -112,6 +113,7 @@ def main():
     ap.add_argument('--draws', type=int, default=10)
     ap.add_argument('--screen', action='store_true')   # also score the 18 Oct screening ideas (plain LM heads, scales, half)
     ap.add_argument('--v559', action='store_true')   # also score the public 0.559 notebook's changes, one at a time
+    ap.add_argument('--ref', default='base')   # variant the paired deltas are measured against
     ap.add_argument('--sizes', type=int, nargs='+', default=[4, 5, 6])   # passages per prompt; 4-6 reproduces every LB sign, 2-3 does not
     args = ap.parse_args()
 
@@ -243,9 +245,15 @@ def main():
             cg = np.array([l.startswith(('claude', 'glm')) for l in labels])
             ge = np.array([l.startswith('gemini') for l in labels])
             shield_pen = -2.5 * (curly[:, None] * cg[None] + em2[:, None] * ge[None])
+            # step 5 invariants (05_invariants.py: <= 1% in train and in prvsiyan's data, per model)
+            apos = np.array([re.search(r"\w'\w", t) is not None for t in tx])
+            em3 = np.array([t.count('\u2014') >= 3 for t in tx])
+            sl = np.isin(labels, ['gpt-5.6-sol', 'gpt-5.6-luna'])
+            g3 = np.isin(labels, ['gemini-3.1-pro-preview', 'gemini-3.6-flash', 'gemini-3.8-flash', 'qwen3.8-max'])
+            pen_apos, pen_em3 = -2.5 * apos[:, None] * sl[None], -2.5 * em3[:, None] * g3[None]
 
         def blend(style_mode='replace', alpha=0.5, use_gate=False, lm_w=None, style_x=1.0, twin_x=1.0,
-                  shield=False, fam_gates=False, adapt_claude=False):
+                  shield=False, fam_gates=False, adapt_claude=False, extra_pen=0.0):
             s = lp_s.copy()
             if style_mode == 'replace':
                 s[srows] = lp_sc[srows]
@@ -265,7 +273,7 @@ def main():
                 P *= (target / (P.sum(0) + 1e-12))[None, :]
                 P /= P.sum(1, keepdims=True) + 1e-12
             if shield:   # the 0.559 notebook's post-Sinkhorn orthographic shield
-                lpz = np.log(np.clip(P, 1e-300, 1)) + shield_pen
+                lpz = np.log(np.clip(P, 1e-300, 1)) + shield * shield_pen + extra_pen
                 P = np.exp(lpz - lpz.max(1, keepdims=True))
                 P /= P.sum(1, keepdims=True)
             pred = P.argmax(1)
@@ -297,15 +305,20 @@ def main():
             variants.update({'shield': blend(shield=True), 'fam_gates': blend(fam_gates=True),
                              'adapt_claude': blend(adapt_claude=True),
                              'all559': blend(alpha=0.25, shield=True, fam_gates=True, adapt_claude=True)})
+            v559 = dict(alpha=0.25, fam_gates=True, adapt_claude=True)
+            variants.update({'559_shield2x': blend(shield=2, **v559),
+                             '559_apos': blend(shield=True, extra_pen=pen_apos, **v559),
+                             '559_em3': blend(shield=True, extra_pen=pen_em3, **v559),
+                             '559_apos_em3': blend(shield=True, extra_pen=pen_apos + pen_em3, **v559)})
         for key, p in variants.items():
             res.setdefault(key, []).append(balanced_accuracy_score(y[rows], p))
         print(f'draw {d}: {len(rows)} passages, twin rows {adapt.sum()}, stylegram rows {srows.sum()} | '
               + ' '.join(f'{k} {v[-1]:.4f}' for k, v in res.items()), flush=True)
 
     lb = {'base': 0.556, 'no_center': 0.552, 'add': 0.550, 'alpha025': 0.556, 'glm_gate': 0.555}
-    b = np.array(res['base'])
+    b = np.array(res[args.ref])
     rng = np.random.default_rng(0)
-    print(f'\n{args.draws} draws, {args.sizes} passages per prompt (paired deltas vs base; LB delta vs 0.556):')
+    print(f'\n{args.draws} draws, {args.sizes} passages per prompt (paired deltas vs {args.ref}; LB delta vs 0.556):')
     for key, s in res.items():
         dlt = np.array(s) - b
         pb = np.mean(rng.choice(dlt, (2000, len(dlt))).mean(1) > 0)   # bootstrap over draws
