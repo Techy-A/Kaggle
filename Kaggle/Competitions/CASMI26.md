@@ -282,3 +282,4 @@ Honest slices only: class 1 from the np bench (70 molecules; the structure keeps
   - **Rank 110 of 3,525** (tie order; 50 teams sit on 0.454, 65 above).
   - Medal lines: gold (top 17) **0.460–0.461**; silver (top 176) **0.451**; bronze (top 352) 0.451. Top public score: 0.495.
   - We are in the silver zone, but only on tie order at the line's neighbourhood. Today's A–D A/B (new image) is the shot at clearing it.
+- **GPU quota (6:52 pm IST, 18 Oct): 26.9 of 30 h used this week** (refreshes 24 Oct, 5:30 am IST). C (depth7) and D (gated gen20) are **held, not pushed**. Order of priority: NTL 0.559 copy > CASMI A > CASMI B > NTL ATLAS. C and D need Kino's quota (push dirs `/home/user/work/push_v459_depth7`, `push_v459_gated_gen20`).
