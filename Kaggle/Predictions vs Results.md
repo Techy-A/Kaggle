@@ -32,6 +32,7 @@ Back to [[Kaggle Home]].
 | 18 Oct | NTL | 0.557 public copy (lightningv08, TabPFN inside) | exact copy | 0.557 | 0.557 | 0.000 |
 | 18 Oct | CASMI | 0.454 public copy (guhongbin v459 e006 defaultimg) | exact copy | 0.454 | 0.454 | 0.000 |
 | 18 Oct | NTL | 0.559 public copy (obstacledeveloper adaptive centered stylegram) | exact copy | 0.559 | pending | |
+| 19 Oct | NTL | 0.563 public copy (vnton37nguyn ntl-lora-instyle) | exact copy | 0.563 | pending | |
 | 18 Oct | CASMI | A: seyitkaangunes 0.452 code (E006 + rel150 + N1A + CC BY ChEBI) on v459's newer docker image | image swap (v459 = the 0.446 code on this image) | 0.457 (0.452 + part of the +0.008 image effect), **range 0.452–0.460** | pending | |
 | 18 Oct | CASMI | B: our V22 + depth7 (0.451) on v459's newer docker image | image swap | 0.455, **range 0.450–0.459**; may fail outright if V22's code needs the old image | pending | |
 | 18 Oct | CASMI | E: ahmedberatozer v14 pubchemlite (0.455, old image) on the newer image | image swap on the best code | 0.459, **range 0.453–0.463** | pending | |
