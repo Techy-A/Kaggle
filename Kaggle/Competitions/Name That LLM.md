@@ -102,3 +102,14 @@ TabPFN weights are under a non-commercial licence, which is a winner-licence ris
   - 46 teams are now above 0.556, up from 30, and the leader is at 0.616. Our silver hangs on tie order at the line.
   - The next real gain has to come from our own work (lab simulation first), not from α.
 
+## Lab: where the stylegram's errors are (18 Oct, CPU, `name-that-llm/lab/02_confusion_gates.py`)
+The test is simulated (held-out prompts, 2–3 passages per prompt, the notebook's clustering); the base is plain + centered evidence.
+
+![[ntl_confusion.png]]
+
+- **Errors:** 52% stay inside the right lab, 48% cross labs. Lab-level accuracy is 0.71.
+- **Weakest classes:** claude-fable-5 0.14, gpt-5.6-sol 0.16, glm-5.3-flash 0.18, kimi-k3 0.20, glm-5.3 0.23.
+- **Cross-lab confusions:** GLM ↔ Claude (fable-5, sonnet-5), and Kimi/Qwen → gpt-5.5.
+- **Within-lab blur:** the Gemini 3.6/3.7/3.8 flashes, and the GPT 5.6 luna/sol/terra trio.
+- **Within-lab gates on the same stylegram features: no gain** (Claude/Gemini/GLM/GPT all within ±0.002). This matches the public GPT gate's −0.001. A gate needs different information (LLM/LoRA features), not the same features retrained on a subset.
+

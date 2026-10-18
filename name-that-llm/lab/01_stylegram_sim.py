@@ -88,6 +88,8 @@ def cluster_ids(texts, threshold=0.90):
 def svc_logp(model, X, K):
     """The notebook's probability mapping: softmax of the SVC decision values."""
     s = model.decision_function(X)
+    if s.ndim == 1:   # a two-class SVC returns one margin (for classes_[1])
+        s = np.stack([-s, s], 1)
     s = np.exp(s - s.max(1, keepdims=True))
     p = np.zeros((X.shape[0], K))
     p[:, model.classes_] = s / s.sum(1, keepdims=True)
