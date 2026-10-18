@@ -122,3 +122,9 @@ Same simulated test (2–3 passages per prompt). Base: the stylegram, plain + ce
 - **Caveat:** the real blend already carries LLM information (LoRAs, token attention), so blend-level gains will be smaller than these stylegram-level ones.
 - **Built, not yet pushed:** `variants/build_glm_claude_gate.py` adds the gate on the balanced posterior, before the within-Claude gate. It reuses the glm9b features the notebook already computes, so there is no GPU cost. It goes on whichever base wins: stylegram-add (if its score improves) or 0.556.
 
+- **Stylegram-add result (landed by 10:56 am IST, 18 Oct): 0.550, worse than 0.556.**
+  - **Why:** the sim scored the stylegram on its own. In the blend, adding the centered evidence to the plain head (both at weight 1.516) doubled the stylegram's say on clustered rows, against 0.03–0.19 for every other member, so it drowned the LoRAs and the encoders.
+  - **Lesson:** a single-member sim can't judge a change that alters that member's effective blend weight. Keep total weight fixed, e.g. 0.5 × plain + 0.5 × centered, or simulate the blend.
+- **Standing (10:56 am IST): rank 88 of 1,448, bronze.** Medal lines: gold (top 12) **0.570**, silver (top 72) **0.556**, bronze (top 144) 0.555. We're tied at 0.556 but below silver on tie order; anything above 0.556 gets silver back.
+- **Next: 0.556 + GLM+Claude gate** (forecast 0.554–0.558). The gate sits on the full posterior at λ 1, the same scale as the existing Claude gate (+0.003 on LB), so the stylegram-add weight problem doesn't apply.
+
