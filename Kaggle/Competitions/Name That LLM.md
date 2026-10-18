@@ -180,3 +180,12 @@ Paired delta vs the 0.556 base; P = bootstrap P(better) over draws.
 - **None of today's three own ideas passes.** The 0.556 weights are already near the optimum for any test shape.
 - **The shield is the one robust piece:** a hard rule of the "physical invariant" kind. Our next own idea is to **mine more invariants** (characters or patterns a lab never uses in train) and verify them on prvsiyan's data, plus tune the −2.5 strength. All of it can be tested in the sim.
 - **The 4–6 calibration still fits the LB best** (8–10 overstates the GLM-gate loss and the α 0.25 loss).
+
+## Lab: more orthographic invariants (18 Oct, `lab/05_invariants.py`, sim `--v559 --ref all559`)
+- **Mined per model, kept only if ≤ 1% in train AND in prvsiyan's data:**
+  - straight apostrophe → not gpt-5.6-sol / gpt-5.6-luna (fires on 32% of other passages);
+  - ≥3 em-dashes → not gemini-3.1-pro / 3.6-flash / 3.8-flash / qwen3.8-max (fires on 7%).
+  - At lab level, only the 0.559 rules survive.
+- **On top of the full 0.559 recipe (30 draws):** apostrophe rule +0.0000 (4–6) / +0.0001 (8–10, P 0.98); em-dash ≥3 rule 0.0000; shield ×2 0.0000.
+- **Dead end.** The rules are true, but the blend already obeys them: it almost never predicts sol/luna on a straight-apostrophe passage. A hard rule only pays where the model breaks it, and that was only the curly quote → Claude/GLM case.
+- **Next NTL candidate: 0.559 + 10% ATLAS** (`variants/build_atlas_mix.py`, push dir `push_ntl559_atlas`). Public evidence: +0.002 on two bases. ATLAS's adapter licence is "other" with no terms, so it is **for rank only**, like TabPFN.
