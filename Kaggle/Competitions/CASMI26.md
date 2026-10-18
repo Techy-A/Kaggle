@@ -266,3 +266,13 @@ Honest slices only: class 1 from the np bench (70 molecules; the structure keeps
 - **Rule:** generation changes need a leaderboard A/B, not a bench verdict. The bench stays useful for diagnosis (where points are lost), not for approving submissions.
 - **Copies:** the CASMI 0.454 public copy (guhongbin v459) was submitted at 2:26 pm IST (57347521), forecast 0.454.
 
+
+## The docker image is worth more than the code (18 Oct, ~5:50 pm IST)
+- **guhongbin v459 "e006 defaultimg" (0.454) has the same code as his 0.446 notebook** (E006 + PubChem promotion at rel > 150). Only the docker image changed: `…f6b083ad2b2f` (newer, also used by the NTL notebooks) instead of `…bf3fc647d461`. That's +0.008, about 2× the noise floor (the same code has scored 0.451 and 0.447 on two runs).
+- v461 adds CC BY ChEBI on the new image and scores the same 0.454, so additions don't simply stack on it.
+- **seyitkaangunes 0.452** (E006 + rel150 + N1A NH4/water-loss GLACIER + CC BY ChEBI) and **our V22 + depth7 (0.451)** both still run on the old image.
+- **A/B on the LB (the user approved all 4 remaining slots today; Kino is busy):**
+  - A: seyit's 0.452 code on the new image;
+  - B: our V22 + depth7 on the new image.
+  - Both are pushed (private) with auto-submit watchers. B waits for a free GPU session (limit 2).
+- **If either lands at 0.455 or above, the image is the lever,** and the next submissions should port our own changes onto it.

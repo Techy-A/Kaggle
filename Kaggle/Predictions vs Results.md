@@ -31,5 +31,8 @@ Back to [[Kaggle Home]].
 | 18 Oct | NTL | 0.556 + GLM+Claude gate (GLM-4-9B features, λ 1) | our own change (lab simulation) | 0.558, **bias-adjusted 0.554–0.558** (gate on the full posterior, same scale as the proven Claude gate; the sim gain was measured on the stylegram only) | 0.555 | −0.003 (inside the adjusted range) |
 | 18 Oct | NTL | 0.557 public copy (lightningv08, TabPFN inside) | exact copy | 0.557 | 0.557 | 0.000 |
 | 18 Oct | CASMI | 0.454 public copy (guhongbin v459 e006 defaultimg) | exact copy | 0.454 | pending | |
+| 18 Oct | NTL | 0.559 public copy (obstacledeveloper adaptive centered stylegram) | exact copy | 0.559 | pending | |
+| 18 Oct | CASMI | A: seyitkaangunes 0.452 code (E006 + rel150 + N1A + CC BY ChEBI) on v459's newer docker image | image swap (v459 = the 0.446 code on this image) | 0.457 (0.452 + part of the +0.008 image effect), **range 0.452–0.460** | pending | |
+| 18 Oct | CASMI | B: our V22 + depth7 (0.451) on v459's newer docker image | image swap | 0.455, **range 0.450–0.459**; may fail outright if V22's code needs the old image | pending | |
 
 **Noise floor:** the same CASMI code scored 0.451 and 0.447 on two runs. Treat any single-submission difference under about 0.004 as noise.
