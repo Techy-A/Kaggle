@@ -27,3 +27,4 @@ Goal: **Kaggle Expert**. Rule: every mistake gets written down once and never re
 ## Preferences
 - **Compute is free only:** Kaggle GPU (30 h/week per account), Kaggle CPU sessions, free Colab T4 as overflow (`colab/colab_runner.ipynb` runs any of our Kaggle job kernels unchanged and uploads the outputs to a private dataset). No paid GPUs.
 - **Always give times in IST** (UTC+5:30), never UTC.
+- **Don't use the term "final pick" unless the user uses it first.** Talk about submissions and what each one is for instead.
