@@ -27,5 +27,6 @@ Back to [[Kaggle Home]].
 | 17 Oct | NTL | merge (TabPFN + Claude gates, with punctuation) | new combination | 0.551 (bias-adjusted 0.549–0.551) | 0.550 | −0.001 (inside the adjusted range) |
 | 17 Oct | CASMI | V22 + gen20 | our own change | 0.453, **bias-adjusted 0.451–0.452** | **0.441** | **−0.012** (−0.010 vs the adjusted range): far outside the noise floor |
 | 18 Oct | NTL | 0.556 + Sinkhorn α 0.25 | combination of two public tricks | 0.557, **bias-adjusted 0.556** | 0.556 | −0.001 (0.000 vs adjusted) |
+| 18 Oct | NTL | 0.556 + centered stylegram evidence added (not replaced), β 1 | our own change (lab simulation) | 0.560, **bias-adjusted 0.556–0.560** (stylegram alone +0.05 vs replace in the 2–3/prompt sim; the blend dilutes it) | pending | |
 
 **Noise floor:** the same CASMI code scored 0.451 and 0.447 on two runs. Treat any single-submission difference under about 0.004 as noise.

@@ -115,7 +115,7 @@ def main():
     train = pd.read_csv('data/train.csv')
     labels = sorted(train.model.unique())
     y = train.model.map({l: i for i, l in enumerate(labels)}).values
-    pid = train.prompt_id.values
+    pid = train.prompt_id.to_numpy(dtype=object)
     K = len(labels)
     # ponytail: one TF-IDF fit on all train text (vocabulary and idf only, no labels), so every fold and every cluster
     # share a feature space; the notebook fits on train and applies to test, which this mirrors transductively.
@@ -139,7 +139,7 @@ def main():
         rng = np.random.default_rng(100 + d)
         rows = np.concatenate([rng.choice(np.flatnonzero(pid == p), int(rng.choice(args.sizes)), replace=False)
                                for p in np.unique(pid)])
-        g = cluster_ids(train.text.values[rows].tolist())
+        g = cluster_ids(train.text.to_numpy(dtype=object)[rows].tolist())
         size = np.bincount(g)[g]
         on = (size >= 2) & (size <= 18)
         same_c, same_p = g[:, None] == g[None, :], pid[rows][:, None] == pid[rows][None, :]
@@ -157,7 +157,7 @@ def main():
         out = {'plain': lp['plain'].argmax(1)}
         for v in ('hard', 'small'):
             out[v] = np.where(on, lp[v].argmax(1), out['plain'])
-            for b in args.betas:
+            for b in (args.betas if v == 'hard' else []):
                 out[f'add_{v}_{b:g}'] = np.where(on, (lp['plain'] + b * lp[v]).argmax(1), out['plain'])
         for v, pred in out.items():
             scores.setdefault(v, []).append(balanced_accuracy_score(yt, pred))
