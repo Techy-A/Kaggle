@@ -113,3 +113,12 @@ The test is simulated (held-out prompts, 2–3 passages per prompt, the notebook
 - **Within-lab blur:** the Gemini 3.6/3.7/3.8 flashes, and the GPT 5.6 luna/sol/terra trio.
 - **Within-lab gates on the same stylegram features: no gain** (Claude/Gemini/GLM/GPT all within ±0.002). This matches the public GPT gate's −0.001. A gate needs different information (LLM/LoRA features), not the same features retrained on a subset.
 
+## Lab: LLM features against the GLM ↔ Claude blur (18 Oct, `lab/03_llm_gate.py`, features cached by `lab/jobs/ntl_featcache`)
+Same simulated test (2–3 passages per prompt). Base: the stylegram, plain + centered evidence, 0.389.
+- **GLM+Claude 7-way gate on GLM-4-9B L8+L3: +0.035** (λ 1, 5/5). On Qwen3-8B: +0.025. On both feature sets together: +0.033.
+- The full 18-way GLM-4-9B head added as a member: **+0.10** (weight 0.5, 5/5).
+  - In the 0.556 notebook the plain glm9b head has **weight 0**; only its centered twin counts.
+  - Those weights were fitted on full 18-passage prompts, not test-shaped ones, so this is a possible lever to revisit.
+- **Caveat:** the real blend already carries LLM information (LoRAs, token attention), so blend-level gains will be smaller than these stylegram-level ones.
+- **Built, not yet pushed:** `variants/build_glm_claude_gate.py` adds the gate on the balanced posterior, before the within-Claude gate. It reuses the glm9b features the notebook already computes, so there is no GPU cost. It goes on whichever base wins: stylegram-add (if its score improves) or 0.556.
+
