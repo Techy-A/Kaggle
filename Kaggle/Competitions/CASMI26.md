@@ -236,3 +236,10 @@ Honest slices only: class 1 from the np bench (70 molecules; the structure keeps
 - That keeps class 1 untouched while still chasing the 23 class-3 near misses.
 - Bench-testable once the class-1 + gen20 run (casmi26-bench-g20) confirms where gen20 hurt.
 
+## Steps 2–4 (18 Oct)
+- **Step 2, gated gen20** (`gensweep` per-molecule outputs, 170 np molecules, engine-1 lists). gen20 everywhere: class 1 0.977 → **0.955**, class 3 0.312 → 0.430.
+  - **Gating at best library match < 0.7 keeps class 1 at 0.977 and class 3 at 0.383**, about 60% of the gain.
+  - The class-3 gain is inflated here (leaky np bench); on the honest bench gen20's class-3 gain was tiny. Realistic LB effect: +0.000 to +0.003. Waiting on the full-pipeline bench (casmi26-bench-g20) before deciding.
+- **Step 4, dedupe by metric key: already done.** 0 duplicate metric keys in 570 bench final lists. No gain available.
+- **Step 3, learned fusion** (`bench/fusion_ltr.py`, running): a LightGBM lambdarank over the five E004 fusion inputs, with source ranks, flags and PubChem scores, against V22's hand-written fusion, out-of-fold on 390 honest molecules.
+
