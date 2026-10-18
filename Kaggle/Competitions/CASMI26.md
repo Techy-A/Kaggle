@@ -242,4 +242,11 @@ Honest slices only: class 1 from the np bench (70 molecules; the structure keeps
   - The class-3 gain is inflated here (leaky np bench); on the honest bench gen20's class-3 gain was tiny. Realistic LB effect: +0.000 to +0.003. Waiting on the full-pipeline bench (casmi26-bench-g20) before deciding.
 - **Step 4, dedupe by metric key: already done.** 0 duplicate metric keys in 570 bench final lists. No gain available.
 - **Step 3, learned fusion** (`bench/fusion_ltr.py`, running): a LightGBM lambdarank over the five E004 fusion inputs, with source ranks, flags and PubChem scores, against V22's hand-written fusion, out-of-fold on 390 honest molecules.
+- **Step 3 result: learned fusion REJECTED, despite the bench.** Out-of-fold on 390 honest molecules:
+  - class 1 0.967 → 0.951 (−0.016, 5 worse);
+  - class 2 0.257 → **0.352** (+0.094);
+  - class 3 flat;
+  - +0.015 at the test mix, P = 0.98.
+  - **Why it's rejected anyway:** every class-2 answer the pipeline finds on this bench comes only from the PubChem list (66 of 128; 0 from engine 2). So the model learned "trust PubChem more", the rel100 trap (bench up, LB −0.006). Real-test class-2 answers often come from the pool and COCONUT through engine 2.
+  - **Rule:** no fusion or PubChem-weighting change is trusted on this bench until it has a class-2 slice whose answers live in engine-2 sources.
 
