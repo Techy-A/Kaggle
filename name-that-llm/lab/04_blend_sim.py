@@ -11,7 +11,9 @@ GLM+Claude gate 0.555), because the other members already carry much of the same
   centered twins on clustered rows: q3_8b 1.5 x 0.219, glm9b 1.5 x 0.110, debv3l 0.25, lora 0.15
   not available, left out:        ultrabert 0.095, desk 0.132, lora3 0.177, style_lgb 0.063, the q25_7b/style4b twins
   test-time steps: the LM heads' test-set standardization, the notebook's mixglm clustering (TF-IDF + GLM-4-9B L24,
-                   cut 0.60) for the twins, the stylegram's own clustering (cut 0.90), Sinkhorn balancing (alpha).
+                   cut 0.60) for the twins, the stylegram's own clustering (cut 0.90), Sinkhorn balancing (alpha),
+                   and the within-Claude gate that picks WHICH Claude after the blend (stylegram SVC on the fold's Claude
+                   rows + the public Claude API passages, lambda 1.5; its LoRA Claude head is not in the fold readouts).
 
 Every OOF prediction comes from a model that never saw that passage's prompt (all fold schemes hold out whole prompts),
 so a pseudo-test pool of 2-3 passages per prompt drawn from all 150 prompts behaves like the hidden test.
@@ -34,6 +36,7 @@ import os
 import numpy as np
 import pandas as pd
 from scipy.cluster.hierarchy import fcluster, linkage
+from scipy.sparse import vstack
 from scipy.spatial.distance import squareform
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -44,6 +47,8 @@ from sklearn.svm import LinearSVC
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OOF = os.path.join(HERE, 'data/oof')
+API = os.path.join(HERE, 'data/ntl_extra_passages_claude.csv')   # seyitkaangunes/ntl-extra-api-passages (no train prompts)
+CLAUDE_GATE_LAM = 1.5
 spec = importlib.util.spec_from_file_location('sim', os.path.join(HERE, '01_stylegram_sim.py'))
 sim = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(sim)   # the notebook's stylegram, sparse centering, stylegram clustering, SVC probabilities
@@ -136,6 +141,12 @@ def main():
     E['glm9b'] = fz['glm9b'][:, :8192].astype(np.float32)
     glm_l24 = fz['glm9b'][:, 8192:].astype(np.float32)
     X = sim.stylegram_features(texts.tolist())
+    api = pd.read_csv(API)
+    # ponytail: one vocabulary over train + API text for the Claude gate (the notebook fits it on Claude + API rows only)
+    XA = sim.stylegram_features(texts.tolist() + api.text.astype(str).tolist())
+    XA_tr, XA_api = XA[:n], XA[n:]
+    y_api = api.model.map({l: i for i, l in enumerate(labels)}).values
+    cl_idx = np.array([i for i, l in enumerate(labels) if l.startswith('claude')])
 
     fold = np.empty(n, int)
     for k, (_, va) in enumerate(GroupKFold(5).split(X, y, pid)):
@@ -156,6 +167,9 @@ def main():
         g = tr & np.isin(y, gc_idx)   # GLM+Claude gate, train scaling (as submitted)
         gsc = StandardScaler().fit(E['glm9b'][g])
         m['gate'] = (gsc, lr(0.0025).fit(gsc.transform(E['glm9b'][g]), y[g]))
+        c = tr & np.isin(y, cl_idx)
+        m['claude'] = LinearSVC(C=0.5, random_state=42, max_iter=4000).fit(vstack([XA_tr[c], XA_api]),
+                                                                             np.concatenate([y[c], y_api]))
         M.append(m)
         print(f'fold {k} fitted', flush=True)
 
@@ -179,6 +193,7 @@ def main():
             lp[key] = np.zeros((len(rows), K))
         twin = {key: np.zeros((len(rows), K)) for key in ('q3_8b', 'glm9b', 'debv3l')}
         gate = np.zeros((len(rows), K))
+        dc = np.zeros((len(rows), len(cl_idx)))
         std = {key: (E[key][rows] - E[key][rows].mean(0)) / (E[key][rows].std(0) + 1e-6) for key in ('debv3l', 'electl')}
         cen = {key: group_center(E[key][rows], G) for key in twin}
         for k in range(5):
@@ -191,6 +206,7 @@ def main():
             for key in twin:
                 csc, clf = m[f'{key}_c']
                 twin[key][mk] = np.log(np.clip(clf.predict_proba(csc.transform(cen[key][mk])), 1e-9, 1))
+            dc[mk] = m['claude'].decision_function(XA_tr[rows][mk])
             gsc, gclf = m['gate']
             gate[np.flatnonzero(mk)[:, None], gc_idx[None, :]] = np.log(np.clip(gclf.predict_proba(gsc.transform(E['glm9b'][rows][mk])), 1e-9, 1))
         # LoRA centered twin: centered features x the row's own fold readout
@@ -218,7 +234,9 @@ def main():
                 isg = np.isin(pred, gc_idx)
                 new = gc_idx[(np.log(np.clip(P[:, gc_idx], 1e-12, 1)) + gate[:, gc_idx]).argmax(1)]
                 pred = np.where(isg, new, pred)
-            return pred
+            isc = np.isin(pred, cl_idx)   # within-Claude gate (every LB notebook has it)
+            new = cl_idx[(np.log(np.clip(P[:, cl_idx], 1e-12, 1)) + CLAUDE_GATE_LAM * dc).argmax(1)]
+            return np.where(isc, new, pred)
 
         variants = {'base': blend(), 'no_center': blend('none'), 'add': blend('add'),
                     'alpha025': blend(alpha=0.25), 'glm_gate': blend(use_gate=True)}
