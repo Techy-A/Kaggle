@@ -287,3 +287,4 @@ Honest slices only: class 1 from the np bench (70 molecules; the structure keeps
   - Queued, in priority order: **E**, v14 on the new image (forecast 0.459), then its **exact copy** (0.455), then B.
   - E and the copy are a clean same-code test of the image.
   - The order is enforced by `scratchpad/casmi_queue.sh` (pushes one at a time behind the 2-session limit).
+- **8:50 pm IST: handed to Kino.** Our GPU runs sat in Kaggle's queue for 3 h+ (a CPU probe ran instantly, so only GPU sessions were stuck). Kino runs from his account: v14 on the latest image (E), the v14 exact copy, and seyit's 0.452 on the latest image (A). Our queued copies were deleted (no quota used). B (our V22 + depth7 on the new image) has not run; one CASMI slot is left today.

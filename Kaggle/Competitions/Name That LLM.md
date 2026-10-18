@@ -189,3 +189,4 @@ Paired delta vs the 0.556 base; P = bootstrap P(better) over draws.
 - **On top of the full 0.559 recipe (30 draws):** apostrophe rule +0.0000 (4–6) / +0.0001 (8–10, P 0.98); em-dash ≥3 rule 0.0000; shield ×2 0.0000.
 - **Dead end.** The rules are true, but the blend already obeys them: it almost never predicts sol/luna on a straight-apostrophe passage. A hard rule only pays where the model breaks it, and that was only the curly quote → Claude/GLM case.
 - **Next NTL candidate: 0.559 + 10% ATLAS** (`variants/build_atlas_mix.py`, push dir `push_ntl559_atlas`). Public evidence: +0.002 on two bases. ATLAS's adapter licence is "other" with no terms, so it is **for rank only**, like TabPFN.
+- **8:50 pm IST: the 0.559 copy is handed to Kino** (ours sat in Kaggle's GPU queue for 3 h+ and was deleted, with no quota used). Forecast 0.559.
