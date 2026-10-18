@@ -127,4 +127,5 @@ Same simulated test (2–3 passages per prompt). Base: the stylegram, plain + ce
   - **Lesson:** a single-member sim can't judge a change that alters that member's effective blend weight. Keep total weight fixed, e.g. 0.5 × plain + 0.5 × centered, or simulate the blend.
 - **Standing (10:56 am IST): rank 88 of 1,448, bronze.** Medal lines: gold (top 12) **0.570**, silver (top 72) **0.556**, bronze (top 144) 0.555. We're tied at 0.556 but below silver on tie order; anything above 0.556 gets silver back.
 - **Next: 0.556 + GLM+Claude gate** (forecast 0.554–0.558). The gate sits on the full posterior at λ 1, the same scale as the existing Claude gate (+0.003 on LB), so the stylegram-add weight problem doesn't apply.
+- **18 Oct, 1:2x pm IST:** exact pinned copy of lightningv08/0-557-lora-smollm3-tabpfn (0.557) pushed. The user approved a 4th NTL slot today to win silver back. It contains TabPFN (non-commercial licence), so use it for rank only: never one of the two finally selected entries.
 
