@@ -133,3 +133,19 @@ Same simulated test (2–3 passages per prompt). Base: the stylegram, plain + ce
   - **The field moved again:** rank **82 of 1,508**. Medal lines: gold (top 13) **0.572**, silver (top 75) **0.557**, bronze (top 150) 0.556. We're tied with the silver line but below it on tie order, so still bronze.
   - **Takeaway:** copying public notebooks only keeps pace, because the silver line rises about 0.001 a day. Getting clear of the tie needs our own gain over the best public line.
 
+
+## Lab: blend-level simulation, calibrated against the LB (18 Oct, `lab/04_blend_sim.py`)
+Rebuilds most of the 0.556 blend from honest out-of-fold predictions: the stylegram (plain + centered twin), lora and lora2, the two token-attention members, the debv3l/electl heads, the q3_8b/glm9b/debv3l/lora centered twins, mixglm clustering, Sinkhorn balancing, and the within-Claude gate. Left out because no OOF exists: ultrabert, desk, lora3, style_lgb, the q25_7b/style4b twins, and the LoRA Claude head. It is calibrated against five known LB results. Paired deltas vs base over 10 draws:
+
+| Variant | LB | 2–3/prompt | 4–6 | 8–10 | 14–17 | **4–6 + Claude gate** |
+|---|---|---|---|---|---|---|
+| no_center | −0.004 | **+0.007** ✗ | −0.003 | −0.006 | −0.006 | **−0.003** |
+| add (stylegram) | −0.006 | **+0.006** ✗ | −0.003 | −0.005 | −0.009 | **−0.003** |
+| alpha 0.25 | 0.000 | +0.001 | −0.001 | +0.001 | −0.002 | **−0.001** |
+| GLM+Claude gate | −0.001 | −0.009 | −0.008 | −0.010 | −0.012 | **−0.003** |
+
+- **The 2–3 passages-per-prompt assumption was wrong.** At 2–3, centering looks harmful, the opposite of the LB. From 4 passages per prompt upward, every LB sign is reproduced. **The hidden test most likely has ~4–10 passages per prompt.** That also explains why the stylegram-level sims (steps 1–3, all at 2–3) misled.
+- **The GLM-gate mismatch was a missing piece of the sim, not the gate.** The notebook's within-Claude gate re-decides WHICH Claude after the GLM gate, overwriting the GLM gate's within-Claude errors. With it in the sim, the GLM gate goes from −0.008 to −0.003 (LB −0.001).
+- **Calibrated sim = 4–6 per prompt + Claude gate.** Use deltas only: the absolute level is ~0.045 above the LB because members are missing.
+- **Noise:** losers of −0.003 still beat base in 3–4 of 10 draws. To approve a change, use ≥30 draws and P(better) ≥ 0.9, and check it at 8–10 per prompt too.
+- **Speed:** fitting the 5 folds takes ~12 min alone. Running 3 at once without thread limits made each ~3× slower; set OMP_NUM_THREADS when running in parallel.
