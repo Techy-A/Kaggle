@@ -160,3 +160,23 @@ Rebuilds most of the 0.556 blend from honest out-of-fold predictions: the styleg
 - **0.558: josephadamski91 "Apex v4 + 10% ATLAS".** It mixes in an ATLAS attribution model (Qwen3-8B with per-source LoRA, trained on train only) at 10%, before Sinkhorn: 0.549 → 0.551 and 0.556 → 0.558. **It could stack on 0.559.**
 - **Done:** a private exact copy of 0.559 is pushed (`aryanawasthiteykik/ntl-0-559-pinned-copy`), ready for tomorrow's slots. Its sources are Apache 2.0 notebooks and CC BY data (no TabPFN), so it is OK as a finally selected entry.
 - **CASMI:** nothing new above 0.454.
+
+## Lab: screening on the calibrated blend sim (18 Oct, 30 draws each, `04_blend_sim.py --screen --v559`)
+Paired delta vs the 0.556 base; P = bootstrap P(better) over draws.
+
+| Variant | 4–6/prompt | 8–10/prompt | Verdict |
+|---|---|---|---|
+| plain glm9b head w 0.1 / 0.2 / 0.4 | +0.000 / −0.001 / −0.005 | −0.001 / −0.003 / −0.009 | ✗ (its weight 0 is right; q3_8b worse) |
+| stylegram ×1.25 | +0.0008 (P 0.96) | −0.0002 (P 0.35) | ✗ not robust across test shapes |
+| stylegram ×0.8 | −0.001 | −0.001 | ✗ |
+| twins ×1.5 | −0.004 | +0.002 (P 0.99) | ✗ flips with group size |
+| twins ×0.67 | −0.002 | −0.008 | ✗ |
+| half plain/centered stylegram | −0.002 | −0.002 | ✗ |
+| 0.559: orthographic shield | **+0.0009 (P 1.00)** | **+0.0007 (P 1.00)** | ✓ robust |
+| 0.559: family gates | +0.0008 (P 0.88) | −0.0001 | ~ |
+| 0.559: adaptive Claude gate | −0.0002 | +0.0003 (P 0.89) | ~ |
+| 0.559: all four | +0.0014 (P 0.94) | +0.0001 | LB +0.003 |
+
+- **None of today's three own ideas passes.** The 0.556 weights are already near the optimum for any test shape.
+- **The shield is the one robust piece:** a hard rule of the "physical invariant" kind. Our next own idea is to **mine more invariants** (characters or patterns a lab never uses in train) and verify them on prvsiyan's data, plus tune the −2.5 strength. All of it can be tested in the sim.
+- **The 4–6 calibration still fits the LB best** (8–10 overstates the GLM-gate loss and the α 0.25 loss).
