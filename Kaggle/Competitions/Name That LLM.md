@@ -95,3 +95,4 @@ TabPFN weights are under a non-commercial licence, which is a winner-licence ris
   - Merging two notebooks that share the same base signal doesn't add.
   - It is out of the finals anyway (TabPFN licence).
 - Next: α 0.25 on the 0.556 line submits at 5:37 am IST (forecast 0.556 after the bias adjustment).
+- **18 Oct, 5:38 am IST: 0.556 + Sinkhorn α 0.25 submitted (57330793).** Forecast 0.556 after the bias adjustment (raw 0.557). It's the first NTL submission of the UTC day.
