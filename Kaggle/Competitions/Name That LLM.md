@@ -129,4 +129,7 @@ Same simulated test (2–3 passages per prompt). Base: the stylegram, plain + ce
 - **Next: 0.556 + GLM+Claude gate** (forecast 0.554–0.558). The gate sits on the full posterior at λ 1, the same scale as the existing Claude gate (+0.003 on LB), so the stylegram-add weight problem doesn't apply.
 - **18 Oct, 1:2x pm IST:** exact pinned copy of lightningv08/0-557-lora-smollm3-tabpfn (0.557) pushed. The user approved a 4th NTL slot today to win silver back. It contains TabPFN (non-commercial licence), so use it for rank only: never one of the two finally selected entries.
 - **GLM+Claude gate result (landed 1:37 pm IST): 0.555 vs 0.556, a wash** (inside the forecast range). The stylegram-level +0.035 didn't transfer: the full blend (LoRAs, token attention) already separates GLM from Claude about as well. **Lab lesson:** both of today's sim-backed changes were measured against the stylegram alone and neither transferred. Next NTL lab work must simulate the blend, which needs out-of-fold predictions of the LLM members.
+- **0.557 copy result (landed by 3:52 pm IST): 0.557** as forecast; our new best.
+  - **The field moved again:** rank **82 of 1,508**. Medal lines: gold (top 13) **0.572**, silver (top 75) **0.557**, bronze (top 150) 0.556. We're tied with the silver line but below it on tie order, so still bronze.
+  - **Takeaway:** copying public notebooks only keeps pace, because the silver line rises about 0.001 a day. Getting clear of the tie needs our own gain over the best public line.
 
