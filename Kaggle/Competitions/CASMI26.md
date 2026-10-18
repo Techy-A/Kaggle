@@ -278,3 +278,7 @@ Honest slices only: class 1 from the np bench (70 molecules; the structure keeps
 - **If either lands at 0.455 or above, the image is the lever,** and the next submissions should port our own changes onto it.
 - **Plus C: v459 + depth7, and D: v459 + gated gen20** (subagent port, diffs verified). Gated gen20 reruns engine 1 at 20 analogs only where lib_max < 0.7, falling back to the 6-analog list on error. Runtime is about 2× engine 1, close to ungated gen20, which completed on the LB.
 - **Licence flag for the final selection:** every E006/V22-lineage notebook (ours included) mounts Ahmed Berat Özer's datasets (fpnet, glacier, iceberg, pubchem-tier, v2-pool, v3/v4b models). v459's markdown says those are **published as non-commercial**. Decide before choosing our two final CASMI entries.
+- **0.454 copy result (landed by 6:50 pm IST, after ~4 h of hidden-test scoring): 0.454, as forecast.** It is our new best.
+  - **Rank 110 of 3,525** (tie order; 50 teams sit on 0.454, 65 above).
+  - Medal lines: gold (top 17) **0.460–0.461**; silver (top 176) **0.451**; bronze (top 352) 0.451. Top public score: 0.495.
+  - We are in the silver zone, but only on tie order at the line's neighbourhood. Today's A–D A/B (new image) is the shot at clearing it.
