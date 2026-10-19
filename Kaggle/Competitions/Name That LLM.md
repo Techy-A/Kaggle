@@ -217,3 +217,9 @@ Paired delta vs the 0.556 base; P = bootstrap P(better) over draws.
   - It adds about 10–20 min of runtime.
   - **Trap found:** our export folder has the same name (`lora8b_v1`) and sorts first, so the unmodified code would have silently used our 8B in place of nishant's. The variant guards against this.
 - **Evidence is weak:** nishant's notebook lists "seed averaging" under "What did not help". Forecast 0.594 (0.592–0.596), most likely a tie, so it is low priority. It needs the checkpoint plus Kino's GPU.
+- **19 Oct, 20:40 IST: the 0.594 copy scored 0.594**, an exact hit. Rank **32/1859, silver**. Lines: gold 0.599 (rank 13), silver 0.579 (rank 92), bronze 0.569. Top score 0.650.
+- **NTL scan, 20:40 IST:** the best public notebook is now **0.597**, alexchilton/ntl-0592-plus-0569. It runs the 0.569 notebook unchanged and adds its blend at weight 0.5 inside the 0.592 notebook. There is no TabPFN or ATLAS, and its inputs are the 0.569 copy's plus nishant's dataset.
+  - Pinned copy pushed at 20:42 IST: `push_ntl597`, aryanawasthiteykik/ntl-0-597-pinned-copy. It auto-submits once.
+  - **Quota risk:** 1.35 h of GPU quota was left, and this notebook runs both pipelines.
+  - Other public notebooks: josephadamski91 two-stage + ATLAS at 0.596 (rank only), and lightningv08 0.595 (Gaussian + OLMo2).
+- 20:40 IST: the Colab checkpoint is still not on Kaggle (it was expected about 20:00).
