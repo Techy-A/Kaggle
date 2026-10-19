@@ -202,3 +202,9 @@ Paired delta vs the 0.556 base; P = bootstrap P(better) over draws.
   3. Plus a Qwen3-14B (27 layers) twin, which disagrees with the 8B model on 22% of passages, an n-gram SVC on train + pool, the centred twin, and balancing. CV 0.593, LB 0.592.
   - Inference takes ~1 h on 2×T4. Training both LoRAs needs far more GPU than our remaining quota (2.15 h until 24 Oct), so it's a candidate for after the refresh, or for Kino's quota. Watch for its datasets going public; the scan routine will then copy it.
 - Other new notebooks: kirilltym "Gaussian Ensemble | ELECTRA Group Expert" 0.568 and "Two-Stage LoRA | Centered Stylegram" 0.567, both below our 0.569.
+- **10:20 am IST, 19 Oct: rebuilding the 0.592 recipe ourselves** (Colab, free T4):
+  - Pool rebuilt from the 14 credited public datasets: 36,923 passages (`lab/06_build_pool.py`), uploaded as the private dataset `ntl-public-pool-v1`.
+  - Training notebook `colab/ntl_twostage_lora_train.ipynb`: Qwen3-8B 24 layers, LoRA r16, triplet plain+centred CE, stage 1 pool then stage 2 train, resumable from Drive.
+  - Checked: a CPU dry run passes, and the LoRA merge check passes.
+  - The inference kernel is prepared (8B only; blend weights carried over heuristically).
+  - Expected: below 0.592 (no 14B, weights not refit) but plausibly above our 0.569. To verify on the LB.
