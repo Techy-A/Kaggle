@@ -300,3 +300,15 @@ Honest slices only: class 1 from the np bench (70 molecules; the structure keeps
 - **v465 + depth7** (`push_v465_depth7`, kernel aryanawasthiteykik/casmi26-v465-depth7). Forecast 0.456–0.458, bias-adjusted 0.456. Depth 7 gave +0.003 and +0.004 on two bases and tied on V22.
 - **v465 + gated gen20** (`push_v465_gated_gen20`). Low priority: ungated gen20 lost 0.010 on the LB, and the bench can't see that loss.
 - Our GPU quota is about used up until 24 Oct, 05:30 IST, so these need Kino's quota or slots.
+
+## 19 Oct: bench calibration against known LB results (CPU; `bench/calibrate.py`, `bench/results/calibration.md`)
+- **No bench and no class mix reproduces the LB ordering.** gen20 breaks every one of them. It scored +0.033 on the np bench, +0.007 on unseen and +0.004 on the honest mix, against −0.010 on the LB.
+  - All signs come out right only at class 1 ≥ 56%, but that mix predicts V22 at about 0.54, not 0.451.
+  - **The benches stay diagnostic only; none of them can approve a change.**
+- **Why gen20 lost (mechanism):** engine 1's ranker features are relative to the whole candidate list (ranks, z-scores, gap to the best, softmax, formula share). Adding up to 350 generated candidates re-scores the candidates V22 already had, changing their top-5 order in 48–60% of molecules.
+  - It isn't crowding: a new candidate never takes rank 1.
+  - Correct class-1 answers lost rank 1 in 2 of 70 lists.
+  - The bench can't see this, because bench answers have about 180 library spectra each against a median of 6 in the test-like world.
+- **Fix to the bench:** add a "thin class-1" slice (keep only 1–5 library spectra per answer) and gate any list-composition change on how often the correct answer loses rank 1.
+- **Fix to the method (H&M lesson):** compute list-relative features over the original, non-generated candidates only, so generated additions can't re-score them, and give the ranker source flags.
+- The probability of −0.010 under the honest bench plus noise is about 1%. So either the test has something the bench lacks, or the public draw was unlucky.
