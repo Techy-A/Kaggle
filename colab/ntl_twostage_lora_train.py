@@ -20,6 +20,9 @@
 # 2. Secrets (key icon) → add `KAGGLE_API_TOKEN` (your Kaggle API token) with notebook access on.
 # 3. Run all.
 #
+# **Progress** is also uploaded every `PROGRESS_EVERY` steps as `progress.json` to the private dataset
+# `PROGRESS_DATASET`, so it can be followed without this tab.
+#
 # **Resuming.** Training saves to Google Drive every `SAVE_EVERY` steps. If Colab disconnects, reconnect and
 # **Run all** again: it picks up from the last save. On a T4 it takes about 3 h in total (stage 1 ~2.5 h).
 
@@ -34,6 +37,8 @@ TRIPLETS_PER_STEP, TRIPLETS_PER_MICRO = 6, 2   # 2 triplets per forward pass x 3
 STAGES = [dict(name="pool", epochs=1, lr_lora=1e-4, lr_head=1e-3, class_weighted=True),
           dict(name="train", epochs=2, lr_lora=5e-5, lr_head=5e-4, class_weighted=False)]
 SAVE_EVERY = 100
+PROGRESS_DATASET = "aryanawasthiteykik/ntl-twostage-progress"   # tiny progress.json, so progress can be read remotely
+PROGRESS_EVERY = 200
 SEED = 42
 DRY_RUN = False   # True: a tiny random Qwen3 on CPU, for checking the code path (no GPU, no downloads)
 LABELS = ['gpt-5.5', 'gpt-5.6-luna', 'gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-6-astra',
@@ -161,6 +166,26 @@ def features(texts):
     return torch.cat([nm((hs[l].float() * m).sum(1) / den) for l, nm in zip(LAYERS, norms)], -1)
 
 # %%
+_upload = None
+
+
+def report(**kw):
+    """Write progress.json and upload it in the background as a new version of a private dataset (never blocks)."""
+    global _upload
+    d = "/content/progress" if not DRY_RUN else f"{WORK}/progress"
+    os.makedirs(d, exist_ok=True)
+    kw["time_utc"] = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+    json.dump(kw, open(f"{d}/progress.json", "w"), indent=1)
+    print("progress:", kw, flush=True)
+    if DRY_RUN or (_upload is not None and _upload.poll() is None):   # previous upload still running: skip this one
+        return
+    json.dump({"title": PROGRESS_DATASET.split("/")[1], "id": PROGRESS_DATASET, "licenses": [{"name": "CC0-1.0"}]},
+              open(f"{d}/dataset-metadata.json", "w"))
+    exists = subprocess.run(["kaggle", "datasets", "status", PROGRESS_DATASET], capture_output=True).returncode == 0
+    cmd = ["kaggle", "datasets", "version", "-p", d, "-m", "progress"] if exists else ["kaggle", "datasets", "create", "-p", d]
+    _upload = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
 def lr_lambda(total):
     warm = max(1, int(0.1 * total))
     return lambda s: (s + 1) / warm if s < warm else 0.5 * (1 + math.cos(math.pi * (s - warm) / max(1, total - warm)))
@@ -202,6 +227,7 @@ for si, st in enumerate(STAGES):
         start = resume["step"]
     model.train(), heads.train()
     t0, run, skipped = time.time(), [], 0
+    report(stage=st["name"], step=start, total=len(steps), event="stage start" if start == 0 else "resumed")
     for step in range(start, len(steps)):
         opt.zero_grad(set_to_none=True)
         for s in range(0, len(steps[step]), TRIPLETS_PER_MICRO):
@@ -227,9 +253,15 @@ for si, st in enumerate(STAGES):
                   f"| {el / 60:.1f} min, ETA {eta:.0f} min", flush=True)
         if (step + 1) % SAVE_EVERY == 0:
             save_state(state_path, si, step + 1, opt, sched, scaler)
+        if (step + 1) % PROGRESS_EVERY == 0:
+            el = time.time() - t0
+            report(stage=st["name"], step=step + 1, total=len(steps), loss=round(float(np.mean(run[-60:])), 4),
+                   skipped=skipped, min_per_100_steps=round(el / 60 / (step + 1 - start) * 100, 2),
+                   eta_min=round(el / 60 / (step + 1 - start) * (len(steps) - step - 1), 1))
     save_state(state_path, si + 1, 0, opt, sched, scaler)
     resume = None
     print(f"stage {st['name']} done", flush=True)
+    report(stage=st["name"], step=len(steps), total=len(steps), event="stage done")
 
 # %%
 # Export in the 0.592 inference layout, then upload as a private Kaggle dataset.
@@ -258,3 +290,4 @@ if not DRY_RUN:
     else:
         kaggle("datasets", "create", "-p", root, "-r", "zip")
     print("uploaded to", OUT_DATASET)
+    report(stage="export", event="checkpoint uploaded", dataset=OUT_DATASET)
