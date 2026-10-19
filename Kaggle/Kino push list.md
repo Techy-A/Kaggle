@@ -11,4 +11,4 @@ Our GPU quota is used up until 24 Oct, 5:30 am IST, so these need your quota. Te
 Forecast 0.456–0.458. Depth 7 gave +0.003 and +0.004 on two earlier bases and tied on a third. Run-to-run noise is about ±0.004.
 
 ## 2. NTL: the 0.594 + our retrained 8B adapter (not ready yet)
-This waits until the Colab training finishes (about 8 pm IST tonight) and the variant notebook is checked. Aryan will send the notebook file and the dataset link.
+Low priority: the 0.592 author found that seed averaging didn't help (forecast 0.594, likely a tie). It waits until the Colab training finishes (about 8 pm IST tonight). Aryan will send the notebook file and the dataset link if we go ahead.

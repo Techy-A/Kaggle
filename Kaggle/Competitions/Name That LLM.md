@@ -209,3 +209,11 @@ Paired delta vs the 0.556 base; P = bootstrap P(better) over draws.
   - The inference kernel is prepared (8B only; blend weights carried over heuristically).
   - Expected: below 0.592 (no 14B, weights not refit) but plausibly above our 0.569. To verify on the LB.
 - **5:46 pm IST, 19 Oct scan: new public 0.594, lightningv08 "Two-Stage LoRA + OLMo2 Ensemble".** nishantdahal has now made the two-stage LoRA checkpoints public (`nishantdahal/ntl-two-stage-lora`, CC BY-SA 4.0), and this notebook adds an OLMo2-7B LoRA (Apache 2.0). No TabPFN or ATLAS. Exact copy pushed and running; it auto-submits. Forecast 0.594, **above the gold line (0.586)**. Also new: zbigniewkirchner 0.574 "fully public" (below). Our own Colab rebuild of the 8B two-stage LoRA is still worth finishing as our own model, but it will rank below this copy.
+
+## 19 Oct: 0.594 copy submitted; seed-bag variant built
+- **0.594 pinned copy submitted** at 17:58 IST (57396197). Forecast 0.594.
+- **Variant built, not pushed:** `push_ntl594_bag8b` (aryanawasthiteykik/ntl-594-bag8b). It is 0.594 with nishant's 8B LoRA averaged 50/50 with our Colab rebuild, in log-probability space before the blend weights.
+  - Everything else is byte-identical, and the hash checks pass.
+  - It adds about 10–20 min of runtime.
+  - **Trap found:** our export folder has the same name (`lora8b_v1`) and sorts first, so the unmodified code would have silently used our 8B in place of nishant's. The variant guards against this.
+- **Evidence is weak:** nishant's notebook lists "seed averaging" under "What did not help". Forecast 0.594 (0.592–0.596), most likely a tie, so it is low priority. It needs the checkpoint plus Kino's GPU.
