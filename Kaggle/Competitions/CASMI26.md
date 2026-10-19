@@ -294,3 +294,9 @@ Honest slices only: class 1 from the np bench (70 molecules; the structure keeps
 - **0.456 copy result (landed by 10:26 am IST, 19 Oct): 0.456, exact. Our new best.** **Rank 69 of 3,570: silver** (top 178 = 0.455). Medal lines: gold (top 17) **0.463**, silver **0.455**, bronze (top 357) 0.451. 40 teams are above 0.456 and 39 tie it.
 - **Kino's first run (submitted 5:53 am IST): 0.455.** Which of his three it is (v14 on the latest image, v14 exact copy, or seyit 0.452 on the latest image) is not labelled. If it is the v14 latest-image run, the image effect is **zero** on v14. His second run (7:02 am IST) is still pending.
 - **Kino's second run (submitted 7:02 am IST): 0.455.** Both of Kino's runs scored 0.455 (the exact v14 copy is 0.455 by construction), so whichever of them ran on the latest image gained nothing. **The image effect does not carry over to the v14/v15 code** (unless it was the seyit-0.452-on-latest-image run, which would be +0.003). Our 0.456 copy stays the best.
+
+## 19 Oct: depth7 and gated gen20 ported onto v465 (the public 0.456)
+- Built by `enveda-casmi26/variants/port_v465.py`. Each variant differs from v465 only in the same lines as the v459 ports (checked with diff).
+- **v465 + depth7** (`push_v465_depth7`, kernel aryanawasthiteykik/casmi26-v465-depth7). Forecast 0.456–0.458, bias-adjusted 0.456. Depth 7 gave +0.003 and +0.004 on two bases and tied on V22.
+- **v465 + gated gen20** (`push_v465_gated_gen20`). Low priority: ungated gen20 lost 0.010 on the LB, and the bench can't see that loss.
+- Our GPU quota is about used up until 24 Oct, 05:30 IST, so these need Kino's quota or slots.

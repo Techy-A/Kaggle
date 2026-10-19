@@ -1,21 +1,14 @@
-# Kino: notebooks to run from your account (18 Oct, only if ours are still queued at 10 pm IST)
+# Kino: notebooks to run from your account (20 Oct)
 
-Our account's GPU runs have been stuck in Kaggle's queue since about 5:30 pm IST, and we have only 3.1 GPU hours left this week. These are public notebooks, so you can fork them yourself. Each one is a single team submission. Please submit before the **5:30 am IST** reset, in this order (highest value first). Tell Aryan which ones you submitted, so ours don't get submitted twice.
+Our GPU quota is used up until 24 Oct, 5:30 am IST, so these need your quota. Tell Aryan which ones you submitted, so nothing is submitted twice.
 
-For every notebook: open the link, **Copy & Edit**, then in the right-hand panel:
-- Accelerator: **GPU T4 ×1**
-- Internet: **off**
-- Environment: set as noted below
+## 1. CASMI26: the public 0.456 + depth 7 (one find-and-replace)
+1. Open https://www.kaggle.com/code/guhongbin/casmi26-v465-v15-pop015 and click **Copy & Edit**.
+2. Find `max_depth=6, max_iter=500` and replace it with `max_depth=7, max_iter=500`. There are exactly **2** hits, both inside the embedded engine file text; change both. Change nothing else.
+3. In the right-hand panel set Accelerator **GPU T4 ×1**, Internet **off**, Environment **Pin to original**.
+4. Click **Save Version → Save & Run All**. When the run finishes, submit `submission.csv`.
 
-Then **Save Version → Save & Run All**. When the run finishes, open the version and click **Submit** (CASMI file `submission.csv`, NTL file `submission.parquet`).
+Forecast 0.456–0.458. Depth 7 gave +0.003 and +0.004 on two earlier bases and tied on a third. Run-to-run noise is about ±0.004.
 
-| # | Competition | Notebook | Environment | Why | Forecast |
-|---|---|---|---|---|---|
-| 1 | Name That LLM | https://www.kaggle.com/code/obstacledeveloper/local-candidate-adaptive-centered-stylegram | **Pin to original** | exact copy of the public 0.559 | 0.559 |
-| 2 | CASMI26 | https://www.kaggle.com/code/ahmedberatozer/casmi26-v14-pubchemlite | **Always use latest environment** | public 0.455 code on the newer image (the image gave v459 +0.008) | 0.459 |
-| 3 | CASMI26 | https://www.kaggle.com/code/ahmedberatozer/casmi26-v14-pubchemlite | **Pin to original** | exact copy of the public 0.455 | 0.455 |
-| 4 | CASMI26 | https://www.kaggle.com/code/seyitkaangunes/casmi26-e006-n1a-cc-by-chebi-lb-0-452 | **Always use latest environment** | public 0.452 code on the newer image | 0.457 |
-
-NTL has only **1** slot left today; CASMI has **4**.
-
-If "latest environment" isn't offered, check the notebook's version settings: the newer image is the one guhongbin's v459 "defaultimg" uses.
+## 2. NTL: the 0.594 + our retrained 8B adapter (not ready yet)
+This waits until the Colab training finishes (about 8 pm IST tonight) and the variant notebook is checked. Aryan will send the notebook file and the dataset link.
