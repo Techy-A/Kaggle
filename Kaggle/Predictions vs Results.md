@@ -31,7 +31,7 @@ Back to [[Kaggle Home]].
 | 18 Oct | NTL | 0.556 + GLM+Claude gate (GLM-4-9B features, λ 1) | our own change (lab simulation) | 0.558, **bias-adjusted 0.554–0.558** (gate on the full posterior, same scale as the proven Claude gate; the sim gain was measured on the stylegram only) | 0.555 | −0.003 (inside the adjusted range) |
 | 18 Oct | NTL | 0.557 public copy (lightningv08, TabPFN inside) | exact copy | 0.557 | 0.557 | 0.000 |
 | 18 Oct | CASMI | 0.454 public copy (guhongbin v459 e006 defaultimg) | exact copy | 0.454 | 0.454 | 0.000 |
-| 18 Oct | NTL | 0.559 public copy (obstacledeveloper adaptive centered stylegram) | exact copy | 0.559 | pending | |
+| 18 Oct | NTL | 0.559 public copy (obstacledeveloper adaptive centered stylegram), run by Kino | exact copy | 0.559 | 0.559 | 0.000 |
 | 19 Oct | NTL | 0.563 public copy (vnton37nguyn ntl-lora-instyle) | exact copy | 0.563 | **0.561** | **−0.002**: the first exact copy to miss (earlier copies 4/4 exact). Likely GPU nondeterminism in the LoRA members, or newer dataset versions mounted than the author's run |
 | 19 Oct | CASMI | 0.456 public copy (guhongbin v465 v15 pop015, old image) | exact copy | 0.456 | pending | |
 | 19 Oct | NTL | 0.569 public copy (prvsiyan the-prompt-is-not-the-author) | exact copy (the last copy missed by −0.002) | 0.569, **range 0.567–0.569** | pending | |
