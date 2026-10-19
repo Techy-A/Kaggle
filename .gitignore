@@ -3,3 +3,4 @@ __pycache__/
 */data/
 name-that-llm/lab/data/
 name-that-llm/lab/*.log
+*.pkl
