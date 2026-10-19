@@ -25,8 +25,9 @@ Back to [[Kaggle Home]].
 | 08 | [[08 Cheminformatics & MS]] | InChIKey14, tautomers, derive rules | tautomers |
 | 09 | [[09 ML Engineering & Reproducibility]] | pinning, the 0.451 vs 0.447 rerun, Kaggle limits | none |
 | 10 | [[10 Competition Playbook]] | **the decision rules**, one page | none |
-| 11 | [[reports/Building and introspecting great models\|Building & introspecting great models]] (research report) | how top practitioners do error analysis, introspection, data audits and final picks, plus action tables for CASMI and NTL | none |
-| 12 | [[reports/Kaggle grandmaster handbook\|Kaggle Grandmaster Handbook]] (research report) | **the book**: progression and medal maths, picking competitions, workflow, small hacks with measured gains, compute and costs, reading list, and a plan for each of our competitions | none |
+| 11 | [[11 Speech Assessment]] | SHL grammar scoring: speech encoders, the ASR filter, losses, robustness, industry systems; ranked untried ideas | none |
+| 12 | [[reports/Building and introspecting great models\|Building & introspecting great models]] (research report) | how top practitioners do error analysis, introspection, data audits and final picks, plus action tables for CASMI and NTL | none |
+| 13 | [[reports/Kaggle grandmaster handbook\|Kaggle Grandmaster Handbook]] (research report) | **the book**: progression and medal maths, picking competitions, workflow, small hacks with measured gains, compute and costs, reading list, and a plan for each of our competitions | none |
 
 ## Eight-week plan (weeks start Monday)
 This plan fits the [[Daily Routine]]: one Kaggle Learn lesson and 10 O'Reilly pages a day, plus **one study block of about 45 min** taken from this guide.
