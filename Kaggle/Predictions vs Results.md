@@ -35,7 +35,7 @@ Back to [[Kaggle Home]].
 | 19 Oct | NTL | 0.563 public copy (vnton37nguyn ntl-lora-instyle) | exact copy | 0.563 | **0.561** | **−0.002**: the first exact copy to miss (earlier copies 4/4 exact). Likely GPU nondeterminism in the LoRA members, or newer dataset versions mounted than the author's run |
 | 19 Oct | CASMI | 0.456 public copy (guhongbin v465 v15 pop015, old image) | exact copy | 0.456 | 0.456 | 0.000 |
 | 19 Oct | NTL | 0.594 public copy (lightningv08 two-stage LoRA + OLMo2 ensemble) | exact copy | 0.594, **range 0.592–0.594** | 0.594 | 0.000 |
-| 19 Oct | NTL | 0.597 public copy (alexchilton 0.592 + 0.569 blend) | exact copy | 0.597, range 0.595–0.597 | pending | |
+| 19 Oct | NTL | 0.597 public copy (alexchilton 0.592 + 0.569 blend) | exact copy | 0.597, range 0.595–0.597 | 0.597 | 0.000 |
 | 19 Oct | NTL | two-stage LoRA 8B, own rebuild of the 0.592 recipe (Colab-trained, 8B only, blend weights carried over) | our own change (rebuild of a public recipe) | 0.575, **range 0.565–0.585** (0.592 had 8B+14B with refit weights) | pending | |
 | 19 Oct | NTL | 0.569 public copy (prvsiyan the-prompt-is-not-the-author) | exact copy (the last copy missed by −0.002) | 0.569, **range 0.567–0.569** | 0.569 | 0.000 |
 | 18 Oct | CASMI | A: seyitkaangunes 0.452 code (E006 + rel150 + N1A + CC BY ChEBI) on v459's newer docker image | image swap (v459 = the 0.446 code on this image) | 0.457 (0.452 + part of the +0.008 image effect), **range 0.452–0.460** | pending | |
