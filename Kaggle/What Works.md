@@ -35,3 +35,8 @@ Back to [[Kaggle Home]]. Every entry has evidence. *LB* = public leaderboard.
 - **Error analysis before tuning (CASMI26, 17 Oct).** The bench showed class 3 holds almost all the lost points. The near-miss analysis showed the bottleneck is *parent selection* (6 analogs). One config knob (20 analogs) raised generated novel answers from 46 to 69 of 130 on the bench.
 - **Calibrate a bench against known LB results before trusting it.** The unseen bench got 2 of 3 known variant directions right; it fails exactly where its class mix differs from the test (PubChem-only class 2).
 - **Exact pinned copies of the best public notebook are free points (NTL, 18 Oct).** The 0.556 copy scored 0.556 and moved us from bronze to silver (rank 53 of 1356). Copies have been unbiased 3 of 3 times. #lb-proven #ntl
+
+## SHL, 20 Oct: pseudo-label only the views the teacher can teach
+- Soft pseudo-labels on just the two DeBERTa text ridges, with a fold-honest teacher (blend weights fitted without the held-out fold): OOF 0.3386 → 0.3375, P 0.987, stable across fold seeds, head retrains and leak controls.
+- **Why it works:** the audio-heavy teacher passes text-only models information they can't hear themselves, including about the hard 45 s test batch.
+- **Caveat:** small (forecast 0.3169 vs 0.3178), and the subset was chosen after seeing the all-member result.
