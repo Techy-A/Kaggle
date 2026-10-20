@@ -224,3 +224,4 @@ Paired delta vs the 0.556 base; P = bootstrap P(better) over draws.
   - Other public notebooks: josephadamski91 two-stage + ATLAS at 0.596 (rank only), and lightningv08 0.595 (Gaussian + OLMo2).
 - 20:40 IST: the Colab checkpoint is still not on Kaggle (it was expected about 20:00).
 - **19 Oct, 23:57 IST: the 0.597 copy scored 0.597**, an exact hit. Rank **31/1904, silver**. Lines: gold **0.603** (rank 13, up from 0.599 three hours earlier), silver 0.592, bronze 0.569. 23 teams are at 0.599 or better. The field is moving fast, so the copies only hold our position.
+- **20 Oct, 06:42 IST NTL scan:** new public **0.600**, kirilltym/0-600-teach-the-model-remove-the-prompt. It is the two-stage LoRA plus both of prvsiyan's Gaussian heads, with the same public inputs as the 0.597 and no TabPFN or ATLAS. Exact copy built in `push_ntl600` but **not pushed**: our GPU quota is 0.66 h, and the similar 0.597 run used 0.69 h. Added to the Kino list (item 3).

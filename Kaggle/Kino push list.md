@@ -12,3 +12,10 @@ Forecast 0.456–0.458. Depth 7 gave +0.003 and +0.004 on two earlier bases and 
 
 ## 2. NTL: the 0.594 + our retrained 8B adapter (not ready yet)
 Low priority: the 0.592 author found that seed averaging didn't help (forecast 0.594, likely a tie). It waits until the Colab training finishes (about 8 pm IST tonight). Aryan will send the notebook file and the dataset link if we go ahead.
+
+## 3. NTL: the new public 0.600 (exact copy), highest value today
+1. Open https://www.kaggle.com/code/kirilltym/0-600-teach-the-model-remove-the-prompt and click **Copy & Edit**.
+2. Accelerator **GPU T4 ×2**, Internet **off**, Environment **Pin to original**. Change nothing in the code.
+3. Click **Save Version → Save & Run All** (about 40 min). When it finishes, submit `submission.parquet`.
+
+Forecast 0.600. Our GPU quota is down to 0.66 h until Saturday, and a similar run used 0.69 h.
