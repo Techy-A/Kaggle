@@ -19,3 +19,8 @@ Low priority: the 0.592 author found that seed averaging didn't help (forecast 0
 3. Click **Save Version → Save & Run All** (about 40 min). When it finishes, submit `submission.parquet`.
 
 Forecast 0.600. Our GPU quota is down to 0.66 h until Saturday, and a similar run used 0.69 h.
+
+## Update 22 Oct (our GPU quota is 0.66 h until Sat 05:30 IST), highest value first
+1. **CASMI26 public 0.464** (above our 0.456 and the old gold line of 0.463): https://www.kaggle.com/code/dmitriigluzdov/casmi-26-the-data-behind-spectra-to-structures. Copy & Edit, **Pin to original**, GPU T4, Internet off, Save & Run All, then submit `submission.csv`. Forecast 0.464. Inputs are dmitriigluzdov's own datasets (licences still to be checked before any final selection). The "Atlas" in the code is NP Atlas, the natural-product database, not the NTL ATLAS adapter.
+2. **NTL public 0.625**: https://www.kaggle.com/code/vishakkbhat/v1-vishak (OLMo-2 13B + Qwen3 14B/8B). Not checked yet: its metadata lists no datasets, so confirm it runs as a Copy & Edit before spending a slot. Next best: dhruvtibarewal/nlm-v21 at 0.611.
+3. Then NTL 0.600 and CASMI depth 7 from the list above, if slots remain.
