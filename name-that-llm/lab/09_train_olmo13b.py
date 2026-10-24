@@ -212,7 +212,7 @@ class Trainer:
             step += 1
             if step == start + 20 and max_secs:   # shorten the schedule to the time budget (cosine still reaches 0)
                 per = (time.time() - t0) / 20
-                new = torch.tensor([min(sch['total'], max(warm + 1, int(max_secs / per)))])
+                new = torch.tensor([min(sch['total'], max(warm + 1, int(max_secs / per)))], device=self.dev)   # NCCL: on GPU
                 if WORLD > 1:
                     dist().broadcast(new, 0)
                 if int(new) < sch['total']:

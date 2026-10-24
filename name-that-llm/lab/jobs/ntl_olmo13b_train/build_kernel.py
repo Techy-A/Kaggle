@@ -19,7 +19,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 LAB = os.path.join(HERE, '..', '..')
 FILES = ['09_train_olmo13b.py', 'olmo13b_member.py', '07_train_encoders.py', '08_blend_oof.py']
-STAGE1_HOURS = 8.0   # + ~0.6 h of loading, filtering and scoring: the stage1 kernel stays near 9 h
+STAGE1_HOURS = 6.5   # measured 13.2 s/step (1 triplet per pass) in v1; + ~0.6 h loading/scoring; Kaggle total ~12 h
 MEMBER_DS = 'aryanawasthiteykik/ntl-olmo13b-member'
 
 GPU_CHECK = '''# Fail fast: pushes have landed on CPU-only machines ("Torch not compiled with CUDA").
@@ -57,7 +57,7 @@ POOL, BASE = find('pool_v4.parquet'), olmo_dir()
 OUT = '/kaggle/working/ntl-olmo13b-member'
 os.makedirs(OUT, exist_ok=True)
 NG = torch.cuda.device_count()
-ARGS = ['--train', TRAIN, '--pool', POOL, '--base', BASE, '--out', OUT]
+ARGS = ['--train', TRAIN, '--pool', POOL, '--base', BASE, '--out', OUT, '--micro-triplets', '3']   # 9 passages/pass
 ENV = dict(os.environ, TOKENIZERS_PARALLELISM='false', PYTORCH_CUDA_ALLOC_CONF='expandable_segments:True',
            HF_HUB_DISABLE_PROGRESS_BARS='1')
 T0 = time.time()

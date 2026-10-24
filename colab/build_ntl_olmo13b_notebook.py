@@ -16,10 +16,10 @@ MD = """# NTL: OLMo-2-13B two-stage LoRA member, trained on free Colab (T4)
 Runs `name-that-llm/lab/09_train_olmo13b.py` (embedded below): nishantdahal's 14B two-stage LoRA recipe on
 allenai/OLMo-2-1124-13B (Apache-2.0), first 27 of 40 layers, base in 4-bit NF4 (QLoRA). Units, in this order:
 
-1. `stage1`: 1 epoch of nishantdahal's public pool (pool_v4, CC BY-SA 4.0), about 17 h on one T4, so several sessions.
-   It normally runs on Kaggle (2x T4, about 8 h); when it has, it is picked up from the dataset below and skipped.
-2. `fold0` .. `fold4`: stage 2 on 4/5 of the prompts, scoring the held-out fifth (the OOF), about 1 h each.
-3. `full`: stage 2 on all rows, writes `lora_olmo2_13b/` (the member the 0.636 notebook variant loads), about 1.3 h.
+1. `stage1`: 1 epoch of nishantdahal's public pool (pool_v4, CC BY-SA 4.0), about 20-27 h on one T4, so several
+   sessions. It normally runs on Kaggle (2x T4, capped at 6.5 h); when it has, it is picked up from the dataset below and skipped.
+2. `fold0` .. `fold4`: stage 2 on 4/5 of the prompts, scoring the held-out fifth (the OOF), about 1.5 h each.
+3. `full`: stage 2 on all rows, writes `lora_olmo2_13b/` (the member the 0.636 notebook variant loads), about 2 h.
 4. `merge`: the OOF summary (`oof_olmo13b.npz`, `summary_olmo13b.json`), seconds.
 
 **What to do:** Runtime → Change runtime type → **T4 GPU**, then Runtime → **Run all**. Approve the Google Drive
@@ -41,7 +41,7 @@ CODE = "/content/ntl_olmo13b_code"            # the embedded scripts (re-written
 DATA = "/content/data"                        # train.csv (competition) and pool_v4.parquet (nishantdahal)
 BASE = "/content/olmo2_13b"                   # the base's config, tokenizer and the shards of layers < KEEP
 HF_ID, KEEP = "allenai/OLMo-2-1124-13B", 27   # same weights as Kaggle's allenai/olmo-2/Transformers/1124-13b/1
-EST_H = {"stage1": 17.0, "fold0": 1.0, "fold1": 1.0, "fold2": 1.0, "fold3": 1.0, "fold4": 1.0, "full": 1.3,
+EST_H = {"stage1": 24.0, "fold0": 1.6, "fold1": 1.6, "fold2": 1.6, "fold3": 1.6, "fold4": 1.6, "full": 2.0,
          "merge": 0.0}   # T4 estimates
 """
 
@@ -158,7 +158,7 @@ for unit in UNITS:
     print(f"\\n=== {unit} (about {EST_H[unit]} h on a T4; {left:.1f} h of units left)", flush=True)
     t = time.time()
     cmd = [sys.executable, "-u", f"{CODE}/09_train_olmo13b.py", "--unit", unit, "--train", f"{DATA}/train.csv",
-           "--pool", f"{DATA}/pool_v4.parquet", "--base", BASE, "--out", WORK]
+           "--pool", f"{DATA}/pool_v4.parquet", "--base", BASE, "--out", WORK, "--micro-triplets", "3"]
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
                          env={**os.environ, "HF_HUB_DISABLE_PROGRESS_BARS": "1", "TOKENIZERS_PARALLELISM": "false",
                               "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"})
