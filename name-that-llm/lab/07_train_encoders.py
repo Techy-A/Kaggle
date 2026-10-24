@@ -43,7 +43,7 @@ LABELS = sorted(['gpt-5.5', 'gpt-5.6-luna', 'gpt-5.6-sol', 'gpt-5.6-terra', 'gpt
 K = len(LABELS)
 MAX_LEN = 512   # enc_infer.py hard-codes 512
 MEMBERS = {   # published recipe; micro = micro-batch for gradient accumulation (memory only, same maths)
-    'modernbert': dict(backbone='answerdotai/ModernBERT-large', lr1=2e-5, bs1=32, micro=16, ckpt=False),
+    'modernbert': dict(backbone='answerdotai/ModernBERT-large', lr1=2e-5, bs1=32, micro=8, ckpt=False),   # 16 OOMs a T4
     'desklib': dict(backbone='desklib/ai-text-detector-v1.01', lr1=2.8e-5, bs1=64, micro=16, ckpt=True),
 }
 LEAK_COS = 0.3   # Nishant's filter: pool passages with content TF-IDF cosine >= 0.3 to a train passage are out

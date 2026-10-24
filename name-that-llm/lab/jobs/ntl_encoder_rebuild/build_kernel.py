@@ -7,11 +7,12 @@ What it does on Kaggle (T4 x2, internet on for the HF backbones):
 4. Run the notebooks' own enc_infer.py, verbatim, on the saved dirs.
 It uses the 0.627 notebook's pinned docker image so the checkpoints load in that image.
 
-Usage: python build_kernel.py   (then push with: kaggle kernels push -p .)
+Usage: python build_kernel.py [member ...]   (default both; then push with: kaggle kernels push -p .)
 Output: ntl-encoder-rebuild.ipynb, kernel-metadata.json (this directory).
 """
 import json
 import os
+import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SCRIPT = open(os.path.join(HERE, '..', '..', '07_train_encoders.py')).read()
@@ -54,11 +55,12 @@ TRAIN, TEST, POOL = find('train.csv'), find('test.csv'), find('pool_v4.parquet')
 OUT = '/kaggle/working/ntl-ours-rebuild'
 os.makedirs(OUT, exist_ok=True)
 HOURS = dict(modernbert=2.5, desklib=3.0)   # stage-1 wall-time caps: the whole job stays under ~4.5 h
-NAMES = ['modernbert', 'desklib']
+NAMES = __NAMES__
 T0 = time.time()
 
 def launch(name, gpu):
-    env = dict(os.environ, CUDA_VISIBLE_DEVICES=str(gpu), TOKENIZERS_PARALLELISM='false')
+    env = dict(os.environ, CUDA_VISIBLE_DEVICES=str(gpu), TOKENIZERS_PARALLELISM='false',
+               PYTORCH_CUDA_ALLOC_CONF='expandable_segments:True')
     return subprocess.Popen([sys.executable, '07_train_encoders.py', '--member', name, '--train', TRAIN, '--pool', POOL,
                              '--out', OUT, '--stage1-hours', str(HOURS[name])],
                             env=env, stdout=open(f'/kaggle/working/log_{name}.txt', 'w'), stderr=subprocess.STDOUT)
@@ -85,7 +87,7 @@ PACKAGE = '''# The notebooks only look for light_members.npz to find this folder
 import json, os, subprocess, sys
 import numpy as np, pandas as pd
 from sklearn.metrics import balanced_accuracy_score
-LABELS = sorted(json.load(open(f'{OUT}/modernbert/config.json'))['label2id'])
+LABELS = sorted(json.load(open(f'{OUT}/{NAMES[0]}/config.json'))['label2id'])
 np.savez(f'{OUT}/light_members.npz', labels=np.array(LABELS, dtype=str))
 train = pd.read_csv(TRAIN)
 for i, n in enumerate(NAMES):   # the notebooks' enc_infer.py, verbatim, on the saved dirs
@@ -119,7 +121,7 @@ nb = dict(nbformat=4, nbformat_minor=4, metadata=dict(kernelspec=dict(name='pyth
                  cell('code', GPU_CHECK),
                  cell('code', '%%writefile 07_train_encoders.py\n' + SCRIPT),
                  cell('code', '%%writefile enc_infer.py\n' + ENC_INFER),
-                 cell('code', RUN),
+                 cell('code', RUN.replace('__NAMES__', repr(sys.argv[1:] or ['modernbert', 'desklib']))),
                  cell('code', PACKAGE)])
 json.dump(nb, open(os.path.join(HERE, 'ntl-encoder-rebuild.ipynb'), 'w'), indent=1)
 meta = {
