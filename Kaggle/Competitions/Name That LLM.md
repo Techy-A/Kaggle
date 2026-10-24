@@ -230,3 +230,10 @@ Paired delta vs the 0.556 base; P = bootstrap P(better) over draws.
 - Scan: 0.636 fleongg contains ATLAS (rank only). The 0.624-0.628 notebooks (romantamrazov, mrpicklerick ×2, nuridudak ×2, ozertuu) all depend on nuridudak/ntl-ours-v1, which is now private, and fall back to about the 0.620 base without it. The clean best is cosmorin's 0.622 reproduction of nishantdahal's 0.620.
 - Pushed and auto-submitting: the 0.622 exact copy, and the 0.636 exact copy for rank only (never a final selection).
 - Next: encoder-member rebuild (06:30) and ATLAS rebuild (07:30), so the 0.624-0.636 lines become usable as our own work.
+
+## 24 Oct: ATLAS licence decision
+- **The user accepted ATLAS under CC BY-SA 4.0** on 24 Oct (option 1). Since 20 Oct, josephadamski91/ntl-atlas-qwen3-8b-v1 ships `LICENSES.md`: weights and docs are CC BY-SA 4.0 and the code is Apache-2.0. Kaggle's licence field still says "other".
+- So the **0.636 copy (fleongg/ntl-part-two-complement) is now eligible as a final pick**, with attribution to Joseph Adamski and share-alike on derived weights.
+- The old "ATLAS = rank only" rule is lifted **for this dataset only**. TabPFN stays rank only.
+- Our rebuild is parked as an optional A/B: code in `lab/atlas/` and `lab/08_train_atlas.py`, the Colab notebook `colab/ntl_atlas_train.ipynb`, and the unpushed variant `/home/user/work/push_ntl636_ouratlas`. The full unit takes about 4 h on a T4, and the expected effect is within ±0.003.
+- Our 0.636 submission's description still says "rank only", from before this decision.
