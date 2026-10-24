@@ -312,3 +312,8 @@ Honest slices only: class 1 from the np bench (70 molecules; the structure keeps
 - **Fix to the bench:** add a "thin class-1" slice (keep only 1–5 library spectra per answer) and gate any list-composition change on how often the correct answer loses rank 1.
 - **Fix to the method (H&M lesson):** compute list-relative features over the original, non-generated candidates only, so generated additions can't re-score them, and give the ranker source flags.
 - The probability of −0.010 under the honest bench plus noise is about 1%. So either the test has something the bench lacks, or the public draw was unlucky.
+
+## 24 Oct, 05:40 IST: GPU reset push
+- Scan first: the new public **0.465** (sanpier, candidate-aware PubChem promotion) is **not reproducible**. Its blank input is required: it asserts on casmi_spectrum_model_v1.zip and selected_policy.json.
+- Pushed and auto-submitting: the 0.464 exact copy (dmitriigluzdov) and 0.464 + depth 7 (2 CASMI slots, approved by the user for today).
+- Leaderboard as of 23 Oct: 3,884 teams. We are rank 526 at 0.456. Silver 0.464, gold 0.471 (rank 17), top 0.504; 376 teams are at 0.464 or better.
