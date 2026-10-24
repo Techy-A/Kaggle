@@ -95,3 +95,20 @@ Assumed where the write-up is silent (⚠):
 
 The 0.627 notebook also writes a fallback submission when test has fewer than 50 rows, which skips **every** member. Its
 commit run therefore never exercises the encoders. They load only in the hidden scoring run.
+
+## Rebuild results (2026-10-24; job aryanawasthiteykik/ntl-encoder-rebuild, T4)
+
+Both runs used the pinned image `9a6bcfda…` (GPU: 2× T4, torch 2.11+cu128, transformers 5.16.1).
+
+| | ours: stage 1 only | ours: OOF | nuridudak (122k pool) | stage-1 time |
+|---|---|---|---|---|
+| modernbert (v2; micro-batch 16 OOMed in v1, 8 works) | 0.521 | **0.553** | 0.542 / 0.569 | 1.65 h, 4680 steps |
+| desklib (v1) | 0.503 | **0.499** | 0.522 / 0.523 | 2.35 h, 2340 steps |
+
+The 0.620 base's OOF is not published. Against the rebuilt SVC member alone (`08_blend_oof.py`), which scores 0.477, or 0.479
+with Sinkhorn, these are the results with Sinkhorn:
+- SVC + modernbert 0.30 + desklib 0.05: 0.581
+- SVC + 0.25/0.10: 0.581
+- SVC + 0.40/0.10: 0.583
+The bootstrap over prompts gives +0.10 with P(better) = 1.000 for each. This is an upper bound on the gain over the full
+base, whose CV is 0.642. Packaged as aryanawasthiteykik/ntl-ours-rebuild (private).
