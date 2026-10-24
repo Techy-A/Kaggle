@@ -346,3 +346,9 @@ Honest slices only: class 1 from the np bench (70 molecules; the structure keeps
 - The diffs compose exactly: stack vs genfix = the 38 gate lines; stack vs gate = the 87 genfix lines.
 - Forecast 0.466 (0.464-0.468).
 - Source of the gate idea: dariushafshar's public-chain table. Every +0.008 frontier step came from GLACIER/ICEBERG evidence coverage (N1A proxies, N1 challenger); gate tweaks on 0.464 gave +0.000.
+
+## 24 Oct: research on getting above 0.466 (see `Study Guide/research_notes/CASMI above 0.466.md`)
+- **Correction:** the 0.465 *is* reproducible. sanpier's wrapper embeds the scored pipeline (sanpier data-behind v2, a fork of dmitriigluzdov v16) as base64. Its only change is a candidate-level PubChem promotion gate. The neural add-on is unscored.
+- Built, not pushed: `/home/user/work/push_casmi465_exact` (exact copy) and `/home/user/work/push_casmi464_candgate` (the gate on our v24 base, `variants/port_candgate.py`).
+- Chain data (481 versions): identical reruns score identically (32 of 33 groups), so the ±0.004 "noise" came from unpinned copies. Steps are quantised at one molecule = 0.0076. The only big repeatable lever is forward-model coverage (N1 challenger, +0.008 ×3). Wider generation lost every time (−0.008 to −0.012). Prior and threshold tweaks are flat.
+- Host, 17 Oct (discussion 750330): non-commercial open licences are now allowed, so the CC BY-NC-SA flag no longer blocks the final picks. NIST is still banned.
