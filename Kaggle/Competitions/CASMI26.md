@@ -338,3 +338,11 @@ Honest slices only: class 1 from the np bench (70 molecules; the structure keeps
 - **Forecast:** 0.464–0.467, point 0.465. Class 1 is safe on the bench. The real gain is the honest class-3 share, about +0.000 to +0.004, under ±0.004 run noise. A loss would point to runtime or downstream fusion, not to re-scoring.
 - **Licence flag:** the 0.464's main asset dataset (`casmi26-attributed-v4g-reproduction-assets`, which holds Ahmed's engine) is CC BY-NC-SA 4.0. That applies to the base and to this variant alike.
 - 0.464 + depth 7 scored 0.456 (−0.008), so depth 7 is dropped on this base.
+
+## 24 Oct, 11:40 IST: gate + genfix stack pushed (3rd CASMI slot today; the user asked to push today)
+- `push_casmi_gate_genfix` (aryanawasthiteykik/casmi26-gate-genfix) = the 0.464 copy plus two changes:
+  - **the candidate-level PubChem promotion gate** (the research agent's implementation of the change behind sanpier's 0.465: promotion uses the leader candidate's own S, popularity and fingerprint margin; thresholds unchanged; writes pubchem_promotion_audit.csv);
+  - **the features-frozen gen20** (δ 2.0, max 60 new).
+- The diffs compose exactly: stack vs genfix = the 38 gate lines; stack vs gate = the 87 genfix lines.
+- Forecast 0.466 (0.464-0.468).
+- Source of the gate idea: dariushafshar's public-chain table. Every +0.008 frontier step came from GLACIER/ICEBERG evidence coverage (N1A proxies, N1 challenger); gate tweaks on 0.464 gave +0.000.

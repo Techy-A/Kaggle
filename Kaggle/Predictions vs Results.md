@@ -50,3 +50,4 @@ Back to [[Kaggle Home]].
 | 24 Oct | CASMI | 0.464 + engine GBM max_depth 7 | our own change | 0.464-0.467 (+0.003 on two earlier bases; noise ±0.004) | **0.456** | **−0.008** |
 | 24 Oct | NTL | 0.622 public copy (cosmorin reproduction of nishantdahal 0.620) | exact copy | 0.622 (range 0.620-0.622) | pending | |
 | 24 Oct | NTL | 0.636 public copy (fleongg, contains ATLAS: rank only, never a final selection) | exact copy | 0.636 | pending | |
+| 24 Oct | CASMI | 0.464 + candidate-level PubChem gate + features-frozen gen20 (δ 2.0) | our own change (stack of 2) | **0.466, range 0.464-0.468** (gate +0.001: documented 0.464→0.465 step; genfix +0.000 to +0.003: thin-class-1 bench 0/270 rank-1 losses; one molecule = 0.0076) | pending | |
