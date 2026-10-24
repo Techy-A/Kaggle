@@ -266,3 +266,8 @@ Paired delta vs the 0.556 base; P = bootstrap P(better) over draws.
 - **Forecast (written before submitting): public 0.642** (range 0.638-0.647). Reasoning: the proxy gain (+0.03) overstates because the 0.639 stack already holds three 14B/8B LoRAs of the same kind; a fifth-to-tenth of that survives, plus it is a new base model family (OLMo). Blend-composition changes have a poor LB record, and this one changes only a member weight, so the downside is about -0.002.
 - **Runtime estimate:** forward only through 27 of 40 layers, NF4, T4. From training throughput (about 1.8 passages/s with backward and checkpointing) inference is about 6-8 passages/s: roughly 3 min per 1,000 test passages, plus about 5 min to load the base and adapter. Add that to the 0.639 notebook's own runtime.
 - **Caveats:** fold 0 only (540 rows, noise about 0.01); the proxy's weight scale is not the notebook's; the centred twin applies on clustered rows only in the notebook, while the proxy applies it on all rows.
+
+## OLMo-13B on the 0.639: measurement pushes (25 Oct 01:5x IST)
+Forecast written before submitting (TWIN_W = 0.10 in both): W=0.15 -> 0.642 (0.637-0.646); W=0.20 -> 0.641 (0.636-0.646).
+Reason: fold0 proxy gain flattens above W=0.05 and the proxy stack is weaker than the real one; pushed on the user's request to measure the weight response, not as a recommendation.
+Notebooks: ntl-0-639-olmo13b-w15, ntl-0-639-olmo13b-w20. Scores to be added below.
