@@ -1,0 +1,25 @@
+{
+ "id": "aryanawasthiteykik/ntl-olmo13b-full",
+ "title": "ntl-olmo13b-full",
+ "code_file": "ntl-olmo13b-full.ipynb",
+ "language": "python",
+ "kernel_type": "notebook",
+ "is_private": true,
+ "enable_gpu": true,
+ "enable_tpu": false,
+ "enable_internet": true,
+ "machine_shape": "NvidiaTeslaT4",
+ "docker_image_pinning_type": "latest",
+ "dataset_sources": [
+  "nishantdahal/ntl-handwriting-blend",
+  "dhruvtibarewal/nlm-offline-wheels",
+  "aryanawasthiteykik/ntl-olmo13b-member"
+ ],
+ "competition_sources": [
+  "name-that-llm"
+ ],
+ "kernel_sources": [],
+ "model_sources": [
+  "allenai/olmo-2/Transformers/1124-13b/1"
+ ]
+}

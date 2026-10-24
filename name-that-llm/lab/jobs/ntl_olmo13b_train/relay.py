@@ -6,7 +6,7 @@ dataset version (CC-BY-SA-4.0, as the pool it was trained on).
 Why: a Kaggle kernel holds no API token here, so the kernel writes outputs and this script publishes them; the next
 unit (or the Colab notebook) reads them from the dataset.
 Output: the mirror dir (default /home/user/work/ds_ntl_olmo13b_member) and a new dataset version.
-Usage: python relay.py --cli /path/to/kaggle_www.py [--mirror DIR]   (KAGGLE_API_TOKEN in the environment)
+Usage: python relay.py --cli /path/to/kaggle_www.py [--mirror DIR] [--kernel owner/slug]   (KAGGLE_API_TOKEN in the environment)
 """
 import argparse
 import json
@@ -22,12 +22,13 @@ KERNEL, DATASET = 'aryanawasthiteykik/ntl-olmo13b-train', 'aryanawasthiteykik/nt
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--cli', required=True)
+    ap.add_argument('--kernel', default=KERNEL)
     ap.add_argument('--mirror', default='/home/user/work/ds_ntl_olmo13b_member')
     a = ap.parse_args()
     kg = lambda *x, **kw: subprocess.run([sys.executable, a.cli, *x], **kw)
     dl = f'{a.mirror}_dl_{time.strftime("%m%d%H%M")}'
     os.makedirs(dl)
-    kg('kernels', 'output', KERNEL, '-p', dl, check=True)
+    kg('kernels', 'output', a.kernel, '-p', dl, check=True)
     src = os.path.join(dl, 'ntl-olmo13b-member')
     assert os.path.isdir(src), os.listdir(dl)
     os.makedirs(a.mirror, exist_ok=True)
@@ -44,7 +45,8 @@ def main():
     shutil.rmtree(src)
     json.dump({'title': DATASET.split('/')[1], 'id': DATASET, 'licenses': [{'name': 'CC-BY-SA-4.0'}]},
               open(os.path.join(a.mirror, 'dataset-metadata.json'), 'w'))
-    exists = kg('datasets', 'status', DATASET, capture_output=True).returncode == 0
+    st = kg('datasets', 'status', DATASET, capture_output=True, text=True)   # exit 0 is not enough: look for 'ready'
+    exists = st.returncode == 0 and 'ready' in st.stdout
     files = sorted(f for f in os.listdir(a.mirror) if f != 'dataset-metadata.json')
     msg = 'relay: ' + ', '.join(files)
     cmd = ['datasets', 'version', '-p', a.mirror, '-m', msg[:200], '-r', 'zip'] if exists else \

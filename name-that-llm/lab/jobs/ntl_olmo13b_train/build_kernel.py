@@ -9,8 +9,12 @@ The outputs land in /kaggle/working/ntl-olmo13b-member/; relay.py turns them int
 It fails fast without a GPU, and uses the latest GPU environment (no pinned image: a pinned gcr.io/kaggle-images digest
 is the CPU image). bitsandbytes comes from the wheel the 0.636 notebook installs (dhruvtibarewal/nlm-offline-wheels).
 
-Usage: python build_kernel.py stage1|stage2   (then: kaggle kernels push -p .)
-Output: ntl-olmo13b-train.ipynb, kernel-metadata.json (this directory).
+Single-unit kernels: `python build_kernel.py fold0` (or fold<k>, full) writes ../ntl_olmo13b_<unit>/ for a kernel
+aryanawasthiteykik/ntl-olmo13b-<unit> that runs just that unit on one GPU (stage 1 from the member dataset) and skips
+merge; run two of them in parallel sessions. relay.py --kernel ntl-olmo13b-<unit> publishes each one's output.
+
+Usage: python build_kernel.py stage1|stage2|fold<k>|full   (then: kaggle kernels push -p DIR)
+Output: ntl-olmo13b-train.ipynb, kernel-metadata.json (this directory; the single units: their own directory).
 """
 import json
 import os
@@ -109,7 +113,11 @@ def cell(kind, src):
 
 def main():
     unit = sys.argv[1] if len(sys.argv) > 1 else 'stage1'
-    assert unit in ('stage1', 'stage2'), unit
+    single = unit not in ('stage1', 'stage2')
+    assert not single or unit == 'full' or (unit.startswith('fold') and unit[4:].isdigit()), unit
+    out = os.path.join(HERE, '..', f'ntl_olmo13b_{unit}') if single else HERE
+    name = f'ntl-olmo13b-{unit}' if single else 'ntl-olmo13b-train'
+    os.makedirs(out, exist_ok=True)
     cells = [cell('markdown', f'# NTL OLMo-2-13B two-stage LoRA, unit `{unit}`\n\nnishantdahal\'s 14B two-stage LoRA '
                               'recipe on allenai/OLMo-2-1124-13B (Apache-2.0), first 27 of 40 layers, NF4 QLoRA; stage 1 '
                               'on nishantdahal/ntl-handwriting-blend pool_v4 (CC BY-SA 4.0), stage 2 on train with '
@@ -117,20 +125,26 @@ def main():
              cell('code', GPU_CHECK), cell('code', SETUP)]
     for f in FILES:
         cells.append(cell('code', f'%%writefile {f}\n' + open(os.path.join(LAB, f)).read()))
-    cells.append(cell('code', RUN.replace('__UNIT__', repr(unit)).replace('__HOURS__', str(STAGE1_HOURS))))
+    run = RUN.replace('__UNIT__', repr(unit)).replace('__HOURS__', str(STAGE1_HOURS))
+    if single:   # one unit on GPU 0 (a second GPU of the session stays idle), no merge
+        for old, new in [("    wait({f'gpu{g}'", "    plan = [[UNIT]]\n    wait({f'gpu{g}'"),
+                         ("    subprocess.run([sys.executable, '09_train_olmo13b.py', '--unit', 'merge', *ARGS], check=True)\n", "")]:
+            assert old in run, old
+            run = run.replace(old, new)
+    cells.append(cell('code', run))
     nb = dict(nbformat=4, nbformat_minor=4, cells=cells,
               metadata=dict(kernelspec=dict(name='python3', display_name='Python 3', language='python')))
-    json.dump(nb, open(os.path.join(HERE, 'ntl-olmo13b-train.ipynb'), 'w'), indent=1)
+    json.dump(nb, open(os.path.join(out, name + '.ipynb'), 'w'), indent=1)
     meta = {
-        'id': 'aryanawasthiteykik/ntl-olmo13b-train', 'title': 'ntl-olmo13b-train', 'code_file': 'ntl-olmo13b-train.ipynb',
+        'id': f'aryanawasthiteykik/{name}', 'title': name, 'code_file': name + '.ipynb',
         'language': 'python', 'kernel_type': 'notebook', 'is_private': True, 'enable_gpu': True, 'enable_tpu': False,
         'enable_internet': True, 'machine_shape': 'NvidiaTeslaT4', 'docker_image_pinning_type': 'latest',
         'dataset_sources': ['nishantdahal/ntl-handwriting-blend', 'dhruvtibarewal/nlm-offline-wheels'] +
-                           ([MEMBER_DS] if unit == 'stage2' else []),
+                           ([MEMBER_DS] if unit != 'stage1' else []),
         'competition_sources': ['name-that-llm'], 'kernel_sources': [],
         'model_sources': ['allenai/olmo-2/Transformers/1124-13b/1']}
-    json.dump(meta, open(os.path.join(HERE, 'kernel-metadata.json'), 'w'), indent=1)
-    print('wrote', HERE, 'unit', unit)
+    json.dump(meta, open(os.path.join(out, 'kernel-metadata.json'), 'w'), indent=1)
+    print('wrote', out, 'unit', unit)
 
 
 if __name__ == '__main__':
