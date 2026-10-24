@@ -245,3 +245,24 @@ Paired delta vs the 0.556 base; P = bootstrap P(better) over draws.
 
 ## 24 Oct scores
 - 0.622 copy = 0.622 and 0.636 copy = 0.636 (both exact). Leaderboard: rank 144/2932 at 0.636; gold 0.653 (rank 15), silver 0.636, bronze 0.624, top 0.7.
+
+## 24 Oct: OLMo-2-13B member, fold 0 result and 0.639 variant (CPU lab, `lab/10_olmo13b_fold0_gain.py`)
+- **Training finished.** Stage 1 (2,099 steps, 66,366 passages, 6.6 h on 2 T4): plain 0.494, centred-by-prompt 0.606. Fold 0 (stage 2, 239 steps): **plain 0.585, triplet-centred 0.646** (540 rows, 30 per class). Full unit (299 steps, 1.7 h): reload agreement 1.0, in-sample bacc 0.873 on 128 rows.
+- **Label order differs.** The OLMo files use the notebook's order (gpt first); the lab's encoder and token-attention OOFs are alphabetical. The script permutes by name. (The notebook variant uses the member's own order, as the 14B LoRAs do.)
+- **Stack proxy on fold 0:** SVC + modernbert 0.40 + desklib 0.10 (nuridudak 0.626 weights) + 3 token-attention members at 0.3, Sinkhorn over the 540 rows: **0.563**. It is far below the real 0.639 stack (the real LoRAs have no OOF), so the gains below are an upper bound.
+- **Grid (gain over W=0/TW=0, paired bootstrap over prompts, 2000 draws), selected rows:**
+
+| W | TWIN_W | bacc | gain | P(better) |
+|---|---|---|---|---|
+| 0 | 0.10 | 0.585 | +0.022 | 1.000 |
+| 0.05 | 0 | 0.567 | +0.004 | 0.75 |
+| 0.05 | 0.05 | 0.578 | +0.015 | 0.995 |
+| 0.05 | 0.10 | 0.594 | +0.032 | 1.000 |
+| 0.10 | 0.10 | 0.594 | +0.032 | 1.000 |
+| 0.20 | 0.10 | 0.600 | +0.037 | 1.000 |
+
+  Pattern: the centred twin carries the gain (the plain head alone needs W>=0.15 to reach P 0.94); gain rises with both weights, with no peak inside the grid, so it is not evidence for more than 0.10 on a stack this weak.
+- **Chosen: W = 0.05, TWIN_W = 0.10** (inside the 0.03-0.10 band). Built `/home/user/work/push_ntl639_olmo13b` with `variants/build_olmo13b_639.py --w 0.05 --twin-w 0.10` (cells 26 -> 29). **Not pushed, not submitted.**
+- **Forecast (written before submitting): public 0.642** (range 0.638-0.647). Reasoning: the proxy gain (+0.03) overstates because the 0.639 stack already holds three 14B/8B LoRAs of the same kind; a fifth-to-tenth of that survives, plus it is a new base model family (OLMo). Blend-composition changes have a poor LB record, and this one changes only a member weight, so the downside is about -0.002.
+- **Runtime estimate:** forward only through 27 of 40 layers, NF4, T4. From training throughput (about 1.8 passages/s with backward and checkpointing) inference is about 6-8 passages/s: roughly 3 min per 1,000 test passages, plus about 5 min to load the base and adapter. Add that to the 0.639 notebook's own runtime.
+- **Caveats:** fold 0 only (540 rows, noise about 0.01); the proxy's weight scale is not the notebook's; the centred twin applies on clustered rows only in the notebook, while the proxy applies it on all rows.
