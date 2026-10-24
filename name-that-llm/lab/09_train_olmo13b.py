@@ -29,14 +29,13 @@ Usage:
   torchrun --nproc_per_node 2 09_train_olmo13b.py --unit stage1 --train train.csv --pool pool_v4.parquet \
       --base OLMO_DIR --out OUT --stage1-hours 8.5
   python 09_train_olmo13b.py --unit fold0,fold1,fold2 ...   (one GPU each; also fold3,fold4,full; then --unit merge)
-  CPU check: lab/tests/check_olmo13b.sh (a tiny random OLMo-2, end to end, NF4 and fp32, 1 and 2 ranks)
+  CPU check: python lab/tests/check_olmo13b.py (a tiny random OLMo-2, end to end, NF4 and fp32, 1 and 2 ranks)
 """
 import argparse
 import importlib.util
 import json
 import math
 import os
-import shutil
 import sys
 import time
 
@@ -98,7 +97,7 @@ class Trainer:
         self.tok = om.tokenizer(a.base)
         self.eos = self.tok.convert_tokens_to_ids('<|endoftext|>')
         t0 = time.time()
-        self.model = om.load_trunk(a.base, a.keep, a.quant, dev, a.compute_dtype)
+        self.model = om.load_trunk(a.base, a.keep, a.quant, str(dev), a.compute_dtype)
         torch.manual_seed(a.seed)   # the same LoRA init on every rank
         self.lora = om.attach_lora(self.model, a.r, a.alpha, a.lora_dropout)
         H = self.model.config.hidden_size
@@ -239,8 +238,8 @@ class Trainer:
     def logits(self, ids, rows, groups):
         """Plain logits and logits of the centred head (features centred within each group) for `rows`.
         Several ranks: whole groups per rank, gathered on every rank."""
-        ug = np.unique(groups[rows])
-        mine = np.array([r for r in rows if groups[r] in set(ug[RANK::WORLD])], dtype=int)
+        my_groups = set(np.unique(groups[rows])[RANK::WORLD])
+        mine = np.array([r for r in rows if groups[r] in my_groups], dtype=int)
         Z = om.features(self.model, self.tok, [ids[i] for i in mine], self.a.layers, self.heads['norms'],
                         self.a.eval_bs, self.dev)
         Zc = Z.copy()
@@ -319,9 +318,9 @@ def merge(a, train, y, folds):
             d = np.array([bacc(y[i], pr[i]) - bacc(y[i], base[i]) for i in boots])
             res[f'svc_plus_olmo_{wgt}_sinkhorn'] = bacc(y, pr)
             res[f'svc_plus_olmo_{wgt}_p_better'] = float((d > 0).mean())
-    s1, sf = [json.load(open(os.path.join(a.out, f))) for f in ('summary_stage1.json', 'summary_full.json')] \
-        if os.path.exists(os.path.join(a.out, 'summary_full.json')) else (None, None)
-    json.dump(dict(scores=res, stage1=s1, full=sf), open(os.path.join(a.out, 'summary_olmo13b.json'), 'w'), indent=1)
+    side = {f[8:-5]: json.load(open(os.path.join(a.out, f))) for f in ('summary_stage1.json', 'summary_full.json')
+            if os.path.exists(os.path.join(a.out, f))}
+    json.dump(dict(scores=res, **side), open(os.path.join(a.out, 'summary_olmo13b.json'), 'w'), indent=1)
     for k, v in res.items():
         log(f'{k:36s} {v if isinstance(v, list) else round(v, 4)}')
 
@@ -355,7 +354,7 @@ def main():
     ap.add_argument('--seed', type=int, default=42)
     ap.add_argument('--svc-oof', help="08's oof_svc.npz, for the blend check in merge")
     ap.add_argument('--boot', type=int, default=2000)
-    ap.add_argument('--limit-pool', type=int, default=None, help='random subset of the pool (smoke tests)')
+    ap.add_argument('--limit-pool', type=int, default=None, help='random whole prompts, up to n passages (smoke tests)')
     ap.add_argument('--limit-prompts', type=int, default=None, help='first n train prompts only (smoke tests)')
     ap.add_argument('--allow-cpu', action='store_true')
     a = ap.parse_args()
@@ -406,7 +405,9 @@ def main():
             log(f'pool {len(pool)}, kept {int(keep.sum())} after the train-similarity filter')
             pool = pool[keep].reset_index(drop=True)
             if a.limit_pool:
-                pool = pool.sample(n=min(a.limit_pool, len(pool)), random_state=0).reset_index(drop=True)
+                ps = pool.prompt_id.drop_duplicates().sample(frac=1, random_state=0)   # whole prompts, for triplets
+                n = pool.groupby('prompt_id').size()[ps].cumsum()
+                pool = pool[pool.prompt_id.isin(n.index[n <= a.limit_pool])].reset_index(drop=True)
             ids_pool = tr.encode(pool.text)
             yp = pool.model.map({l: i for i, l in enumerate(LABELS)}).values
             tr.probe(ids_pool, yp)
@@ -446,7 +447,7 @@ def main():
                 if dev.type == 'cuda':
                     torch.cuda.empty_cache()
                 Z, heads = om.olmo_features(out_dir, a.base, train.text.values[chk].tolist(), a.eval_bs, LABELS,
-                                            device=dev)
+                                            device=str(dev))
                 P_re = Z @ heads['plain.weight'].T + heads['plain.bias']
                 agree, diff = float((P_re.argmax(1) == P_mem.argmax(1)).mean()), float(np.abs(P_re - P_mem).max())
                 log(f'reloaded {out_dir} with olmo_features: top-1 agreement {agree:.3f}, max |logit diff| {diff:.2e}')

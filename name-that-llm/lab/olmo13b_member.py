@@ -9,7 +9,7 @@ Why: 09_train_olmo13b.py trains with this module and the 0.636 notebook variant 
 are computed by the same code and the same NF4 base as in training. Merging into an fp16 base, as nishant's code
 does, would read a base the heads never saw (the NF4 rounding is not in the adapter).
 Output: none (a module). Usage: from olmo13b_member import olmo_features; Z, heads = olmo_features(ckpt, base, texts,
-8, LABELS); check: lab/tests/check_olmo13b.sh.
+8, LABELS); check: lab/tests/check_olmo13b.py.
 """
 import gc
 import json
