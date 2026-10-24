@@ -1,0 +1,62 @@
+parent_ref,parent_version,child_ref,child_first_version,how_known,note
+fleongg/ntl-part-two-complement,1,kirilltym/0-639-teach-more-keep-the-signature,1,credit,"markdown: ""Based on fleongg NTL Part Two Complement, scored V1"""
+josephadamski91/teach-the-model-10-atlas,1,kirilltym/0-637-remove-the-prompt-keep-the-signature,1,fork,Kaggle fork record; v3 re-bases on fleongg 0.636
+lightningv08/0-595-two-stage-lora-gaussian-olmo2,13,lightningv08/0-636-lora-llama-qwen3-8-27b,1,fork,Kaggle fork record
+nishantdahal/two-stage-lora-part-two,2,fleongg/ntl-part-two-complement,1,credit,"markdown: ""Main: Nishant Dahal two-stage part two, public version2""; comp stack + ATLAS from dhruvtibarewal/nlm-v21 (the ""scored 0.612 method"")"
+fleongg/ntl-part-two-complement,1,mtoshidesu/testntl-part-two-complement,1,fork,Kaggle fork record; exact copy
+mrpicklerick/ntl-0-627-encoder-ratio-6-to-1,2,amanatar/ntl-ultimate-sota-gpu-ensemble,1,code,rewrite; same members and weights as the 0.627 (similarity 0.45 to the 0.624 base)
+mrpicklerick/ntl-0-627-encoder-ratio-6-to-1,2,adityaakbar/ntl-0627-small-encoder-ensemble,1,credit,"markdown: ""Pickle Rick, v2 / 361476098"""
+josephadamski91/two-stage-lora-atlas-and-early-layers,1,romantamrazov/name-that-llm-who-am-i,1,code,v8 re-bases on nuridudak 0.624; v11 credits fleongg
+mrpicklerick/ntl-0-624-base-without-hard-typography-guards,1,mrpicklerick/ntl-0-627-encoder-ratio-6-to-1,1,code,one constant changed
+nuridudak/0-624-two-stage-lora-encoders-typoguard,1,nuridudak/0-626-when-llm-decoders-meet-bert-encodersv2,1,code,"same author, one constant changed"
+nuridudak/0-624-two-stage-lora-encoders-typoguard,1,mrpicklerick/ntl-0-624-base-without-hard-typography-guards,1,code,TYPO_GUARDS False + public-sample shortcut
+nishantdahal/two-stage-lora-part-two,1,nuridudak/0-624-two-stage-lora-encoders-typoguard,1,credit,"markdown: ""Base: nishantdahal/two-stage-lora-part-two"""
+nuridudak/0-624-two-stage-lora-encoders-typoguard,1,ozertuu/multi-scale-stylometry-dual-stage-lora-ensemble,1,copy,one print line differs
+nishantdahal/two-stage-lora-part-two,1,cosmorin/name-that-llm-public620-reproduction,1,fork,Kaggle fork record
+cosmorin/name-that-llm-public620-reproduction,1,emmanuelmirekumensah/name-that-llm-public620-repro-v1,2,copy,closest-code similarity 1.0
+nishantdahal/two-stage-lora-part-two,1,saamhm/qwen-lora-n-gram-svm-lr-ensemble-for-name-that-l,3,copy,v22 = nishant 0.620 with imports moved (26 changed lines)
+nishantdahal/two-stage-lora-on-the-public-pool,2,nishantdahal/two-stage-lora-part-two,1,credit,"markdown: ""Our first notebook scored 0.592"""
+nishantdahal/two-stage-lora-part-two,1,bartwoz/ntl-nishant-v1-reproduction-0-620,1,fork,Kaggle fork record; exact copy
+nishantdahal/two-stage-lora-part-two,1,emmanuelmirekumensah/name-that-llm-nishant-part-two-repro-v1,1,copy,closest-code similarity 1.0
+nishantdahal/two-stage-lora-part-two,1,huangkx666/ntl-v24-two-stage-part-two,1,copy,closest-code similarity 1.0
+dhruvtibarewal/nlm-v21,1,dazhijiang/name-that-llm-sota-fusion,3,code,closest-code similarity 0.9629
+prvsiyan/the-prompt-is-not-the-author,5,dhruvtibarewal/nlm-v21,1,code,rewrite: infer.py around nishant two-stage + own fold LoRAs; embeds the 0.569 stack as comp_stack.py
+kirilltym/0-600-teach-the-model-remove-the-prompt,20,josephadamski91/teach-the-model-10-atlas,1,code,title + code: 0.600 + 10% ATLAS
+lucasboesen/lora-x-adaptive-centering,1,lynnsakurai/lora-opt-ed-bot,1,fork,Kaggle fork record
+ahmedberatozer/name-that-llm-d,1,flexonafft/ntl-reproduction-and-experiments,5,code,closest-code similarity 0.0197
+lucasboesen/lora-x-adaptive-centering,3,prvsiyan/the-prompt-is-not-the-author,1,code,closest-code similarity 0.2126
+kirilltym/0-600-teach-the-model-remove-the-prompt,20,sangam21/two-stage-lora-gaussian-full-hungarian-0-604,1,fork,Kaggle fork record
+kirilltym/0-600-teach-the-model-remove-the-prompt,20,thechi/sota-6,1,fork,Kaggle fork record (code is a rewrite)
+sangam21/two-stage-lora-gaussian-full-hungarian-0-604,1,kiza123123/ntl-0604-dual-lora-gaussian-hungarian,2,copy,closest-code similarity 1.0
+sangam21/two-stage-lora-gaussian-full-hungarian-0-604,1,ozertuu/fast-result-for-lb-180-free-medals,1,fork,Kaggle fork record; exact copy
+kiza123123/ntl-0612-apex-invariants-hungarian,2,saddamaditya/name-that-llm-two-stage-lora-hungarian,1,code,closest-code similarity 0.9948
+sangam21/two-stage-lora-gaussian-full-hungarian-0-604,1,kiza123123/ntl-0612-apex-invariants-hungarian,2,code,closest-code similarity 0.9746
+kirilltym/0-600-teach-the-model-remove-the-prompt,20,otmaneelmahdaouy/ntl-v27-grandmaster-sovereign,1,code,closest-code similarity 0.9868
+kirilltym/0-600-teach-the-model-remove-the-prompt,20,zhangyiji/name-that-llm-v15-teach-remove-prompt,1,copy,closest-code similarity 1.0
+prvsiyan/the-prompt-is-not-the-author,5,zhangyiji/name-that-llm-v17-atlas,2,code,closest-code similarity 0.9901
+ahmedberatozer/name-that-llm-d,1,kirilltym/0-600-teach-the-model-remove-the-prompt,4,fork,Kaggle fork record
+kirilltym/two-stage-lora-gaussian-readout,4,pikaaa/name-that-llm-sota-master-ensemble,5,code,script rewrite (similarity 0.22)
+dhruvtibarewal/nlm-v21,1,mrpicklerick/ntl-0-611-fast-no-post-14b-reallocation,2,credit,title names the 0.611
+lynnsakurai/llm-decoder-qwen-ver,2,ahmedberatozer/name-that-llm-d,1,code,closest-code similarity 0.021
+ahmedberatozer/name-that-llm-d,1,lucasboesen/lora-x-adaptive-centering,1,code,closest-code similarity 0.0444
+lucasboesen/lora-x-adaptive-centering,3,lightningv08/0-595-two-stage-lora-gaussian-olmo2,2,code,closest-code similarity 0.7099
+kirilltym/0-600-teach-the-model-remove-the-prompt,13,maverickss26/kaggle-name-the-llm-v2,1,code,closest-code similarity 0.7469
+lucasboesen/lora-x-adaptive-centering,3,nishantdahal/two-stage-lora-on-the-public-pool,2,credit,"credits the LoRA24 recipe, adaptive centring, twin and Sinkhorn (new code)"
+nishantdahal/two-stage-lora-on-the-public-pool,2,alexchilton/ntl-0592-plus-0569,1,credit,title: 0.592 plus 0.569; runs prvsiyan 0.569 then mixes into nishant 0.592
+kirilltym/0-600-teach-the-model-remove-the-prompt,18,kirilltym/two-stage-lora-gaussian-readout,3,code,closest-code similarity 0.9993
+nishantdahal/two-stage-lora-on-the-public-pool,2,josephadamski91/two-stage-lora-atlas-and-early-layers,1,code,closest-code similarity 0.7991
+nishantdahal/two-stage-lora-on-the-public-pool,2,huangkx666/ntl-v20-average-clustering-prvsiyan-member,1,code,closest-code similarity 0.8966
+huangkx666/ntl-v20-average-clustering-prvsiyan-member,1,huangkx666/ntl-v21-em-dash-and-hungarian-guarded,1,code,closest-code similarity 0.9055
+huangkx666/ntl-v21-em-dash-and-hungarian-guarded,1,huangkx666/ntl-v22-gaussian-readout,1,code,closest-code similarity 0.7186
+huangkx666/ntl-v22-gaussian-readout,1,huangkx666/ntl-v23-pool-b2m,1,code,closest-code similarity 0.9977
+lynnsakurai/llm-decoder-qwen-ver,2,evgendvorkin/name-that-llm,2,code,closest-code similarity 0.0716
+prvsiyan/the-prompt-is-not-the-author,1,zbigniewkirchner/0-574-in-style-qwen3-8b-lora-fully-public,1,code,his own in-style LoRA added to the 0.569
+kirilltym/0-600-teach-the-model-remove-the-prompt,13,vnton37nguyn/ntl-lora-instyle-0-563,1,code,closest-code similarity 0.8538
+kirilltym/0-600-teach-the-model-remove-the-prompt,4,kirilltym/qwen2-5-lora-centered-twin,1,fork,Kaggle fork record
+nishantdahal/two-stage-lora-part-two,1,saamhm/qwen-lora-n-gram-svm-lr-ensemble-for-name-that-l,22,copy,later version re-based on this parent
+kirilltym/0-639-teach-more-keep-the-signature,1,maverickss26/kaggle-name-the-llm-v2,4,code,later version re-based on this parent
+nuridudak/0-624-two-stage-lora-encoders-typoguard,1,romantamrazov/name-that-llm-who-am-i,8,code,later version re-based on this parent
+fleongg/ntl-part-two-complement,1,romantamrazov/name-that-llm-who-am-i,11,credit,later version re-based on this parent
+fleongg/ntl-part-two-complement,1,kirilltym/0-637-remove-the-prompt-keep-the-signature,3,credit,later version re-based on this parent
+sangam21/two-stage-lora-gaussian-full-hungarian-0-604,1,flexonafft/ntl-reproduction-and-experiments,13,credit,later version re-based on this parent
+dhruvtibarewal/nlm-v21,1,lightningv08/0-636-lora-llama-qwen3-8-27b,14,code,later version re-based on this parent

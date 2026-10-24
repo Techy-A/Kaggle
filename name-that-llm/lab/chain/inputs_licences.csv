@@ -1,0 +1,20 @@
+input,visibility,licence,used_by,note
+nuridudak/ntl-ours-v1,private (403),-,"0.624, 0.625, 0.626, 0.627, 0.628 (encoders); romantamrazov v11/v12 lost it",public replacement nuridudak/ntl-two-stage-encoders (Apache-2.0) used by adityaakbar 0.631 and amanatar 0.632
+nuridudak/ntl-two-stage-encoders,public,Apache-2.0,"adityaakbar 0.631, amanatar 0.632",ModernBERT-large + desklib heads; desklib base model licence to check
+josephadamski91/ntl-atlas-qwen3-8b-v1,public,"Kaggle ""other""; LICENSES.md: weights CC BY-SA 4.0, code Apache-2.0","0.607, 0.611, 0.612, 0.636, 0.637, 0.639",accepted by the user under CC BY-SA (24 Oct)
+kirilltym/ntl-spectral-style-heads-paired-4404,public,unknown,"0.637 (official_only), 0.639 (synthetic4404)","synthetic4404 bank trained on 4,404 privately generated passages that are not released: rule 2.6 / licence risk for a final pick"
+lightningv08/ntl-olmo2-native24-final-inference-assets,public (re-versioned),other (README: components Apache-2.0 / CC BY-SA 4.0),lightningv08 0.602-0.636,"v20 runtime folders (ntl636-fulltext-qwen-external3200-runtime, ntl627-own-fulltext) are not in the current version; bundles llama31-prefix24 (Llama 3.1 Community Licence) and qwen38-27b-nf4"
+fleongg/ntl-quality-selected-public-svc-pool,public,other,"0.636, 0.637, 0.639",derived from public CC BY / CC BY-SA pools; no terms given
+fleongg/ntl-legacy-qwen24-recovery,public,other,"0.636, 0.637, 0.639",recovered public LoRA24 checkpoint; no terms given
+nishantdahal/ntl-handwriting-blend,public,CC BY-SA 4.0,every >=0.620 notebook,"pool_v4, Qwen3-14B / Qwen2.5-14B LoRAs, DeBERTa-v3-large"
+nishantdahal/ntl-two-stage-lora,public,CC BY-SA 4.0,0.594-0.612 and comp-stack notebooks,
+pjmathematician/ultrabert-380m-ntl,public,Apache-2.0,"comp stack, 0.631, 0.632",
+"zbigniewkirchner/ntl-qwen3-8b-lora-claude-head, -instyle",public,Apache-2.0,"comp stack, 0.612",
+"dhruvtibarewal/nlm-l24-adapters, nlm-matched-clean",public,MIT,"0.611, 0.612, 0.636-0.639",
+dhruvtibarewal/nlm-offline-wheels,public,other,0.611+,bitsandbytes wheels (MIT upstream)
+bbucxi/qwen35-9b-safetensors,public,unknown,comp stack (token-attention Qwen3.5),Qwen weights are Apache-2.0 upstream; Kaggle field says unknown
+lucasboesen/name-that-llm-glm4-9b-trunc25 (notebook output),public,notebook output,comp stack (glm9b twin and Gaussian head),GLM-4-9B weights: GLM-4 licence (commercial use after registration); check before a final pick
+lucasboesen/name-that-llm-desklib-weights (notebook output),public,notebook output,comp stack (desk 0.132),desklib/ai-text-detector-v1.01 base: check licence
+"prvsiyan/prvsiyans-extended-name-that-llm-dataset; seyitkaangunes, abdullah1afify, dophuchung, lucasboesen passage sets",public,CC BY 4.0,pools and comp stack,
+TabPFN,-,non-commercial (Prior Labs licence),none of the >=0.600 notebooks,only the 0.551-0.557 lightningv08 / kirilltym v14 era
+private-data-source,private,-,romantamrazov v12 (0.621),unnamed private input

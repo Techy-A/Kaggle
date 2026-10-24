@@ -1,0 +1,47 @@
+change_type,step,base_score,child_score,delta,confounded,note
+complementary stack (main 0.85 + 0.563-era stack 0.15),kirilltym/0-600 v19,0.592,0.594,+0.002,no,two-stage main (re-implemented 0.592) + four-Gaussian 0.568 stack
+complementary stack,prvsiyan/the-prompt-is-not-the-author v2,0.592,0.593,+0.001,yes,"0.85 two-stage branch + 0.15 own 0.569 branch, plus in-style LoRA"
+complementary stack,alexchilton/ntl-0592-plus-0569 v1,0.592,0.597,+0.005,no,0.569 blend mixed at 0.5 into the 0.592
+complementary stack + ATLAS 10% (margin<0.3),fleongg/ntl-part-two-complement v1,0.620,0.636,+0.016,yes (ATLAS too),largest single public step since 19 Oct
+"complementary stack removed (+ post off, 14B 2.0->2.5)",mrpicklerick/ntl-0-611-fast-no-post v2,0.611,0.600,-0.011,yes,
+complementary stack removed,flexonafft v15,0.604,0.598,-0.006,no,
+ATLAS 10% before balancing,josephadamski91/apex-v4-10-atlas (forum 750447),0.556,0.558,+0.002,no,author-reported
+ATLAS 10%,josephadamski91 on lucasboesen v3 (forum 750447),0.549,0.551,+0.002,no,author-reported
+ATLAS 10%,josephadamski91/teach-the-model-10-atlas v1,0.600,0.607,+0.007,no,
+ATLAS + early layers,josephadamski91/two-stage-lora-atlas-and-early-layers v1,0.592,0.596,+0.004,yes,
+ATLAS 10%,zhangyiji/name-that-llm-v17-atlas v2,0.603,0.601,-0.002,no,on prvsiyan v5
+ATLAS 10% -> 15%,kirilltym/0-637 v1,0.607,0.605,-0.002,no,
+encoder members ModernBERT 0.25 + desklib 0.10 (+ hard guards),nuridudak/0-624 v1,0.620,0.624,+0.004,yes (guards),needs nuridudak/ntl-ours-v1 (now private) or ntl-two-stage-encoders
+encoder weight ModernBERT 0.25->0.40,nuridudak/0-626 v1,0.624,0.626,+0.002,no,
+encoder weight MB 0.30 / desklib 0.05,mrpicklerick/0-627 v1,0.625,0.627,+0.002,no,
+encoders added to the 0.636,fleongg (reported to the user),0.636,0.634,-0.002,unknown,not in a public version we could read
+encoders lost (dataset not attached),romantamrazov v11,0.628,0.621,-0.007,yes (family heads),shows the encoders were worth ~+0.007 on the 0.620 base
+"small encoders: UltraBERT 5-fold + ELECTRA readout, 10% prob mix",adityaakbar/ntl-0627-small-encoder-ensemble v1,0.627,0.631,+0.004,no,"both already inside the comp stack (ultrabert 0.095, electl 0.032)"
+UltraBERT 0.15 log-space + reweights,amanatar v2,0.632,0.621,-0.011,yes,
+typography guards off,mrpicklerick/0-624-base-without-hard-typography-guards v1,0.624,0.625,+0.001,no,
+spaced em-dash guard (+ Gaussian 14B + Hungarian),sangam21 v1,0.600,0.604,+0.004,yes,
+curly-quote guard + Hungarian from size 9,kiza123123/ntl-0612 v2,0.604,0.603,-0.001,yes,
+soft guards + kNN centring + 6-view SVC + repulsion + partial Sinkhorn,amanatar v1,0.627,0.632,+0.005,yes,many changes at once
+Hungarian assignment in clusters,danielandresmiranda (forum 751871),0.427,0.425,-0.002,no,author-reported; nishant also reports it worse on LB
+entropic OT instead of Hungarian (+ATLAS),lynnsakurai v5 x2,~0.604-0.607,0.604/0.605,~0,yes,
+Gaussian group heads (frozen views),prvsiyan/the-prompt-is-not-the-author v1,0.563,0.569,+0.006,no,
+Gaussian heads + ELECTRA group expert,kirilltym/0-600 v18,0.562,0.568,+0.006,yes,
+Gaussian head on two-stage 8B LoRA,kirilltym/0-600 v20,0.594,0.600,+0.006,no,
+Gaussian heads on all two-stage LoRAs,prvsiyan v4,0.599,0.604,+0.005,yes (grouping),
+grouped Gaussian + OLMo2 0.03,lightningv08/0-595 v14,0.594,0.595,+0.001,yes,
+new member: own two-stage LoRAs,prvsiyan v3,0.593,0.599,+0.006,no,
+new member: in-style Qwen3-8B LoRA,zbigniewkirchner/0-574 v1,0.569,0.574,+0.005,no,
+new member swap: in-style 8B for lora24_public,dazhijiang v3,0.611,0.612,+0.001,no,
+new member: frozen Qwen3-4B early layers 0.10,prvsiyan v5,0.604,0.603,-0.001,no,
+new member: Qwen3.8-27B NF4 LoRA tail share 0.2 / 0.1 / 0.05,lightningv08/0-636 v14/v15/v18,0.611,0.602/0.610/0.610,-0.009/-0.001/-0.001,no,on the cached nlm-v21 runtime
+new member: full-text Qwen3.8-27B 10% on low-margin half,lightningv08/0-636 v20,0.636 (reference),0.636,0.000,no,tie
+pool 35k -> 84k + Qwen2.5-14B + DeBERTa-v3-large + EOS fix,nishantdahal/two-stage-lora-part-two v1,0.592,0.620,+0.028,yes,author: pool is the main part (14B CV 0.569 -> 0.611)
+stage-1 public pool then stage-2 train (two-stage LoRA),nishantdahal/two-stage-lora-on-the-public-pool v2,0.569 (frontier),0.592,+0.023,yes,new pipeline
+in-style external data share 0.35 -> 0.60,kirilltym/0-600 v17,0.559,0.562,+0.003,no,
+"readout bank on LoRA24 features, train only, 10%",kirilltym/0-637 v3,0.636,0.637,+0.001,no,
+"readout bank trained with +4,404 private synthetic passages",kirilltym/0-639 v1,0.637,0.639,+0.002,no,reproduced by maverickss26 v4 (0.639)
+"SVC prefit cache (CPU fit, sha-pinned)",cosmorin/name-that-llm-public620-reproduction v1,0.620,0.622,+0.002,no,deterministic: our copy also 0.622
+"SVC topic centring, margin-gated",romantamrazov v9,0.627,0.628,+0.001,no,
+centring: twin weight = plain weight + prvsiyan member,huangkx666/ntl-v20,0.592,0.597,+0.005,yes,
+blend weights reallocation,amanatar v2 / mrpicklerick 0.600,,,-0.011 / -0.011,yes,every pure reweight above 0.62 was flat or negative
+exact copies (re-runs),13 copy pairs,,,"0.000 (11), +0.001 (2)",,display-level re-run spread <= 0.001
