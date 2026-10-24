@@ -242,3 +242,6 @@ Paired delta vs the 0.556 base; P = bootstrap P(better) over draws.
 - Root cause: our copies pinned the original's docker image digest `gcr.io/kaggle-images/python@sha256:17b2fc…` with pinning 'original'. That digest is **Kaggle's CPU image** (CPU-only torch), so the runs got no CUDA despite enable_gpu. The 0.636 burned 3.5 h on CPU before failing.
 - The originals (cosmorin, fleongg) use **pinning "latest"** (pinning_type None). Fix: drop docker_image and set pinning 'latest'. Both re-pushed at 10:45 IST.
 - **Rule from now on:** copy pinning exactly as the original has it. If pinning is None, use 'latest', and never pin a `kaggle-images` (CPU) digest for a GPU notebook.
+
+## 24 Oct scores
+- 0.622 copy = 0.622 and 0.636 copy = 0.636 (both exact). Leaderboard: rank 144/2932 at 0.636; gold 0.653 (rank 15), silver 0.636, bronze 0.624, top 0.7.
