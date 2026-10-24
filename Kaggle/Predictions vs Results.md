@@ -46,7 +46,7 @@ Back to [[Kaggle Home]].
 | 18 Oct | CASMI | D: v459 (0.454) + gated gen20 (lib_max < 0.7) | our own change, LB A/B (the bench can't judge generation changes) | 0.452, **range 0.444–0.456**; ungated gen20 lost 0.010 on V22 | held (GPU quota) | |
 
 **Noise floor:** the same CASMI code scored 0.451 and 0.447 on two runs. Treat any single-submission difference under about 0.004 as noise.
-| 24 Oct | CASMI | 0.464 public copy (dmitriigluzdov, the data behind spectra) | exact copy | 0.464 | pending | |
-| 24 Oct | CASMI | 0.464 + engine GBM max_depth 7 | our own change | 0.464-0.467 (+0.003 on two earlier bases; noise ±0.004) | pending | |
+| 24 Oct | CASMI | 0.464 public copy (dmitriigluzdov, the data behind spectra) | exact copy | 0.464 | 0.464 | 0.000 |
+| 24 Oct | CASMI | 0.464 + engine GBM max_depth 7 | our own change | 0.464-0.467 (+0.003 on two earlier bases; noise ±0.004) | **0.456** | **−0.008** |
 | 24 Oct | NTL | 0.622 public copy (cosmorin reproduction of nishantdahal 0.620) | exact copy | 0.622 (range 0.620-0.622) | pending | |
 | 24 Oct | NTL | 0.636 public copy (fleongg, contains ATLAS: rank only, never a final selection) | exact copy | 0.636 | pending | |

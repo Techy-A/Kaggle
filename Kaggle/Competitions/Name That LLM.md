@@ -237,3 +237,8 @@ Paired delta vs the 0.556 base; P = bootstrap P(better) over draws.
 - The old "ATLAS = rank only" rule is lifted **for this dataset only**. TabPFN stays rank only.
 - Our rebuild is parked as an optional A/B: code in `lab/atlas/` and `lab/08_train_atlas.py`, the Colab notebook `colab/ntl_atlas_train.ipynb`, and the unpushed variant `/home/user/work/push_ntl636_ouratlas`. The full unit takes about 4 h on a T4, and the expected effect is within ±0.003.
 - Our 0.636 submission's description still says "rank only", from before this decision.
+
+## 24 Oct: why the 0.622 and 0.636 copies got no GPU
+- Root cause: our copies pinned the original's docker image digest `gcr.io/kaggle-images/python@sha256:17b2fc…` with pinning 'original'. That digest is **Kaggle's CPU image** (CPU-only torch), so the runs got no CUDA despite enable_gpu. The 0.636 burned 3.5 h on CPU before failing.
+- The originals (cosmorin, fleongg) use **pinning "latest"** (pinning_type None). Fix: drop docker_image and set pinning 'latest'. Both re-pushed at 10:45 IST.
+- **Rule from now on:** copy pinning exactly as the original has it. If pinning is None, use 'latest', and never pin a `kaggle-images` (CPU) digest for a GPU notebook.

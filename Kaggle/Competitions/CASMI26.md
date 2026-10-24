@@ -317,3 +317,7 @@ Honest slices only: class 1 from the np bench (70 molecules; the structure keeps
 - Scan first: the new public **0.465** (sanpier, candidate-aware PubChem promotion) is **not reproducible**. Its blank input is required: it asserts on casmi_spectrum_model_v1.zip and selected_policy.json.
 - Pushed and auto-submitting: the 0.464 exact copy (dmitriigluzdov) and 0.464 + depth 7 (2 CASMI slots, approved by the user for today).
 - Leaderboard as of 23 Oct: 3,884 teams. We are rank 526 at 0.456. Silver 0.464, gold 0.471 (rank 17), top 0.504; 376 teams are at 0.464 or better.
+
+## 24 Oct results
+- **0.464 exact copy: 0.464**, as forecast. **0.464 + depth 7: 0.456 (−0.008).** Depth 7 hurts on this base: on the earlier bases it gave +0.003, +0.004 and a tie. The engine-2 rankers in this base are probably already tuned around depth 6. **Drop depth 7.**
+- Leaderboard after the scores: 3919 teams, us rank 426 at 0.464; gold 0.471 (rank 17), silver 0.464 (rank 195), bronze 0.464 (rank 391).
