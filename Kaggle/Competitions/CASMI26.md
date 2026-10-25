@@ -355,3 +355,12 @@ Honest slices only: class 1 from the np bench (70 molecules; the structure keeps
 
 ## Notebook scan (25 Oct 11:2x IST; nothing built)
 Public top is now **0.466**: sanpier/pubchem-neural025-lb-0-466 (70 votes, version 25 Oct 04:55 IST, "PubChem + Neural025") and gwey1025/casmi26-lb-0-466 (3 votes, 25 Oct 00:22 IST). 0.465 tier: dmitriigluzdov (170 votes, the base we copied), lavinwins, guhongbin v498/v501/v502, avazaku evidence lab, youyouwou. 0.464 tier: evgendvorkin (198), amrkhalid124, rajrajak99 Apex v800-v840, d1m4official, hailonglv. Our stack is 0.465. The 0.466 pair is new (not in the vault before); "Neural025" suggests a neural re-rank weight of 0.25 on the PubChem gate, matching lever (3) in our discussion draft. To do on go: read sanpier's source and diff against the 0.464 base.
+
+## Discussion scan (25 Oct 11:4x IST; replies not read, only topic lists and opening posts)
+- Our own post "Three changes on top of the 0.464 base..." (752356) is up since 24 Oct 20:52 IST: 0 votes, 0 comments.
+- 752497/752498 cosmorin, 25 Oct 11:28 IST: "Team up, Silver zone (~Top 200), pushing for Gold" (0 comments).
+- 752297 (24 Oct): rules question whether the notebook may use relationships across test spectra at inference (clustering test spectra, using a confidently identified molecule to rank similar ones). Directly relevant to any cross-spectrum re-rank; host answer not read. 2 comments, last 25 Oct 03:51 IST.
+- 751373 (21 Oct, active 25 Oct 08:55 IST, 4 comments): which third-party pretrained models are OK (MS2DeepScore, FIORA, SIRIUS/CSI:FingerID, chemical language models); earlier host rule: weights need original training code plus permitted training data.
+- 751300 (7 votes, 6 comments): class 3 scores: poster's local gains do not reach the LB, same as our experience.
+- 748882 (13 comments): consolidated open questions before final selection (reproducibility of official checkpoints).
+To do on go: read the host replies in 752297 and 751373 before building anything cross-spectrum or using a new pretrained model.

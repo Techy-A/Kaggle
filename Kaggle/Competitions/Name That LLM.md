@@ -275,3 +275,12 @@ Result (25 Oct 10:57 IST): W=0.15 -> 0.635, W=0.20 -> 0.635 (TWIN_W 0.10), again
 
 ## Notebook scan (25 Oct 11:2x IST; nothing built)
 New top public: **0.641** lightningv08/0-641-lora-llama-qwen3-8-27b (84 votes, version 25 Oct 10:22 IST; title says LoRA + Llama + Qwen3.8-27B, not yet read). +0.002 over the 0.639 lineage (kirilltym 63 votes, maverickss26 and romantamrazov and arlearonreidma forks at 0.639). 0.636 tier unchanged (fleongg, lynnsakurai, huangkx666, avazaku). No other new tier. To do on go: read the 0.641 source, check its licences and whether the gain is a new member (contradicts "no new LLM member helps above 0.61") or a recipe change.
+
+## Discussion scan (25 Oct 11:4x IST; replies not read, only topic lists and opening posts)
+- Our own post "What 134 public versions show..." (752357) is up since 24 Oct 20:54 IST: 0 votes, 0 comments.
+- 752478 (25 Oct 08:49 IST, -1 vote): whether generating training data through the 18 candidate models' APIs is allowed under Rule 2.6; 0 comments, no host answer yet. Same worry as our open question on the 0.639's readout bank (private passages).
+- 752280: how the passages were generated; 752270: external data from paid and region-restricted LLMs (3 votes); 751655 (active 25 Oct 10:15 IST): datasets forum for competitions.
+- 752365 (jusill): Sinkhorn balancing cost when the test mix is uneven, measured on 2,699 OOF passages at about 0.64 balanced accuracy. Relevant: every notebook in our chain ends with Sinkhorn. Result numbers not read.
+- 750768: whether test passages share prompts, and whether using relationships between test passages is allowed (host answer not read).
+- 749447 (121 votes, 54 comments): "Will the winner just be whoever can get the most extra training data?"; 752418: are the 0.700 scores real or a trick.
+To do on go: read the 752365 numbers (could change our Sinkhorn step) and the host replies on 752478 and 750768.
