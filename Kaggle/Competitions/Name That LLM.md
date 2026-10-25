@@ -399,3 +399,6 @@ To do on go: read the 0.642 source and diff against the 0.641.
 
 ## 0.642 copy (25 Oct ~19:20 IST)
 ntl-0-642-copy: copy of lightningv08 0.642 on its original pinned image, own-dataset path fix as in the 0.641 copy (push dir /home/user/work/push_ntl642), pushed v1; a detached watcher submits it when the fixture run completes. Forecast written before submitting: 0.641 (0.639-0.643) if the hidden-test run works; the 0.641 copy v3 is still PENDING, so a failure here would repeat that one.
+
+## Stopped, difference read (25 Oct ~19:30 IST)
+Watchers stopped before submitting the 0.642 copy (kernel ntl-0-642-copy still runs on Kaggle; not submitted). The 0.642 and 0.641 notebooks have identical source (0 changed lines between the pulled 0.641 and 0.642 versions), so the +0.001 is rerun/data-version noise or a metadata change, not a new method. The 0.641 copy v3 (ref 57631776) is still PENDING. Decision: wait for a larger jump before spending more submissions here.

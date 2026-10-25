@@ -460,3 +460,6 @@ To do on go: read alexchilton's source and diff against sanpier's.
 
 ## 0.467 copy (25 Oct ~19:20 IST)
 casmi-one-knob-rrf-copy: exact copy of alexchilton 0.467 on its original pinned image (push dir /home/user/work/push_casmi467), pushed v1; a detached watcher submits it when the kernel completes. Forecast written before submitting: 0.466 (0.464-0.467); our copy of sanpier's 0.466 scored 0.465, so a 0.467 reproduction is unlikely.
+
+## Stopped, difference read (25 Oct ~19:30 IST)
+Watchers stopped before submitting the 0.467 copy (kernel casmi-one-knob-rrf-copy still runs on Kaggle; not submitted). Difference 0.466 (sanpier, pulled) -> 0.467 (alexchilton): one constant, RRF_OFFSET 3.0 -> 1.0, with NEURAL_WEIGHT 0.25 (not the 0.15 of the pulled sanpier file), plus a fast path on the placeholder test and new markdown. Author's own sweep (each a full submission): w 0.25 / offset 3 -> 0.466; w 0.25 / offset 1 -> 0.467; w 0.25 / offset 10 -> 0.446; w 0.75 / offset 3 -> 0.419. So the neural re-rank is sensitive to its parameters (flatter or heavier lost 0.02-0.05) and the +0.001 is one point inside rerun noise. This also fits our 0.465 for the w 0.15 copy. Decision: wait for a larger jump before spending more submissions here.
