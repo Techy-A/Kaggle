@@ -457,3 +457,6 @@ Every positive-mode adduct is covered at molecule level; the only blind group is
 - New top public: **0.467** alexchilton/casmi26-lb-0-467-one-knob-rrf-offset-3-to-1 (9 votes): the rank-fusion offset in the neural re-rank changed from 3 to 1, a one-parameter change on the 0.466 line. New 0.466 copies: borrun (pubchem-context-ranker), ou20040313 (orange rank lab), guhongbin v508 pc466w025; sanpier now 78 votes, lavinwins 0.466. Steps of +0.001 around 0.465-0.467 are inside rerun noise (3 of 33 identical-code groups differ by 0.002-0.006), so treat 0.467 as unproven until seen twice.
 - New topic 752541 (LeeDongHyuk, 25 Oct 14:45 IST): eligibility of non-reproducible final submissions on the private LB and medals; no replies yet.
 To do on go: read alexchilton's source and diff against sanpier's.
+
+## 0.467 copy (25 Oct ~19:20 IST)
+casmi-one-knob-rrf-copy: exact copy of alexchilton 0.467 on its original pinned image (push dir /home/user/work/push_casmi467), pushed v1; a detached watcher submits it when the kernel completes. Forecast written before submitting: 0.466 (0.464-0.467); our copy of sanpier's 0.466 scored 0.465, so a 0.467 reproduction is unlikely.

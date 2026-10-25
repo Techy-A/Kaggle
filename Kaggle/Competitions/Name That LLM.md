@@ -396,3 +396,6 @@ Not recommended: any new member at 10% or more (OLMo-13B -0.004, encoders -0.002
 - Our copy of the 0.641: v1 failed (path to lightningv08's own dataset), v2 (path fix, latest image) went COMPLETE with no score after minutes (hidden-test run failed), v3 pins the original container image like the author; submitted 25 Oct 19:07 IST (ref 57631776), PENDING. 3 submissions left today. Forecast 0.641 (0.639-0.643), rank-only.
 - Discussion: 752539 new (WOOSUNG YOON, "Dataset And Kaggle Benchmark"); thread 749447 (pay-to-win) now 59 comments; 752270 (paid and region-restricted LLMs) has a first reply. Still no host reply on 752478 (Rule 2.6, API-generated data).
 To do on go: read the 0.642 source and diff against the 0.641.
+
+## 0.642 copy (25 Oct ~19:20 IST)
+ntl-0-642-copy: copy of lightningv08 0.642 on its original pinned image, own-dataset path fix as in the 0.641 copy (push dir /home/user/work/push_ntl642), pushed v1; a detached watcher submits it when the fixture run completes. Forecast written before submitting: 0.641 (0.639-0.643) if the hidden-test run works; the 0.641 copy v3 is still PENDING, so a failure here would repeat that one.
