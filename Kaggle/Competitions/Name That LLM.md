@@ -362,3 +362,31 @@ Datasets' pages were fetched anonymously; descriptions longer than the page's JS
 2. **Sinkhorn variants on our own OOF, CPU only:** 1/3/50/300 iterations and cross-fitted offsets, at the 4 test-like crops with prompt-grouped OOF of the lab stack, paired bootstrap over prompts. Expected: +0.001 to +0.002 for 3 iterations on a balanced mix, -0.01 to -0.07 risk for full balance if the test is very uneven (locdunhat table); the public LB history (Sinkhorn +0.011 on a single LoRA) says our test predictions lean, so the 300-iteration step may be doing real work. Accept only at P(better) >= 0.9; this is a correction step, the one kind of change the project rules allow. Forecast if submitted on the 0.639 chain: 0.639 +/- 0.002 (no change expected; the gain is risk reduction).
 3. **One early-layer single readout head on cached LoRA24 features (CPU):** Daniel's single-layer-18 head tied the 8-layer head and disagreed on 29%; two readouts plus the train-only LoRA added +2 pts there. Expected +0.001 to +0.003 on OOF, and by the olmo13b and encoder history likely 0 to +0.002 on public. Forecast: 0.639 -> 0.640 (0.637-0.642). Only if the lab has the cached features; otherwise drop it.
 Not recommended: any new member at 10% or more (OLMo-13B -0.004, encoders -0.002), any Rule-2.6-dependent API data, grouping tricks (Hungarian/centring lose at 1-2 answers per prompt).
+
+## 25 Oct (14:2x IST): Sinkhorn variants on our OOF (next experiment 2; CPU lab, `lab/11_sinkhorn_variants.py`, output `lab/artifacts/sinkhorn_variants.json`)
+- **Forecast (written in the 25 Oct digest, restated before the conclusion below):** on the public 0.639 chain, 3 iterations or 300 iterations both land at 0.639 +/- 0.002; no measurable change if the public test is near balanced, a gain only if it is uneven. Not submitted.
+- **What was evaluated.** The best honest 5-fold prompt-grouped OOF blend in the lab: SVC 1.0 + modernbert 0.40 + desklib 0.10 + 3 token-attention members 0.3 each + LoRA24 plain 1.0 + LoRA24 prompt-centred 1.0 (the LoRA24 readouts applied to the held-out fold's cached features; centred head by prompt-centring the fold's features). Members alone (argmax bacc): SVC 0.477, modernbert 0.553, desklib 0.499, tok 0.394/0.370/0.411, LoRA plain 0.482, LoRA centred 0.596. Weights are the proxy's, not tuned. **Not the real 0.639 stack** (its 14B LoRAs/ATLAS have no OOF), so this transfers loosely. **No length crops exist for NTL (that is an SHL notion): rows are full passages.**
+- **Balanced OOF (2,699 rows, Sinkhorn over all rows), bacc and paired bootstrap over 150 prompts vs 300 iterations (2000 draws):**
+
+| variant | bacc | gain vs sk300 | 90% CI | P(better) |
+|---|---|---|---|---|
+| argmax | 0.6131 | +0.0025 | -0.003..+0.008 | 0.75 |
+| 1 it | 0.6127 | +0.0022 | -0.003..+0.007 | 0.74 |
+| 3 it | 0.6127 | +0.0022 | -0.0015..+0.0056 | 0.83 |
+| 10 it | 0.6112 | +0.0007 | -0.002..+0.003 | 0.65 |
+| 50 it | 0.6116 | +0.0011 | 0.000..+0.0026 | 0.89 |
+| 300 it | 0.6105 | 0 | | |
+| cross-fitted offsets | 0.6083 | -0.0023 | -0.0056..+0.0011 | 0.14 |
+
+- **Simulated uneven test pools** (2,000 rows drawn from the OOF with class counts ~ multinomial(Dirichlet(alpha)), 200 draws each; gain vs 300 iterations, draw-level P(better) in brackets):
+
+| mix | argmax | 1 it | 3 it | 10 it | 50 it | 300 it (bacc) | offsets |
+|---|---|---|---|---|---|---|---|
+| alpha 1 | +0.076 [0.99] | +0.076 | +0.065 [0.99] | +0.038 | +0.003 | 0.537 | +0.072 [0.98] |
+| alpha 5 | +0.034 | +0.035 [1.00] | +0.033 [1.00] | +0.023 | +0.005 | 0.578 | +0.029 |
+| alpha 20 | +0.016 | +0.016 | +0.016 [0.97] | +0.013 | +0.005 | 0.597 | +0.012 |
+| balanced | +0.005 [0.81] | +0.005 | +0.004 [0.80] | +0.004 | +0.002 | 0.609 | -0.0004 |
+
+  Regret vs oracle (known-mix prior shift, argmax of logP + log pi), 300 it: 0.068 / 0.035 / 0.017 / 0.005 at alpha 1 / 5 / 20 / balanced; 3 it: 0.002 / 0.002 / 0.001 / 0.001; offsets: -0.004 / 0.006 / 0.005 / 0.005. (Regret can be negative: the oracle maximises accuracy, not bacc.)
+- **Findings.** (1) Full 300-iteration balance is the worst variant at every mix and costs 0.003 on a balanced pool already (on this blend; P(better) of 3 it only 0.83, so it fails the 0.9 rule). (2) 1-3 iterations keep nearly all of argmax's robustness (regret <= 0.002 at every mix) and equal the best on balanced pools; 50 iterations is the only variant whose balanced bootstrap clears 0.89, but its gain is +0.001. (3) Cross-fitted offsets are worse than 3 iterations everywhere and worse than 300 on a balanced pool (GoPain's regret 0.018 vs 0.060 at alpha 1 reproduces in direction: ours 0.004 vs 0.068, offsets win over 300 it but not over 3 it). (4) Here argmax is as good as 3 it: this blend is not skewed. The 8-member proxy already has a flat class histogram, so Sinkhorn has little to fix; the public +0.011 for Sinkhorn on a single LoRA (GoPain) is the case where it works, and our real 0.639 chain is a blend, closer to this proxy.
+- **Recommendation.** Not accepted under the rule (no variant reaches P(better) >= 0.9 on the balanced OOF; the 0.83 for 3 it is the best of the plausible ones). As a risk reduction only, replacing 300 by 3 iterations costs nothing measurable on a balanced test (+0.002) and removes up to 0.07 of downside if the hidden mix is uneven; it would not be an honest validated gain. Forecast on the public 0.639 chain: 0.639 +/- 0.002 (range 0.637-0.641). Real chain not tested; a 2-submission cost is not worth +0.000-0.002. Notebooks unchanged. Caveat: the lean of the real chain's pre-Sinkhorn predictions is unknown; check the predicted class histogram of the 0.639 test output before choosing (if flat, 3 it equals 300 it).
