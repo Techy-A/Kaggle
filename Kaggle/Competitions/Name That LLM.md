@@ -287,3 +287,9 @@ To do on go: read the 752365 numbers (could change our Sinkhorn step) and the ho
 
 ## 0.641 copy (25 Oct 12:43 IST)
 Kernel ntl-0-641-pinned-copy (copy of lightningv08/0-641-lora-llama-qwen3-8-27b, latest env, push dir /home/user/work/push_ntl641). v1 failed ("Final checkpoint is missing"): the notebook reads lightningv08's own dataset at /kaggle/input/<slug>, but a dataset owned by someone else mounts at /kaggle/input/datasets/<owner>/<slug>. v2 replaces that path (145 occurrences, only change); fixture run COMPLETE. Not yet submitted. New data in it: Llama-3.1 24-layer prefix and OLMo-2 native24 members and a Qwen3.8-27B LoRA tail (check licences before a final pick: Llama 3.1 community licence).
+
+## Discussion replies read (25 Oct 13:0x IST)
+- 752365 reply (GoPain): Sinkhorn removes a per-class offset in the scores; alternative is cross-fitted offsets (learn one log-offset per class on four folds' OOF, add to the fifth fold, argmax), which needs no assumption about the test mix. Table of numbers cut off in my read; open the thread before using. Worth testing against our Sinkhorn step.
+- 750768: no host answer. A participant guesses test has about 222 new prompts with at most one answer per model (4,000/18), not necessarily all 18.
+- 751655: a participant points to MAABench (huggingface ming9999/maabench, used in ATLAS) and two public datasets (darragh1walsh/ntl-kaggle-ai-gen-run-1, prvsiyan's extended dataset, which is already in our chain). Licences not checked.
+- 752478 (Rule 2.6, API-generated data): still no host reply.

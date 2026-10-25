@@ -367,3 +367,8 @@ To do on go: read the host replies in 752297 and 751373 before building anything
 
 ## 0.466 copy (25 Oct 12:37 IST)
 Kernel casmi-pubchem-neural025-copy (exact copy of sanpier/pubchem-neural025-lb-0-466, original image pin, push dir /home/user/work/push_casmi466), pushed v1; running. Not yet submitted.
+
+## Discussion replies read (25 Oct 13:0x IST)
+- 751373, host David Healey (22 Oct): models trained only on public libraries (MS2DeepScore, FIORA-OS) allowed; SIRIUS/CSI:FingerID not allowed; chemical language/graph models allowed; the code that generates intermediates is needed too; PubChem Lite is fine. Follow-up 25 Oct asks whether regenerable code is enough or intermediates must be bit-for-bit reproducible (unanswered).
+- 752297 (cross-test-spectrum use): no host answer yet. A participant says it has always been ok to use test data this way; a second asks the host for yes/no. Treat as unconfirmed.
+- 751300 (class 3): others also see local class-3 gains not reaching the LB; one claims a +0.003-0.004 class-3 lever over weeks and a possible +0.007-0.010 one. Nothing concrete.
