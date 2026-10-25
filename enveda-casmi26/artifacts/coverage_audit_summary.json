@@ -4,7 +4,7 @@
   "ICE+GL": 366,
   "none": 27,
   "ICE only (Na fallback)": 5,
-  "GL only": 2
+  "GL only (N1A proxy)": 2
  },
  "by_adduct_set": {
   "[M+CH2O2-H]-": {
@@ -38,7 +38,7 @@
    "ICE+GL": 79
   },
   "[M+NH4]+": {
-   "GL only": 2
+   "GL only (N1A proxy)": 2
   },
   "[M+Na]+": {
    "ICE only (Na fallback)": 5
@@ -47,44 +47,13 @@
    "none": 25
   }
  },
- "cos>=0.5": {
-  "lib_matched": 400,
-  "lib_groups": {
-   "ICE+GL": 366,
-   "none": 27,
-   "ICE only (Na fallback)": 5,
-   "GL only": 2
-  },
-  "nolib_groups": {}
+ "not_full_N1": 34,
+ "share_none": 0.0675,
+ "expected_molecules_by_class_none": {
+  "1": 7.56,
+  "2": 5.4,
+  "3": 14.04
  },
- "cos>=0.7": {
-  "lib_matched": 400,
-  "lib_groups": {
-   "ICE+GL": 366,
-   "none": 27,
-   "ICE only (Na fallback)": 5,
-   "GL only": 2
-  },
-  "nolib_groups": {}
- },
- "cos>=0.9": {
-  "lib_matched": 400,
-  "lib_groups": {
-   "ICE+GL": 366,
-   "none": 27,
-   "ICE only (Na fallback)": 5,
-   "GL only": 2
-  },
-  "nolib_groups": {}
- },
- "none_adducts_cos>=0.7": {
-  "[M+CH2O2-H]-": {
-   "n": 2,
-   "lib": 2
-  },
-  "[M-H]-": {
-   "n": 25,
-   "lib": 25
-  }
- }
+ "public_blind_expected": 8.9,
+ "lb_gain_if_all_blind_fixed_perfectly": 0.0677
 }
