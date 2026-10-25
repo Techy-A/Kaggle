@@ -271,3 +271,4 @@ Paired delta vs the 0.556 base; P = bootstrap P(better) over draws.
 Forecast written before submitting (TWIN_W = 0.10 in both): W=0.15 -> 0.642 (0.637-0.646); W=0.20 -> 0.641 (0.636-0.646).
 Reason: fold0 proxy gain flattens above W=0.05 and the proxy stack is weaker than the real one; pushed on the user's request to measure the weight response, not as a recommendation.
 Notebooks: ntl-0-639-olmo13b-w15, ntl-0-639-olmo13b-w20. Scores to be added below.
+Result (25 Oct 10:57 IST): W=0.15 -> 0.635, W=0.20 -> 0.635 (TWIN_W 0.10), against 0.639 for the base: -0.004 both, below the forecast range's low end (0.636/0.637). The fold0 proxy gain (+0.03) did not transfer; same pattern as the encoders on the 0.636 (0.634). Identical scores at both weights suggest the loss comes from the centred twin / member itself, not W. Scoring runs did not draw GPU quota (8.87 h left before and after). Not pursued further without a new reason.
