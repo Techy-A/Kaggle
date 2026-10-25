@@ -364,3 +364,6 @@ Public top is now **0.466**: sanpier/pubchem-neural025-lb-0-466 (70 votes, versi
 - 751300 (7 votes, 6 comments): class 3 scores: poster's local gains do not reach the LB, same as our experience.
 - 748882 (13 comments): consolidated open questions before final selection (reproducibility of official checkpoints).
 To do on go: read the host replies in 752297 and 751373 before building anything cross-spectrum or using a new pretrained model.
+
+## 0.466 copy (25 Oct 12:37 IST)
+Kernel casmi-pubchem-neural025-copy (exact copy of sanpier/pubchem-neural025-lb-0-466, original image pin, push dir /home/user/work/push_casmi466), pushed v1; running. Not yet submitted.

@@ -284,3 +284,6 @@ New top public: **0.641** lightningv08/0-641-lora-llama-qwen3-8-27b (84 votes, v
 - 750768: whether test passages share prompts, and whether using relationships between test passages is allowed (host answer not read).
 - 749447 (121 votes, 54 comments): "Will the winner just be whoever can get the most extra training data?"; 752418: are the 0.700 scores real or a trick.
 To do on go: read the 752365 numbers (could change our Sinkhorn step) and the host replies on 752478 and 750768.
+
+## 0.641 copy (25 Oct 12:43 IST)
+Kernel ntl-0-641-pinned-copy (copy of lightningv08/0-641-lora-llama-qwen3-8-27b, latest env, push dir /home/user/work/push_ntl641). v1 failed ("Final checkpoint is missing"): the notebook reads lightningv08's own dataset at /kaggle/input/<slug>, but a dataset owned by someone else mounts at /kaggle/input/datasets/<owner>/<slug>. v2 replaces that path (145 occurrences, only change); fixture run COMPLETE. Not yet submitted. New data in it: Llama-3.1 24-layer prefix and OLMo-2 native24 members and a Qwen3.8-27B LoRA tail (check licences before a final pick: Llama 3.1 community licence).
