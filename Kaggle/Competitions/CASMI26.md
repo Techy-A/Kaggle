@@ -466,3 +466,6 @@ Watchers stopped before submitting the 0.467 copy (kernel casmi-one-knob-rrf-cop
 
 ## lavinwins copy (25 Oct ~20:00 IST)
 casmi-lavinwins-top1-copy: exact copy of lavinwins/casmi-26-lb-top-1 (public 0.466, 43 votes), original image, push dir /home/user/work/push_casmi_lavin, pushed v1 on user request. Not submitted (hold until a larger jump).
+
+## romanrozen 0.468 copy (26 Oct 17:19 IST)
+New top public **0.468** romanrozen/0-468-casmi-from-peaks-to-structures ("From Peaks to Structures": leader-safe consensus re-ranking on the strongest public pipeline; keeps the proven rank-1 decision and re-ranks the rest of each list). Notebook is 947 lines against 95 for sanpier's 0.466, so a different method, not one knob; sources otherwise the same datasets (sanpier spectrum model, dmitriigluzdov assets). Copy casmi-romanrozen-0468-copy (exact, original image, push dir /home/user/work/push_casmi468) pushed v1 on user request; NOT submitted. Forecast written before submitting: 0.467 (0.465-0.468); our copies of 0.466 lines scored 0.465.
