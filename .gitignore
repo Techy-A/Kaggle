@@ -7,3 +7,5 @@ name-that-llm/lab/*.log
 
 # local feature caches (rebuilt by 51_isomer_reranker.py)
 enveda-casmi26/artifacts/51_*_feats.parquet
+enveda-casmi26/artifacts/5*_fiora_out.mgf
+enveda-casmi26/artifacts/5*_fiora_in.csv
