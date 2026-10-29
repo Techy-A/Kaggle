@@ -322,3 +322,18 @@ pushed to Kaggle or submitted.
 - **Forecast before scoring:** few firings (published layer changed 0 net public molecules); without the neural gates
   firings should be more numerous and less precise, so expect ~0 to slightly negative bench MRR; public = bench gain
   / 3-10, one molecule = 0.004 on ~125 public molecules: about 0 +- 0.001, below LB resolution.
+
+**Result (29 Oct 16:40 IST): no-go (ablated replay; faithful replay not possible locally).** 250 b_ lists, 165 s CPU.
+- Firings: **47** (reasons: 88 failed ion/loss gates, 55 leader already fragment-best, 53 < 3 bins, 7 no same-formula
+  rival). MRR 0.5656 -> 0.5186, d **-0.0471 [-0.0658, -0.0297], P(better) 0.00**.
+- Class 1 (70): 14 fired, 0.804 -> 0.723, **11 rank-1 losses**, 0 gains. Class 2 (50): 8 fired, 0.891 -> 0.821, 7 losses,
+  0 gains. Class 3 (130): 25 fired, 0.312 -> 0.292, 5 losses, 0 gains. Zero rank-1 gains in any class.
+- Gates: P 0.00 < 0.9 and 11 class-1 losses: both fail.
+- Reading: the published ion + neutral-loss margins alone are not precise; on our bench the contenders they promote are
+  wrong 23/47 times when the leader was right and never right when it was wrong. Whatever precision the published layer
+  has must come from the neural z/cosine gates and the merge-discard condition, which we cannot replay. Consistent
+  with it changing 0 net public molecules.
+- Forecast vs outcome: forecast ~0 to slightly negative; outcome clearly negative (ungated by neural). Public forecast
+  for the published (fully gated) layer: unknown locally; its own public result (0 net change) is the best estimate,
+  i.e. 0. Verdict: no Kaggle version; a faithful replay would need the 0.477 pipeline's physical/V2/CUSTOM lists and
+  neural features dumped on a bench (GPU run, needs approval). Outputs: `artifacts/55_per_list.csv`, `55_summary.json`.
