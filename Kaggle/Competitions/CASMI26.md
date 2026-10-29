@@ -520,3 +520,6 @@ Lever table (38 levers, bench and LB), ranked plan and final-selection advice in
 **29 Oct 16:32 IST pointer:** FIORA step 3, rank-preserving fusion (`54_fiora_rank_preserving.py`, pre-registered in research note §10 at 16:26): z(-log base rank) + 0.25 z(FIORA entropy CE10) within rank-1-formula slots, lib_max >= 0.9 untouched. 214 [M-H]- lists: 2 changed, MRR -0.0022 (P 0.23), 1 class-1 rank-1 loss; fresh 41 formate/Cl/2M-H lists: 1 changed, +0.0012 (P 0.63). Both gates fail: no-go, no Kaggle version.
 
 **29 Oct 16:40 IST pointer:** Step 4, Spectral Parallax disagreement rescue (`55_neutral_loss_rescue.py`, pre-registered §11 at 16:40). Faithful replay not possible locally (bench has no physical/V2/CUSTOM lists or neural/cosine features); ablated replay with published ion + neutral-loss gates on 250 np lists: 47 firings, 0 rank-1 gains, 23 losses (11 class 1), MRR -0.047 (P 0.00). No-go. Details: research note §11.
+
+## Scan 30 Oct 01:37 IST
+Notebooks: heliosli 0.478 still alone above the 0.477 plateau; new alexchilton "0.477 | 0.472 Weights + Fragment Check". Discussion 753900 (new): request for generation code of widely reused public assets (megayak simulated ranker rows, prvsiyan ranker features/fingerprint caches, ...) for prize eligibility; with 753662 and 753775 still open, eligibility of copies that load those assets is unresolved.
