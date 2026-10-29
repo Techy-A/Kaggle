@@ -213,3 +213,11 @@ pushed or submitted.
   risk -0.004 per misfired rank-1 swap. **Step 3: no-go for now.** Next (cheap, CPU, ~10 min): enlarge the bench to
   ~250 molecules with the same frozen settings (entropy CE10 + z-sum) and require P >= 0.9 there, then a guarded
   run on genfix-bench [M-H]- base lists for the class-1 gate, before any Kaggle dataset.
+
+## 9. Step 2 enlarged: FIORA-OS on ~250 new held-out [M-H]- molecules + guarded genfix-bench check (29 Oct, IST)
+`enveda-casmi26/53_fiora_negmode_bench250.py`, outputs `artifacts/53_*` (summary `53_summary.json`). CPU only, local;
+nothing installed, pushed to Kaggle or submitted.
+- **Forecast, written before any 53 result was read.** Frozen settings (entropy CE10, z(frag)+z(FIORA)). If the
+  combination holds its 31-molecule gain (~+0.08 MRR within isomer sets) and the guarded bench shows a gain, the public
+  effect is bench gain / 3-10 on at most ~8 affected public molecules, one molecule = 0.004: roughly **+0.0003 to
+  +0.001 public**, downside -0.004 per misfired rank-1 swap. A result below ~+0.0005 is not measurable on the public LB.
