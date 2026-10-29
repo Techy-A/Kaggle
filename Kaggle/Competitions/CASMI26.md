@@ -513,3 +513,6 @@ Script `enveda-casmi26/51_isomer_reranker.py` (outputs `artifacts/51_*`). Traini
 
 ## Next steps plan (29 Oct 16:3x IST)
 Lever table (38 levers, bench and LB), ranked plan and final-selection advice in [[CASMI next steps plan]] (`Study Guide/`). Final selection recommended: 0.477 copy (57736039) + Spectral Parallax copy 0.472 (57699799).
+
+## Discussion scan 29 Oct 16:23 IST
+- 753775 (new, no host answer): are checkpoints that other participants published as Kaggle datasets (gradient-boosted rankers, fine-tuned fingerprint networks, precomputed feature tables) without training code or data treated like public pretrained models, or must a team be able to retrain them? Relevant to every copy we hold (the 0.477 and 0.472 lines load dmitriigluzdov's and sanpier's assets); together with 752541 (host may remove non-reproducible submissions) this is the main eligibility risk of copies, not of the score. Watch for the host's answer before final selection.
