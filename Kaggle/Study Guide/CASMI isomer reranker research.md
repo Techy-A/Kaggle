@@ -221,3 +221,31 @@ nothing installed, pushed to Kaggle or submitted.
   combination holds its 31-molecule gain (~+0.08 MRR within isomer sets) and the guarded bench shows a gain, the public
   effect is bench gain / 3-10 on at most ~8 affected public molecules, one molecule = 0.004: roughly **+0.0003 to
   +0.001 public**, downside -0.004 per misfired rank-1 swap. A result below ~+0.0005 is not measurable on the public LB.
+- **Data (new held-out).** The pool ran out at **193** molecules, not 250: after all exclusions (enveda-180 rows,
+  genfix bench answers, MSnLib structures, the 60 formulas of 52, one molecule per formula, >= 11 same-formula
+  structures, SMILES <= 80 chars) no more formulas qualify. Instruments LC-ESI-QTOF 149, ESI-QTOF 24, qtof 13,
+  LC-ESI-TOF 7; libs massbank 80, riken 42, mona 40, msdial 18, spectraverse 13; CE 6-80 eV (median 30); 15.3
+  candidates on average; 2,961 FIORA predictions at CE 10, 0 missing, 120 s wall (4 x 1-thread shards). No retuning.
+- **New 193, top-1 / MRR:** FIORA entropy-CE10 0.466 / 0.606; fragment 0.218 / 0.495; random 0.073 / 0.230 (expected
+  0.225); combination z(frag)+z(FIORA) 0.446 / 0.608. Paired bootstrap over molecules: comb vs fragment d +0.113
+  [+0.073, +0.154], **P 1.00**; FIORA vs fragment d +0.111 [+0.064, +0.162], **P 1.00**; comb vs FIORA d +0.002, P 0.54.
+- **Pooled with the 31 held-out of §8 (224):** FIORA 0.451 / 0.600, fragment 0.219 / 0.501, comb 0.442 / 0.610; comb vs
+  fragment +0.109, P 1.00; FIORA vs fragment +0.099, P 1.00; comb vs FIORA +0.010, P 0.79. Gate (P >= 0.9) passes:
+  on random train isomers FIORA is clearly a stronger isomer signal than fragment matching; the combination adds
+  nothing measurable over FIORA alone.
+- **Guarded genfix-bench check (fixed before scoring), negative.** 214 bench lists have [M-H]- pseudo-test spectra
+  (timsTOF, enveda rows; 542 spectra); 17 untouched by lib_max >= 0.9, 191 scored (3,119 FIORA predictions, 91 s).
+  Rule: rank-1-formula slots reordered by z(frag)+z(FIORA) (scores summed over the molecule's [M-H]- spectra), rank 1
+  moves only if the margin >= 1.0. Result: 52 lists changed, rank-1 changed in 71; **class 1: 19 rank-1 losses, 0
+  gains** (MRR 0.933 -> 0.801; gate requires zero); class 2: 13 losses (0.873 -> 0.447); class 3: 7 losses (0.315 ->
+  0.205). All-list MRR change **-0.163 [-0.209, -0.120], P(better) 0.00**.
+- **Why (diagnostic, after the decision, not used for it).** On the 153 scored lists whose answer sits in the
+  rank-1-formula slots, the answer's within-slot reciprocal rank is 0.94 for the base order, 0.65 for the fragment
+  score, 0.61 for FIORA, 0.28 random. Both signals work, but the base list already orders the bench isomers far better;
+  a reranker that ignores the base rank (as pre-registered here) destroys that. Random-train-isomer benches overstate
+  what is left to gain on real base lists (same lesson as §6).
+- **Forecast vs outcome.** Forecast +0.0003 to +0.001 public was conditional on a bench gain; the bench gain is
+  negative (-0.16 MRR within [M-H]- lists), so the forecast is now negative (several -0.004 rank-1 losses). 
+- **Verdict (13:46 IST): step 3 no-go.** Not integrated, nothing submitted. Any retry would need the base rank as a prior
+  (z(-log rank) + small alpha z(FIORA), as in heliosli's layer) and a fresh pre-registration; that would be new tuning
+  on the bench and is not done here.
