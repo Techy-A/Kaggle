@@ -287,3 +287,38 @@ has 41 lists (36 scored, 637 new FIORA predictions in 137 s on 4 x 1-thread shar
 - **Verdict:** step 3 no-go; no Kaggle version. FIORA's isomer signal (§9, P 1.00 on random train isomers) does not
   translate into gains on real base lists at a safe weight, and a larger weight is what §9 already showed to be harmful.
   Not tuning the weight on the bench (would be post hoc).
+
+## 11. Step 4: Spectral Parallax "disagreement rescue" CPU replay (29 Oct, IST)
+`enveda-casmi26/55_neutral_loss_rescue.py` (own rewrite of `choose_disagreement` / `neutral_loss_score` from
+romantamrazov/casmi-2026-spectral-parallax, read as data, not executed), outputs `artifacts/55_*`. CPU only; nothing
+pushed to Kaggle or submitted.
+
+**Pre-registration (written 29 Oct 16:40 IST, before any 55 score was computed).**
+- **What the published layer needs:** the 0.477 final list (base), the fragment-check list (`submission_physical_V2`,
+  its rank-1 = contender), the V2 and CUSTOM variant lists (to fire only where the 0.477 merge discarded the change),
+  per-candidate `neural_score`, `neural_cos`, `neural_ok`, `library_max`, and source ranks
+  (`engine2_rank`, `pubchem_rank`, `main_rank`), plus the query spectra and busyaprime's `frag_rescore`.
+- **What our bench has (audit before scoring):** the genfix bench (`bench/results/genfix_bench_log.txt.gz`, 450
+  lists) holds engine-1 lists of the V22-era pipeline (`pre1`, `fin1`, scores, `lib_max`), not the busyaprime 0.477
+  pipeline. It has **no** physical-V2 list, no V2/CUSTOM lists, no neural score or cosine and no
+  engine2/pubchem/main ranks. `frag_rescore` is available as our own V22 notebook copy (cell 34; may differ from
+  busyaprime's dataset copy). So a faithful replay is **not possible locally**.
+- **What is run instead (ablated diagnostic, cannot give a go on its own):** sets = the 250 `b_` lists
+  (enveda-np-examples pseudo-test, classes 1/2/3 = 70/50/130); the 200 `t_` lists are enveda-180 rows and are never
+  used. Base = `fin1` top 25, leader = rank 1. Contender (stand-in for the fragment check's rank-1) = the candidate
+  in `fin1` top 15 with the same formula as the leader and the highest `frag_rescore.score_molecule` over the
+  molecule's spectra, if it differs from the leader (so the "source rank <= 15" gate is met by construction via the
+  fin1 rank). Gates as published, unchanged: same formula; `lib_max` < 0.955 (list-level lib_max as stand-in for the
+  leader's library_max); >= 3 spectrum bins (adduct, round(CE/10)), <= 9 kept, >= 9 peaks, top 120 peaks; full-set
+  ion score finite; per-bin ion margin median >= 0.022, mean >= 0.045, share > 0.004 >= 0.70; neutral-loss margin
+  median >= 0.015, mean >= 0.024, share > 0.001 >= 0.67 (losses = M - fragment levels 1 (w 1) and 2 (w 0.55),
+  observed = precursor - peak m/z > 6, H shifts -2..+2, linear credit within 0.012 Da). **Dropped (not computable):**
+  neural z-margin >= 0.04, cosine margin >= -0.002, and the "merge discarded it" condition. Fire = move the contender
+  to rank 1, others keep order.
+- **Acceptance (as instructed):** paired bootstrap over molecules (10,000, seed fixed) of rr(after) - rr(before) on
+  the 250 lists, P(better) >= 0.9 AND zero class-1 rank-1 losses. Because the neural gates and the firing condition
+  are missing, even a pass is only a reason to ask for a faithful replay (which needs the 0.477 pipeline's
+  intermediates on a bench), not a Kaggle version.
+- **Forecast before scoring:** few firings (published layer changed 0 net public molecules); without the neural gates
+  firings should be more numerous and less precise, so expect ~0 to slightly negative bench MRR; public = bench gain
+  / 3-10, one molecule = 0.004 on ~125 public molecules: about 0 +- 0.001, below LB resolution.
