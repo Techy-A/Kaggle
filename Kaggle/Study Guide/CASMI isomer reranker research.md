@@ -249,3 +249,25 @@ nothing installed, pushed to Kaggle or submitted.
 - **Verdict (13:46 IST): step 3 no-go.** Not integrated, nothing submitted. Any retry would need the base rank as a prior
   (z(-log rank) + small alpha z(FIORA), as in heliosli's layer) and a fresh pre-registration; that would be new tuning
   on the bench and is not done here.
+
+## 10. Step 3: rank-preserving FIORA fusion on genfix-bench base lists (29 Oct, IST)
+`enveda-casmi26/54_fiora_rank_preserving.py`, outputs `artifacts/54_*`. CPU only; nothing pushed to Kaggle or submitted.
+
+**Pre-registration (written 29 Oct 16:26 IST, before any 54 score was computed).**
+- **Rule.** For each genfix-bench list (fin1, top 25) with lib_max < 0.9: take the slots whose formula equals the
+  rank-1 candidate's formula; if >= 2, reorder them by `z(-log base_rank) + 0.25 * z(S)`, where base_rank is the
+  1-based position in fin1 and S is FIORA-OS ([M-H]-, HCD, CE 10) unweighted entropy similarity (0.01 Da, peaks >=
+  precursor - 1 removed) summed over the molecule's negative-mode query spectra; z over the slots; stable sort; no
+  margin rule. Other slots and lists with lib_max >= 0.9 untouched. Weight 0.25 fixed, no tuning.
+- **(a) Primary / sanity set:** the 214 lists with [M-H]- spectra used in §9 (cached FIORA predictions reused). Not
+  fresh, so not decisive: must show zero class-1 rank-1 losses and no MRR loss.
+- **(b) Decision set (fresh):** the 41 bench lists not in the 214 whose pseudo-test query has negative-mode spectra of
+  other adducts only ([M+CH2O2-H]- 94, [2M-H]- 8, [M+Cl]- 6 spectra; not used in 52/53). Same [M-H]- CE 10 FIORA
+  prediction; each spectrum's precursor is converted to the implied [M-H]- m/z (formate -46.00548, Cl -35.97668,
+  2M-H: (p+1.00728)/2 - 1.00728) for peak cleaning. Small set (41 lists, fewer scored), so power is low; stated
+  in advance.
+- **Acceptance:** paired bootstrap over lists of rr(after) - rr(before) on the decision set with P(better) >= 0.9,
+  AND zero class-1 rank-1 losses on both sets. Anything else = no-go.
+- **Forecast before scoring:** at weight 0.25 the base log-rank term dominates (rank 1 vs 2 differ by ~0.69 in -log
+  rank), so few lists should change; expected bench effect ~0 to +0.01 MRR; public = bench gain / 3-10 on at most ~8
+  affected molecules (one molecule = 0.004): about 0 to +0.001, below LB resolution.
