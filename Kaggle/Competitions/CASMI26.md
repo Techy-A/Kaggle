@@ -516,3 +516,5 @@ Lever table (38 levers, bench and LB), ranked plan and final-selection advice in
 
 ## Discussion scan 29 Oct 16:23 IST
 - 753775 (new, no host answer): are checkpoints that other participants published as Kaggle datasets (gradient-boosted rankers, fine-tuned fingerprint networks, precomputed feature tables) without training code or data treated like public pretrained models, or must a team be able to retrain them? Relevant to every copy we hold (the 0.477 and 0.472 lines load dmitriigluzdov's and sanpier's assets); together with 752541 (host may remove non-reproducible submissions) this is the main eligibility risk of copies, not of the score. Watch for the host's answer before final selection.
+
+**29 Oct 16:32 IST pointer:** FIORA step 3, rank-preserving fusion (`54_fiora_rank_preserving.py`, pre-registered in research note §10 at 16:26): z(-log base rank) + 0.25 z(FIORA entropy CE10) within rank-1-formula slots, lib_max >= 0.9 untouched. 214 [M-H]- lists: 2 changed, MRR -0.0022 (P 0.23), 1 class-1 rank-1 loss; fresh 41 formate/Cl/2M-H lists: 1 changed, +0.0012 (P 0.63). Both gates fail: no-go, no Kaggle version.

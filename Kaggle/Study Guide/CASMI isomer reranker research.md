@@ -271,3 +271,19 @@ nothing installed, pushed to Kaggle or submitted.
 - **Forecast before scoring:** at weight 0.25 the base log-rank term dominates (rank 1 vs 2 differ by ~0.69 in -log
   rank), so few lists should change; expected bench effect ~0 to +0.01 MRR; public = bench gain / 3-10 on at most ~8
   affected molecules (one molecule = 0.004): about 0 to +0.001, below LB resolution.
+
+**Result (29 Oct 16:32 IST): no-go.** Set (a) reproduces §9 exactly (214 lists, 17 lib-gated, 191 scored); set (b)
+has 41 lists (36 scored, 637 new FIORA predictions in 137 s on 4 x 1-thread shards, 0 failures).
+- **(a) 214 [M-H]- lists:** 2 lists changed, rank-1 changed in 2. MRR 0.7436 -> 0.7414, d -0.0022 [-0.0070, +0.0004],
+  P(better) 0.23. Class 1 (124): 0.933 -> 0.929, **1 rank-1 loss** (t_HJPIKKKAGLKWNA, 1 -> 0.5), 0 gains; class 2
+  (27): 0.873 unchanged; class 3 (63): 0.3148 -> 0.3152 (b_UEDUENGHJMELGK 0.10 -> 0.125), 0 gains/losses.
+- **(b) 41 fresh formate/Cl/2M-H lists:** 1 list changed (b_SHIBSTMRCDJXLN, class 3, 0.20 -> 0.25), 0 rank-1
+  changes. MRR 0.6939 -> 0.6951, d +0.0012 [0.0000, +0.0037], **P(better) 0.63**. Class 1 (23) 0 losses, class 2 (4)
+  unchanged, class 3 (14) 0.336 -> 0.339.
+- **Gates:** decision-set P 0.63 < 0.9 fails; class-1 zero-loss gate fails on (a). Both acceptance conditions fail.
+- **Forecast vs outcome.** Forecast ~0 to +0.01 bench MRR; outcome -0.002 (a) / +0.001 (b), i.e. as predicted the
+  log-rank prior dominates at 0.25 and almost nothing moves. Public forecast: (a) implies one misfired class-1 swap
+  per ~124 class-1 lists, ~-0.0005 to 0 expected on <= 8 affected public molecules; no measurable gain either way.
+- **Verdict:** step 3 no-go; no Kaggle version. FIORA's isomer signal (§9, P 1.00 on random train isomers) does not
+  translate into gains on real base lists at a safe weight, and a larger weight is what §9 already showed to be harmful.
+  Not tuning the weight on the bench (would be post hoc).
