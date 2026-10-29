@@ -136,3 +136,30 @@ Sources: [DiffMS (arXiv 2502.09571)](https://arxiv.org/html/2502.09571v2), [test
 [MS2DeepScore 2.0 cross-ion preprint](https://www.biorxiv.org/content/10.1101/2024.03.25.586580.full.pdf),
 [Leaderboard Lottery / MCB (ICML 2026)](https://icml.cc/virtual/2026/80012), [Reducing overfitting in challenge-based
 competitions](https://arxiv.org/pdf/1607.00091), pulled notebooks under `/home/user/work/pull_*`.
+
+## Step 4 result (2026-10-29 16:30 IST): diffs of the public 0.477 notebooks vs busyaprime
+Pulled to `/home/user/work/pull_f477_*`, code cells diffed against `pull_c477` (busyaprime 0.477, variant M). All seven
+use busyaprime's seven datasets unchanged (no private/empty `dataset_sources`, no models, no kernel sources); kunal adds
+only `metric/rdkit-2026-3-3-wheel`, not referenced in code. No enveda-180 references anywhere. Six are forks of
+busyaprime; Spectral Parallax is now also a busyaprime fork plus one layer.
+
+| notebook | fork of | difference | class |
+|---|---|---|---|
+| pjmathematician/casmi26-e303-pub477-gpu | busyaprime | byte-identical code | none |
+| cngnguynhuuz/casmi26-fork-m477 | busyaprime | byte-identical notebook (same as pj) | none |
+| rajrajak99/apex-v1300 | busyaprime | `COMMIT_MODE='fast'` with dummy commit file, guards around stages; scoring path unchanged | none (plumbing) |
+| rajrajak99/apex-v1320 | apex-v1300 | `w_top=0.0` instead of 0.25 | (a) tweak |
+| youyouwou/v120rel150 | busyaprime | `IS_RERUN=True` forced; InChIKey-14 dedup + backfill from CUSTOM/V2 | (a) rule; no-op on our lists (lever 16: 0 duplicates) |
+| kunaldesale2408/mid | busyaprime | `w_mid=0.80`, `rescue=1`, 25 outsiders; merge gate removed (leader move applied even if V[0]!=C[0] or sets differ, V[0] not kept at rank 2); same K14 dedup | (a) tweaks + gate loosening |
+| romantamrazov/spectral-parallax (new) | busyaprime 0.477 | adds "disagreement rescue": where the fragment check moved rank 1 but the 0.477 merge discarded it, swap to the physical leader only if same formula, leader `library_max`<0.955, neural z-margin>=0.04, cosine margin>=-0.002, >=1 source rank<=15, >=3 acquisitions, and per-acquisition fragment-ion and **neutral-loss** margins pass (median/mean/fraction gates) | (b) new evidence source (neutral-loss matching), heavily gated |
+
+Public score for all is 0.477 = base, so on the public split the extra layers changed 0 net molecules.
+
+**Recommendation.** Only one candidate signal: the Parallax neutral-loss + multi-acquisition ion gate for isomer
+leader swaps. Worth one CPU replay, nothing on Kaggle. Validation: port `choose_disagreement`/`neutral_loss_score`
+(rewritten, not executed from the pull) to our bench; pre-register its gates as published; replay on the
+leader-disagreement lists of the genfix bench (same 214 [M-H]- lists as step 3, plus [M+H]+ if available); accept only
+if paired bootstrap over molecules gives P(better) >= 0.9 *and* zero class-1 rank-1 losses, then confirm on an unused
+slice. Expect few or zero firings (it fired on no net public molecule). Ignore the K14 dedup (already 0 duplicates),
+w_top/w_mid/rescue tweaks and kunal's gate removal (a looser version of a gate we chose deliberately). Final selection
+in section 5 stands.
