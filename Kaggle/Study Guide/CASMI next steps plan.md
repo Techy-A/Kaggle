@@ -1,0 +1,138 @@
+---
+tags: [kaggle, casmi26, plan]
+date: 2026-10-29
+---
+# CASMI26: next steps plan (29 Oct 2026, IST)
+
+Research and planning only. Nothing installed, downloaded, pushed or submitted for this note. Back to [[CASMI26]].
+
+**Where we stand (29 Oct 16:15 IST).** Best public 0.477 = exact copy of busyaprime's "two 0.472 fixes merged the
+right way" (`/home/user/work/push_c477`, ref 57736039). Public top 0.478 (heliosli; needs a private rr4 dataset, not
+copyable). The 0.477 plateau has many forks. About 125 public molecules: one rank-2 -> 1 move = 0.004, one miss -> rank
+1 = 0.008, modelled SE of the public mean about 0.04. Gold line about 0.471-0.473. GPU quota 0.83 h until 31 Oct
+05:30 IST (one 0.477-sized run costs about 0.45 h visible).
+
+## 1. Every lever tried (ours and the public's), with measured effect
+LB = public leaderboard change against the base it was applied to. "Bench" = our offline benches (np, unseen, thin
+class-1 genfix bench, isomer benches). Rule of thumb from all of it: **LB = bench / 3-10, and the sign is not reliable
+for anything that changes list composition.**
+
+| # | Lever | Who | Bench | LB | Verdict |
+|---|---|---|---|---|---|
+| 1 | Exact pinned copy of best public notebook | us | - | reproduced every time but once (0.443, 0.441, 0.454, 0.456, 0.464, 0.468, 0.472, 0.477; the miss: 0.465 vs 0.466) | **works**; unpinned copies lost 0.014 |
+| 2 | Docker image swap (same code) | guhongbin v459 / Kino | - | +0.008 once (0.446 -> 0.454), 0 on v14 | not a lever on current code |
+| 3 | Own engine merged by RRF into strong pipeline | us | - | +0.001 / -0.001 / -0.007 | dead |
+| 4 | Fingerprint re-rank inside fork's final 25 | us | - | 0.000 | dead |
+| 5 | Generated class-3 candidates at rank 2 | us | 42% answers generated offline | -0.001 | dead |
+| 6 | Popularity prior | us | +0.50 MRR | +0.075 | worked, shrinks 7x |
+| 7 | Agreement-only promotion | us | - | -0.004 | dead |
+| 8 | PubChem gate rel 150 -> 100 / 250 | us, public | bench +0.002 (wrong sign) | -0.006 / -0.006 | keep 150 |
+| 9 | Engine-2 rank-3 insert (E2R3) | us | -0.003 | -0.001 | dead |
+| 10 | Engine-2 max_depth 7 | us | - | +0.003, +0.004, 0.000, **-0.008** | base-dependent, dead on current base |
+| 11 | gen20 (wider generation, ungated) | us | +0.033 np / +0.004 honest | **-0.010** | dead; re-scores list-relative features (top-5 changed in 48-60%) |
+| 12 | Gated gen20 (lib_max < 0.7) | us | keeps class 1 | not submitted | no evidence |
+| 13 | Features-frozen gen20 (genfix δ 2.0) + candidate-level PubChem gate | us | 0/270 rank-1 losses, c3 +0.083 (leaky) | 0.465 (vs 0.464 base) | +0.001, noise |
+| 14 | Learned fusion (LambdaRank over E004 inputs) | us | +0.015, P 0.98 | not submitted | rejected: learns "trust PubChem" (rel100 trap) |
+| 15 | NPAtlas / bigger NP catalogue | us | 485 new structures of 36k | - | not worth it; DB coverage saturated |
+| 16 | Dedupe by metric key | us | 0 duplicates | - | already done |
+| 17 | Forward-model coverage (N1A proxies, N1 challenger) | public | - | **+0.008 x3** | the only big repeatable lever; positive adducts now fully covered |
+| 18 | [M+Na]+ -> [M+H]+ GLACIER shift | public | - | -0.008, -0.008, -0.013 | dead |
+| 19 | Candidate-level PubChem promotion gate | sanpier | - | +0.001 | noise-level |
+| 20 | Neural CLIP model RRF (w 0.15-0.25, offset 3) | sanpier / our copy | holdout MRR 0.39 alone | +0.001 (our copy 0.465 = 0) | noise-level |
+| 21 | RRF offset 3 -> 1 / 10; w 0.75 everywhere | alexchilton | - | +0.001 / -0.020 / -0.047 | parameters are sharp; heavier loses |
+| 22 | Leader-safe consensus V2 (rank 1 at 0.25, ranks 2-25 at 0.50) | romanrozen | - | +0.002 (0.466 -> 0.468) | works (protects rank 1) |
+| 23 | w_mid 0.75 (also 0.70, 0.80 all 0.472) | alexchilton forks | - | +0.004 | works, flat in 0.70-0.80 |
+| 24 | Rank-1 neural weight 0 / 0.50 / 1.00 | public forks | - | 0.472 / 0.448 / 0.359 | **moving rank 1 with the neural model loses** |
+| 25 | Tamrazov fragment check on V2 order | Spectral Parallax | - | +0.004 (0.468 -> 0.472) | works |
+| 26 | Fragment check + w 0.75 stacked plainly | busyaprime e1 | - | 0.472 (no add) | contender window changes |
+| 27 | Fragment check leader moves from V2 + ranks 2-25 from 0.75 (merge order) | busyaprime m1 | - | **0.477** | current best; about one net leader move |
+| 28 | Provenance reranker | Tamrazov / busyaprime e2 | - | 0.000 | dead |
+| 29 | Long-trained neural model (Ahmed) | busyaprime e3/e4 | holdout 0.718 vs 0.484 | **-0.019** | offline neural gains do not transfer |
+| 30 | NX isomer reranker weight 2 | busyaprime e6 | - | **-0.058** | dead |
+| 31 | heliosli rr3 / rr4 overlay (permutation of non-train candidates, z(-log rank) + α z(reranker), lib_max >= 0.9 untouched) | heliosli | - | +0.007 on 0.468 line, rr4 0.478 | needs private dataset |
+| 32 | Our fragment-feature LightGBM isomer reranker | us (script 51) | isomer sets +0.009; real lists **-0.006**, P 0.14, 5 class-1 rank-1 losses | not submitted | dead (redundant with 25/20) |
+| 33 | FIORA-OS [M-H]- reranker ignoring base rank | us (52/53) | random isomers +0.11 MRR P 1.00; real lists **-0.163**, 19 class-1 rank-1 losses | not submitted | dead as built; base order already RR 0.94 within slot vs FIORA 0.61 |
+| 34 | Negative-mode forward-model gap | us (50) | 27 of 400 molecules ([M-H]- / formate only) | - | headroom < 1 public molecule |
+| 35 | enveda-180 rows = verbatim test spectra with decoy-looking labels | us | label in top 25 for 12/400 | - | **trap**, never use |
+| 36 | Public dead ends (FRIGID ungated, JESTR, CFM-ID LOTUS, stepped-CE GLACIER, MSEntropy, ChEBI+LIPID MAPS, blind PubChem isomer expansion) | public | - | -0.009, -0.022, 0 to -0.018, -0.004, 0, -0.005, -0.13 | dead |
+| 37 | MetFrag-lite parsimony tuning (2-bond x0.6, linear int., 0.005 Da) | NeckBeard | +0.065 isomer panel | flat | dead as a main bet |
+| 38 | Rule-based biotransformation of analogs for class 3 | forum 753400 | few hits | - | dead |
+
+**Three lessons that matter most**
+1. **Rank 1 is where points are won and lost, and the base pipeline's rank 1 is already very good.** Every gain since
+   0.466 protects rank 1 (rows 22-27); every lever that let a new signal move rank 1 freely lost (rows 24, 29, 30, 32,
+   33). Our two rerankers looked strong on random-isomer benches and lost on real lists because the base order already
+   ranks isomers at RR 0.94. Any new signal must enter as a small term on top of the base rank, never as a replacement.
+2. **Our benches cannot approve list-composition changes.** gen20 (+0.033 bench, -0.010 LB), rel100 and learned
+   fusion all had the wrong sign. The benches are good at diagnosis and at catching class-1 rank-1 losses; the zero
+   class-1-loss gate is the one filter that would have stopped every LB loss we caused.
+3. **The public LB cannot separate the plateau.** One molecule is 0.004 against SE 0.04; 0.472 -> 0.477 is about one
+   molecule. Copies are reproducible (5 of 6), so the 0.477 is a real public number, but its private advantage over
+   0.472 is closer to a coin with a small tilt than to a sure thing.
+
+## 2. What the top notebooks do, layer by layer (read from pulled sources)
+- **Base (0.465, base64-embedded, SHA pinned):** dmitriigluzdov v16 + sanpier's candidate-level PubChem gate. Library
+  search, PubChem channel, GLACIER + ICEBERG (N1 challenger), engine 1 (Ahmed v4b) + engine 2 fusion.
+- **Neural RRF (sanpier, 0.466):** CLIP spectrum/fingerprint model trained only on train.parquet; score
+  1/(3+b) + w/(3+n).
+- **Leader-safe V2 (romanrozen, 0.468):** rank 1 at w 0.25, ranks 2-25 at w 0.50; optional tail rescue (V3).
+- **0.75 order (alexchilton forks, 0.472):** ranks 2-25 at w_mid 0.75.
+- **Fragment check (Tamrazov Spectral Parallax, 0.472):** untrained MetFrag-lite. Rank 1: if lib_max < 0.87 and >= 3
+  spectra, a same-formula candidate from ranks 2-6 can lead if it explains clearly more intensity, is higher on the
+  neural model and has engine top-5 or GLACIER/ICEBERG support. Plus up to 2 adjacent swaps in ranks 2-11 and one
+  outside candidate at rank 25.
+- **Merge order (busyaprime m1, 0.477):** run the fragment check on the V2 order; keep only its leader moves, put the
+  old leader second, the rest from the 0.75 order. The gain is the merge order, not a new signal.
+- **heliosli rr3/rr4 (0.475/0.478):** permutation-only overlay on non-train candidates, z(-log rank) + α z(GNN +
+  transformer fragment scorer through five fold-safe FPNets); private dataset.
+
+## 3. Ideas from the web and forum, against our constraints
+| Idea | Expected public gain | Cost | Risk | Licence | Validation |
+|---|---|---|---|---|---|
+| A. Rank-preserving FIORA fusion on [M-H]- / formate-only molecules: z(-log base rank) + α z(FIORA), α fixed in advance (0.25), rank-1 swap only with margin and lib_max < 0.87 | +0.000 to +0.001 (affects <= ~8 public molecules) | CPU replay of existing 53 artifacts (minutes); later a Kaggle dataset + 0.45 h GPU | the same 214 lists were used for the no-go, so α must be fixed before looking; a fresh slice is needed | FIORA MIT, OS weights on MSnLib, host-allowed (751373) | genfix-bench [M-H]- lists, paired bootstrap P >= 0.9 **and** 0 class-1 rank-1 losses |
+| B. Copy heliosli if the rr4 dataset goes public (title: "happy to make the dataset public if it helps") | +0.001 (0.478) | 0.45 h GPU | low; private gain unknown | check dataset licence | exact-copy rule (reproduced 5/6) |
+| C. Ensembling distinct 0.477 forks (kunaldesale MID, rajrajak Apex PXM, Spectral Parallax current) | 0 to +0.004 | read diffs (CPU), one run | blend-composition changes failed 10x in the SHL project and RRF of near-identical lists is a no-op | as the forks | only if a fork adds a *new* signal; otherwise skip |
+| D. Class-3 recall by de novo generation (DiffMS, ICML 2025, formula-constrained graph diffusion; test-time-tuned LMs, arXiv 2510.23746) | ~0 by the deadline (published top-1 on MassSpecGym is a few %) | days of GPU training on train.parquet | very high; list-composition changes lost every time | DiffMS MIT; pretraining data must be checked | would need a leaderboard A/B; not affordable |
+| E. Cross-ion analog search (MS2DeepScore 2.0) for [M-H]- molecules | ~0 (DB coverage saturated, row 15) | install + embeddings | medium | Apache-2.0 (verify); host-allowed | coverage count first |
+| F. Private-split robustness when choosing between near-identical submissions | protects ~0.004-0.008 private | none | none | - | reasoning below (multiple-comparisons-with-the-best view: the 0.472-0.477 group is statistically one winner set) |
+
+## 4. Ranked plan (at most 5 items, step -> verify)
+Honest odds first: P(any item below beats 0.477 on the public LB) is about 15-20% in total. The plateau is a
+noise wall; build for the private split.
+
+1. **Lock the final selection now (no compute).** -> verify: two submission IDs written under "Final selection"
+   in [[CASMI26]]; re-check only if a new lineage (not a fork) reaches >= 0.480 twice. Expected gain: protects the
+   0.477 against the private reshuffle; cost 0.
+2. **Watch heliosli's dataset; copy if it becomes public.** -> verify: dataset visible with a licence that passes the
+   host rules, exact copy scores 0.478 +- 0.001. Expected +0.001 public, P(dataset released before the deadline) about
+   30%. Uses the 0.83 h quota only then.
+3. **Rank-preserving FIORA fusion, pre-registered.** Write α = 0.25, margin and gates into the script header
+   *before* running; replay on the 214 [M-H]- genfix-bench lists from `artifacts/53_*` (CPU, minutes). -> verify:
+   P(better) >= 0.9 and zero class-1 rank-1 losses; if it passes, a second check on a slice not yet used (e.g. the 31
+   lists of script 52 run through the guard). Expected +0.000 to +0.001 public, P(pass) about 20%. Needs user approval
+   for any Kaggle dataset/push.
+4. **Read the diffs of the other 0.477 forks (kunaldesale MID, rajrajak PXM, current Spectral Parallax).** CPU only.
+   -> verify: a table of executed-line differences vs busyaprime m1; act only if one adds a new signal (not a weight).
+   Expected 0 to +0.004, P(useful) about 10%.
+5. **Stop list (no work):** class-3 generation in any form, wider PubChem, depth 7, learned fusion, any reranker that
+   can move rank 1 without the base rank as a prior, enveda-180 lookups. -> verify: nothing in this list gets GPU time.
+
+## 5. Final selection (recommendation)
+Kaggle scores the better of the two selected submissions on the private split (~275 molecules), so the second slot
+should be a strong submission that **fails differently**, not the next-best near-duplicate.
+- **Selection 1: the 0.477 copy (57736039).** Highest public score, reproduced exactly, same base as everything else.
+- **Selection 2: the Spectral Parallax copy, 0.472 (57699799).** It differs from the 0.477 exactly where the 0.477's
+  extra +0.005 comes from (ranks 2-25 at 0.50 instead of 0.75, and its own swaps/tail), so if the 0.477 merge was a
+  one-molecule public fluke the second slot still holds the 0.472 lineage. It shares the base and the leader-safe rank
+  1, so its expected private score is close to the 0.477's.
+- Do **not** use the slot for our own 0.465 stack or the 0.468 copy (lower and highly correlated), or for any untested
+  variant. Swap selection 2 only for a different lineage that has scored >= 0.477 publicly (e.g. a public heliosli
+  copy at 0.478, which would then take selection 1 and move the 0.477 to selection 2).
+- Licence: both use the dmitriigluzdov assets (CC BY-NC-SA, allowed by host since 17 Oct) and sanpier's
+  train.parquet-trained model; both are copies, rank-only, not honestly validated models of ours.
+
+Sources: [DiffMS (arXiv 2502.09571)](https://arxiv.org/html/2502.09571v2), [test-time tuned LMs for MS/MS
+(arXiv 2510.23746)](https://arxiv.org/abs/2510.23746v1), [FIORA (Nat Commun 2025, PMC)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11889238/),
+[MS2DeepScore 2.0 cross-ion preprint](https://www.biorxiv.org/content/10.1101/2024.03.25.586580.full.pdf),
+[Leaderboard Lottery / MCB (ICML 2026)](https://icml.cc/virtual/2026/80012), [Reducing overfitting in challenge-based
+competitions](https://arxiv.org/pdf/1607.00091), pulled notebooks under `/home/user/work/pull_*`.

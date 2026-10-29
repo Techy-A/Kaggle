@@ -510,3 +510,6 @@ Script `enveda-casmi26/51_isomer_reranker.py` (outputs `artifacts/51_*`). Traini
 **29 Oct 13:24 IST pointer:** FIORA-OS step 2 bench (`52_fiora_negmode_bench.py`, 60 [M-H]- QTOF train molecules, enveda-180 and MSnLib structures excluded): held-out 31, top-1/MRR FIORA 0.355/0.561 vs fragment 0.226/0.543 vs random 0.097/0.231, P(better) 0.62; z-sum FIORA+fragment 0.419/0.627, P 0.94; 0.037 s/prediction on 4 cores. Step 3 no-go until a ~250-molecule bench confirms. Details: research note §8.
 
 **29 Oct 13:46 IST pointer:** FIORA step 2 enlarged (`53_fiora_negmode_bench250.py`): pool gave 193 new held-out [M-H]- molecules (not 250). FIORA 0.466/0.606 top-1/MRR vs fragment 0.218/0.495 (P 1.00), comb 0.446/0.608 (P 1.00 vs fragment, 0.54 vs FIORA). Guarded genfix-bench check on 214 [M-H]- lists failed: 19 class-1 rank-1 losses, MRR -0.163 (P 0.00); the base order already ranks isomers at 0.94 within slots. Step 3 no-go. Details: research note §9.
+
+## Next steps plan (29 Oct 16:3x IST)
+Lever table (38 levers, bench and LB), ranked plan and final-selection advice in [[CASMI next steps plan]] (`Study Guide/`). Final selection recommended: 0.477 copy (57736039) + Spectral Parallax copy 0.472 (57699799).
