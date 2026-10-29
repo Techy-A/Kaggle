@@ -182,3 +182,34 @@ molecules in the covered gap (25/27 of ~8.9), most class 1 already right; earlie
 molecule = ~0.004-0.008 on ~125-132 public molecules). Expected public +0.000 to +0.004, point +0.001, P(>= +0.004)
 about 0.15; risk of -0.004 if the guard misfires once. Recommendation: **go for steps 1-2 only** (cheap, CPU, decides
 it); no-go for a submission unless the bench passes the gates.
+
+## 8. Step 2 (A2) result: FIORA-OS negative-mode isomer bench (29 Oct 13:24 IST) - weak, not yet a go
+`enveda-casmi26/52_fiora_negmode_bench.py`, outputs `artifacts/52_*` (summary in `52_summary.json`). CPU only, nothing
+pushed or submitted.
+- **Data.** 60 [M-H]- queries from `train.parquet`, one spectrum each: instrument_type contains "tof" (LC-ESI-QTOF 53,
+  ESI-QTOF 3, LC-ESI-TOF 3, qtof 1; no timsTOF label exists in train), single CE in eV (6-50, median 20), >= 5 peaks;
+  libs riken 22, massbank 22, mona 11, msdial 4, spectraverse 1. Excluded: every `enveda-180` row (also as isomer
+  source), genfix bench answers, and any structure with a `pluskal_ms2` row (MSnLib = FIORA-OS training data). One
+  molecule per formula; 10-24 same-formula isomers from other train structures (mean 16.1 candidates). Split by a fixed
+  random draw into tune 29 / test 31 (formula-disjoint).
+- **FIORA.** [M-H]-, HCD, CE grid {10, 20, 30, 40} fixed in advance plus the grid mean; 3,856 predictions, 0 missing.
+  Score: cosine (sqrt intensity) and unweighted entropy similarity, 0.01 Da greedy matching, peaks >= precursor - 1
+  removed. Ties: expected reciprocal rank under random tie-break.
+- **Tune half (MRR):** cos 10/20/30/40/mean 0.654/0.644/0.645/0.646/0.651; entropy 0.662/0.611/0.625/0.605/0.629.
+  Chosen: entropy at CE 10.
+- **Held-out half (31 molecules), top-1 / MRR:** FIORA entropy-CE10 0.355 / 0.561; fragment score
+  (`fragments.explain_scores`, negative mode) 0.226 / 0.543; random 0.097 / 0.231 (expected 0.214).
+  FIORA vs fragment: d MRR +0.019, 95% CI [-0.102, +0.144], **P(better) 0.62**. FIORA vs random P 1.00.
+  Pre-fixed combination z(frag) + z(FIORA) within the list: top-1 0.419, MRR 0.627, vs fragment d +0.084
+  [-0.019, +0.197], **P(better) 0.94**. Post hoc (not used for decisions): cos_mean on test 0.587, ent_mean 0.578; the
+  tune-half CE choice is noise-level (spread 0.01-0.06 MRR on 29 molecules). All 60: FIORA 0.610 vs fragment 0.540.
+- **Speed.** 4 shards x 1 thread (OMP_NUM_THREADS=1): 143 s wall for 3,856 = 0.037 s/prediction wall, ~0.15 s per
+  core. Default threading in one process was 2.45 s/prediction (232-row test; thread oversubscription), so the Kaggle
+  run must set OMP_NUM_THREADS=1 and shard. Stage 1 (~2.4k predictions) would take ~1.5 min on 4 cores.
+- **Verdict.** FIORA alone is not clearly better than the fragment score (P 0.62). Its value is complementary: the
+  combination passes P >= 0.9 nominally (0.94) but on 31 molecules, and the class-1 zero-rank-1-loss gate is untested
+  (no base lists here). Forecast if integrated as stage 1: bench gain +0.08 MRR within isomer sets on <= ~8 affected
+  public molecules = ~0.6 molecule-equivalents x 0.004 = +0.0027 before transfer; /3-10 -> **+0.0003 to +0.001**,
+  risk -0.004 per misfired rank-1 swap. **Step 3: no-go for now.** Next (cheap, CPU, ~10 min): enlarge the bench to
+  ~250 molecules with the same frozen settings (entropy CE10 + z-sum) and require P >= 0.9 there, then a guarded
+  run on genfix-bench [M-H]- base lists for the class-1 gate, before any Kaggle dataset.
