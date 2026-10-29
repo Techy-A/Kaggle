@@ -109,3 +109,6 @@ Check: exact array equality on a sample, the `ingest_lib` and InChIKey of the ma
 3. Small GNN+transformer like heliosli's: most cost, heliosli's own gain over 0.477-equivalent was ~+0.001. Not first.
 Honest summary: one molecule is 0.004 against a standard error of 0.04, so any public result is mostly noise; build it
 for the private split, not for the public number.
+
+## 6. Result of the recommended first experiment (29 Oct 12:07 IST) - negative
+`enveda-casmi26/51_isomer_reranker.py`. Scaffold-held-out isomer MRR: LightGBM 0.871 vs fragment score 0.862 vs random 0.206 (+0.009). On the genfix bench base lists with the guards fixed up front (formula-of-rank-1 slots only, alpha 1, rank-1 margin 1.0, lib_max >= 0.9 skipped): natural d -0.0056, P(better) 0.14; class 1 has 5 rank-1 losses vs 4 gains. Forecast -0.0006 to -0.002 on public. Rejected; not integrated. Anomaly: 40/40 sampled test spectra equal a train row exactly, all `enveda-180`, one structure each (labels apparently not the answers); not used. Next only if new information: a stronger isomer signal (forward-model spectra, e.g. FIORA-OS), not more fragment features.

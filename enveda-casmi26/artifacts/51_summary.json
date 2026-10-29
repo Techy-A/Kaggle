@@ -1,0 +1,158 @@
+{
+ "train": {
+  "n_queries": 3000,
+  "n_rows": 51628,
+  "mrr_lgbm_oof": 0.8714723499835392,
+  "mrr_fragscore": 0.8623195088336729,
+  "mrr_random": 0.205936169513757,
+  "expected_random": 0.20789838339427236,
+  "per_fold": {
+   "0": [
+    0.8802641309746104,
+    0.8669450344405939
+   ],
+   "1": [
+    0.8890958244695358,
+    0.8801266841215295
+   ],
+   "2": [
+    0.8570180874306074,
+    0.8541542167250685
+   ],
+   "3": [
+    0.8593558988077261,
+    0.8500786157689617
+   ],
+   "4": [
+    0.8742747028922654,
+    0.8619920876266053
+   ]
+  },
+  "top1_lgbm_oof": 0.7896666666666666,
+  "top1_fragscore": 0.7796666666666666
+ },
+ "alpha": 1.0,
+ "margin": 1.0,
+ "lib_tau": 0.9,
+ "natural": [
+  -0.005636189155796999,
+  -0.015745243989851835,
+  0.004476878141829116,
+  0.1404
+ ],
+ "mix_28_20_52": [
+  -0.007285922719256055,
+  -0.015450388478623775,
+  -0.0002918712097633699,
+  0.0198
+ ],
+ "class1": {
+  "n": 270,
+  "mrr0": 0.8884303350970016,
+  "mrr1": 0.8848563128955286,
+  "rank1_losses": 5,
+  "rank1_gains": 4,
+  "top1_changed": 10
+ },
+ "class2": {
+  "n": 50,
+  "mrr0": 0.8913333333333333,
+  "mrr1": 0.8872222222222222,
+  "rank1_losses": 0,
+  "rank1_gains": 0,
+  "top1_changed": 0
+ },
+ "class3": {
+  "n": 130,
+  "mrr0": 0.31179487179487175,
+  "mrr1": 0.30128915202444617,
+  "rank1_losses": 1,
+  "rank1_gains": 0,
+  "top1_changed": 15
+ },
+ "changed_lists": 24,
+ "gated_lib": 40,
+ "missing_smiles_mean": 5.802222222222222,
+ "anomaly": {
+  "sample": 40,
+  "test_cols": [
+   "molecule_id",
+   "spectrum_id",
+   "ms2_mzs",
+   "ms2_normalized_intensities",
+   "base_peak_intensity",
+   "adduct",
+   "ionization_mode",
+   "instrument_type",
+   "precursor_mz",
+   "collision_energy_orig",
+   "collision_energy_ev",
+   "collision_energy_orig_units"
+  ],
+  "n_test_with_exact_mz_match": 40,
+  "n_train_rows_matched": 40,
+  "ingest_lib_counts": {
+   "enveda-180": 40
+  },
+  "intensities_equal_frac": 1.0,
+  "distinct_ik14_per_test_spectrum": 1.0,
+  "examples": [
+   {
+    "molecule_id": "m_006153",
+    "ingest_lib": "enveda-180",
+    "ik14": "BKIHGKNEJKYYAC",
+    "adduct": "[M-H]-",
+    "int_equal": true
+   },
+   {
+    "molecule_id": "m_347e26",
+    "ingest_lib": "enveda-180",
+    "ik14": "AVPWXVRXPXHKRI",
+    "adduct": "[M+H]+",
+    "int_equal": true
+   },
+   {
+    "molecule_id": "m_e44302",
+    "ingest_lib": "enveda-180",
+    "ik14": "BPXFXKKOUKUYHJ",
+    "adduct": "[M-H]-",
+    "int_equal": true
+   },
+   {
+    "molecule_id": "m_8bb047",
+    "ingest_lib": "enveda-180",
+    "ik14": "AJUNJWYDJXCEDG",
+    "adduct": "[M+H]+",
+    "int_equal": true
+   },
+   {
+    "molecule_id": "m_3f6bab",
+    "ingest_lib": "enveda-180",
+    "ik14": "CPBRKLFURDMWSO",
+    "adduct": "[M-H]-",
+    "int_equal": true
+   },
+   {
+    "molecule_id": "m_997dbc",
+    "ingest_lib": "enveda-180",
+    "ik14": "AAWPYOUKYVYTOC",
+    "adduct": "[M+H]+",
+    "int_equal": true
+   },
+   {
+    "molecule_id": "m_e1d7ad",
+    "ingest_lib": "enveda-180",
+    "ik14": "DRODYACLPOTBOW",
+    "adduct": "[M+H]+",
+    "int_equal": true
+   },
+   {
+    "molecule_id": "m_8db7e3",
+    "ingest_lib": "enveda-180",
+    "ik14": "DIROQCYJENWMMI",
+    "adduct": "[M+H]+",
+    "int_equal": true
+   }
+  ]
+ }
+}
