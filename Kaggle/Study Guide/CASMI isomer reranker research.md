@@ -112,3 +112,73 @@ for the private split, not for the public number.
 
 ## 6. Result of the recommended first experiment (29 Oct 12:07 IST) - negative
 `enveda-casmi26/51_isomer_reranker.py`. Scaffold-held-out isomer MRR: LightGBM 0.871 vs fragment score 0.862 vs random 0.206 (+0.009). On the genfix bench base lists with the guards fixed up front (formula-of-rank-1 slots only, alpha 1, rank-1 margin 1.0, lib_max >= 0.9 skipped): natural d -0.0056, P(better) 0.14; class 1 has 5 rank-1 losses vs 4 gains. Forecast -0.0006 to -0.002 on public. Rejected; not integrated. Anomaly: 40/40 sampled test spectra equal a train row exactly, all `enveda-180`, one structure each (labels apparently not the answers); not used. Next only if new information: a stronger isomer signal (forward-model spectra, e.g. FIORA-OS), not more fragment features.
+
+## 7. FIORA / FIORA-OS as a negative-mode forward model (29 Oct 2026, IST; research only, nothing run)
+
+Sources read: github.com/BAMeScience/fiora (README, `pyproject.toml`, `requirements.txt`, the shipped
+`fiora_OS_v0.1.0_params.json` / `fiora_OS_v1.0.0_params.json`, `examples/example_input.csv`); search abstracts of
+Nowatzky et al., Nat Commun 16, 2298 (2025). The full paper (nature.com, PMC, arXiv 2304.13136) could not be fetched
+here (hosts not allowed by the session network), so the paper numbers below are marked unverified.
+
+**What it is.** A GNN (RGCNConv, depth 10 in OS v1.0.0) that scores single bond cleavages (each side, up to 4 H shifts)
+and outputs a fragment-intensity MS/MS spectrum; RT/CCS heads exist but `rt_supported`/`ccs_supported` are false in the OS
+models. CLI `fiora-predict -i in.csv -o out.mgf`, columns Name, SMILES, Precursor_type, CE, Instrument_type.
+
+**Adducts / modes (from the OS params files).** `precursor_mode` in {[M+H]+, [M-H]-, [M]+, [M]-}; `instrument` in {HCD}
+only; inputs also collision energy, molecular weight and element composition. So:
+- covers the 25 [M-H]--only test molecules (our main blind group);
+- does **not** cover [M+CH2O2-H]- (2 molecules; a formate adduct usually fragments as [M-H]- after formic loss, so
+  scoring them as [M-H]- is a plausible but untested proxy), [M+Na]+ (5 Na-only), [M+NH4]+ or [M+K]+;
+- timsTOF is not a category: we would pass `HCD` and the spectrum's CE. Beam-type CID in a timsTOF collision cell is
+  close to HCD, but the CE scale differs (Orbitrap NCE vs eV); treat CE as a tuned constant (try file CE, and 20/40 eV).
+
+**Licence / rules.** Code MIT (repo and `pyproject.toml`). OS weights ship inside the MIT repo, trained only on MSnLib
+(v1.0 for OS v0.1.0, v7 for OS v1.0.0; public Zenodo library, Orbitrap HCD; licence believed CC BY 4.0, verify on
+Zenodo record 16984129 before use). Training code is public (`fiora-train`, MSnLib download/preprocess scripts). Host
+in thread 751373 named FIORA-OS as allowed. No NIST in the OS models (the paper's NIST-trained model is not the one
+shipped). Allowed, commercial-use compatible.
+
+**Dependencies / offline install.** Python >= 3.10.8; torch (dev pin 2.6.0), torch_geometric 2.6.x, lightning-fabric
+2.6.x, torchmetrics, rdkit (pin 2024.9.6), spectrum_utils 0.4.2, treelib, regex, dill, seaborn, scikit-learn.
+torch, rdkit, sklearn are usually in the Kaggle image; torch_geometric 2.6 is pure Python (RGCNConv needs no
+torch-scatter/sparse wheels). Realistic offline route: a Kaggle dataset holding the fiora source tree (with weights) plus
+wheels for torch_geometric, lightning-fabric, spectrum_utils, treelib, then `pip install --no-index --no-deps`.
+Risk: the 0.477 kernel's pinned image torch/numpy versions; check before building.
+
+**Speed.** README: the 10-row example "typically completes within a few seconds" on CPU (includes model load); GPU via
+`--dev cuda:0`. Paper abstract: large GPU speed-up, CFM-ID much slower. No per-spectrum figure seen; estimate
+10-100 ms per (candidate, CE) on CPU, to be measured in step A2.
+
+**Accuracy (unverified, abstract only).** Claims better prediction quality than ICEBERG and CFM-ID on NIST-2017,
+MS-DIAL and CASMI 2016/2022; negative-mode numbers not seen. The OS model (MSnLib) may be weaker than the paper model.
+
+**Public CASMI26 notebooks.** None of the 200 scanned Code-tab titles (`scan_casmi/kernels.json`) mentions FIORA.
+
+### Integration plan for the 0.477 (guarded extra signal)
+Stage 1 (gap only): for molecules whose spectra are all [M-H]- (25) or [M+CH2O2-H]- (2, as [M-H]- proxy), predict FIORA
+spectra for the 25 final candidates, score cosine (sqrt intensities, 0.01 Da, precursor removed) against each real
+spectrum, mean over spectra; re-rank with `final = base_rank_score + w * z(fiora_cos)` within formula-of-rank-1 slots,
+w fixed in advance (w in {0.5, 1}), rank-1 swap only when the FIORA margin > m and lib_max < 0.9 (same guards as §6).
+Na-only (5) stays out: FIORA has no [M+Na]+ mode. Stage 2 (optional): same column at ranks 2-25 for all molecules,
+alongside ICEBERG/GLACIER, only if stage 1 passes.
+
+Bench protocol: build a negative-mode pseudo-test from `train.parquet` [M-H]- spectra (excluding `enveda-180`, never
+use the test-in-train rows), candidate lists from the same genfix pipeline; paired bootstrap over molecules,
+accept only with P(better) >= 0.9 **and** zero rank-1 losses on the class-1 (library-hit) subset.
+
+Runtime vs 9 h: stage 1 = 27 molecules x 25 candidates x <= 3 CE x mean ~1.2 spectra ~ 2.4k predictions, ~1-5 min CPU.
+Stage 2 = 400 x 25 x ~3 = 30k predictions, ~10-50 min CPU (seconds on GPU). Install from dataset < 2 min. Fits easily.
+
+Steps needing user approval (in order):
+1. Download the fiora repo (MIT) with the OS v1.0.0 weights and pip-install it plus torch_geometric etc. into a local
+   venv (network + install of external code).
+2. A2: local CPU test on 30-60 negative-mode bench molecules: run the 10-row example and compare with
+   `expected_output.mgf`, time per spectrum, then the bench above (no GPU, no Kaggle).
+3. Only if the bench passes: upload a Kaggle dataset (fiora source + weights + wheels), push a kernel = 0.477 copy +
+   stage-1 block, and submit (each a separate approval).
+
+Forecast (written before any run): offline bench gain divided by 3-10 for public transfer. Ceiling: about 8.3 public
+molecules in the covered gap (25/27 of ~8.9), most class 1 already right; earlier coverage steps gave ~+0.008 (one
+molecule = ~0.004-0.008 on ~125-132 public molecules). Expected public +0.000 to +0.004, point +0.001, P(>= +0.004)
+about 0.15; risk of -0.004 if the guard misfires once. Recommendation: **go for steps 1-2 only** (cheap, CPU, decides
+it); no-go for a submission unless the bench passes the gates.
