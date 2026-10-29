@@ -1,0 +1,46 @@
+{
+ "n": 250,
+ "reasons": {
+  "inconsistent_fragment_and_loss_evidence": 88,
+  "leader_best_fragment": 55,
+  "too_few_acquisitions": 53,
+  "fired": 47,
+  "no_same_formula": 7
+ },
+ "fired": 47,
+ "mrr0": 0.5656380952380953,
+ "mrr1": 0.5185666666666666,
+ "boot": [
+  -0.04707142857142857,
+  -0.0658142857142857,
+  -0.02973809523809524,
+  0.0
+ ],
+ "per_class": {
+  "1": {
+   "n": 70,
+   "fired": 14,
+   "mrr0": 0.804421768707483,
+   "mrr1": 0.7232142857142857,
+   "rank1_gains": 0,
+   "rank1_losses": 11
+  },
+  "2": {
+   "n": 50,
+   "fired": 8,
+   "mrr0": 0.8913333333333333,
+   "mrr1": 0.8213333333333332,
+   "rank1_gains": 0,
+   "rank1_losses": 7
+  },
+  "3": {
+   "n": 130,
+   "fired": 25,
+   "mrr0": 0.31179487179487175,
+   "mrr1": 0.29192307692307695,
+   "rank1_gains": 0,
+   "rank1_losses": 5
+  }
+ },
+ "accept": false
+}
