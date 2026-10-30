@@ -523,3 +523,6 @@ Lever table (38 levers, bench and LB), ranked plan and final-selection advice in
 
 ## Scan 30 Oct 01:37 IST
 Notebooks: heliosli 0.478 still alone above the 0.477 plateau; new alexchilton "0.477 | 0.472 Weights + Fragment Check". Discussion 753900 (new): request for generation code of widely reused public assets (megayak simulated ranker rows, prvsiyan ranker features/fingerprint caches, ...) for prize eligibility; with 753662 and 753775 still open, eligibility of copies that load those assets is unresolved.
+
+## Comments on heliosli's 0.478 notebook (read 30 Oct 08:4x IST)
+4 top-level comments: fanyuchen (Expert, 27 Oct 19:13 IST) asked him to publish the rr3 bundle (rr3_config.json, rr_deploy.py, rr_v3.py, checkpoint, self-test, training/preprocessing code and data provenance); heliosli (Master) replied "Yes, happy to make the dataset public if it helps!" (21:46 IST), which is the notebook's title. FOYSAL posted a screenshot captioned "Private Dataset"; heliosli replied "Let the bullets fly a little longer~", i.e. he is keeping it private for now. sghwr (Expert): sarcasm about leading the board and fishing for a medal. As of 30 Oct the reranker datasets are still private (two empty entries in the notebook's dataset_sources). Keep watching; the 0.83 h of GPU is reserved for a copy if they go public.
