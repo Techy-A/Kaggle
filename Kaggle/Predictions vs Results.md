@@ -51,3 +51,15 @@ Back to [[Kaggle Home]].
 | 24 Oct | NTL | 0.622 public copy (cosmorin reproduction of nishantdahal 0.620) | exact copy | 0.622 (range 0.620-0.622) | 0.622 | 0.000 |
 | 24 Oct | NTL | 0.636 public copy (fleongg; ATLAS accepted under CC BY-SA, final-pick eligible) | exact copy | 0.636 | 0.636 | 0.000 |
 | 24 Oct | CASMI | 0.464 + candidate-level PubChem gate + features-frozen gen20 (δ 2.0) | our own change (stack of 2) | **0.466, range 0.464-0.468** (gate +0.001: documented 0.464→0.465 step; genfix +0.000 to +0.003: thin-class-1 bench 0/270 rank-1 losses; one molecule = 0.0076) | pending | |
+
+## Medal lines over time (computed from leaderboard downloads; gold = rank 10 + 0.2% of teams, silver top 5%, bronze top 10%)
+The user's point holds: the lines rise with every new public notebook, because hundreds of teams copy it within a day.
+
+| Time (UTC) | NTL teams | NTL gold / silver / bronze | NTL us | CASMI teams | CASMI gold / silver / bronze | CASMI us |
+|---|---|---|---|---|---|---|
+| 18 Oct 10:22 | 1,508 | 0.572 / 0.557 / 0.556 | 0.557 (r82) | 3,500 (17 Oct) | 0.459 / 0.451 / 0.451 | 0.451 (r87) |
+| 19 Oct 18:28 | 1,904 | 0.603 / 0.592 / 0.569 | 0.597 (r31) | 3,571 (19 Oct) | 0.463 / 0.455 / 0.451 | 0.456 (r69) |
+| 24 Oct 10:11 | 2,932 | 0.653 / 0.636 / 0.624 | 0.636 (r147) | 3,919 (24 Oct) | 0.471 / 0.464 / 0.464 | 0.464 (r284) |
+| 30 Oct 22:04 | 3,964 | **0.681 / 0.662 / 0.659** | **0.662 (r117)** | 4,409 | **0.482 / 0.477 / 0.477** | **0.477 (r144)** |
+
+Correction: the "gold line" figures used in earlier notes (NTL about 0.653, CASMI about 0.471-0.473) were the 24 Oct values and are stale. On 30 Oct both our scores sit exactly on the silver line, not above gold. The best public notebook (NTL 0.663, CASMI 0.478) is now at or below the silver line; gold needs NTL 0.681 and CASMI 0.482, which no public notebook reaches. Public top: NTL 0.736, CASMI 0.517.
