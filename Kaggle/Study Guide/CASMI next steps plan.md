@@ -163,3 +163,17 @@ if paired bootstrap over molecules gives P(better) >= 0.9 *and* zero class-1 ran
 slice. Expect few or zero firings (it fired on no net public molecule). Ignore the K14 dedup (already 0 duplicates),
 w_top/w_mid/rescue tweaks and kunal's gate removal (a looser version of a gate we chose deliberately). Final selection
 in section 5 stands.
+
+## Bench option 1: a faithful bench from the 0.477 pipeline (planned 30 Oct, IST)
+**Why.** Every own CASMI test so far ran on lists from the old V22 pipeline (enveda-casmi26/bench, build_bench.py), not on the 0.477's. That made the Parallax replay impossible and likely distorted the reranker and FIORA tests. The bench must be the real pipeline on molecules with known answers.
+
+**Reuse.** build_bench.py already turns a notebook into a bench: the 250 enveda-np-examples natural products (1,184 timsTOF spectra) with answers hidden by simulated class (class 1 28%: only the query spectra removed; class 2 20%: every spectrum of the structure removed; class 3 52%: also removed from every candidate source), leak controls (leak-free FPNets, GBMs fit without the query set; remaining exposure: PubChem-channel FPNets A+B, pv GBM rows), plus make_unseen.py's leak-free Enveda-180 Zenodo slice (structures absent from train) for classes 2/3. Never use the enveda-180 rows of train.parquet.
+
+**Steps (step -> verify).**
+1. CPU, before the reset: build `casmi26-bench477` from push_c477. The 0.477 runs the frozen 0.465 pipeline from an embedded base64 notebook (FROZEN_B64) in a subprocess: decode it, inject the BENCH cell (adapted from build_bench.py), re-encode, update any SHA-256 pin; make the notebook save every intermediate (final list per variant V0/V1/V2/CUSTOM and the merged 0.477 order, the fragment-check list, neural_score/neural_cos/neural_ok, source ranks, library_max, frozen_candidate_evidence.parquet). -> verify: the cells compile; the decoded and re-encoded frozen notebook differs from the original only by the BENCH cell; a dry run of the BENCH cell on CPU (dryrun_benchcell.py) hides the right rows per class.
+2. GPU, after 31 Oct 05:30 IST (quota back to 30 h): push the private kernel (never submitted), full run, no fast path. Estimate 2-4 h (the hidden 400-molecule run takes several hours; the bench is ~250 molecules); hard stop at the 9 h limit. -> verify: run COMPLETE, bench_results.json and the intermediates present.
+3. CPU: score every variant from the saved intermediates. **Calibration gate:** the bench must order the known public scores the same way: V0 (0.465) < V1 0.25/offset 3 (0.466) <= V2 0.50 (0.472) and 0.75 (0.472) < merged 0.477. If it does not, the bench is not trusted and we stop.
+4. Only then use it for our own ideas, each pre-registered: FIORA only on lists with no simulator evidence (negative-mode-only molecules); the Parallax neutral-loss rescue with all its gates; the engine-1 ranker retrain with source flags. Acceptance as before: paired bootstrap P(better) >= 0.9 and zero class-1 rank-1 losses; LB forecast = bench gain / 3-10.
+
+**Risks.** The SHA pin or subprocess layout may resist the injection (fall back to injecting into the frozen notebook run directly); runtime near the limit; leakage left in the PubChem-channel FPNets makes absolute scores read high (compare variants, not absolutes); the calibration gate may fail, which is still a useful answer.
+**Cost.** About 2-4 GPU h of 30, one private kernel, no submissions.
