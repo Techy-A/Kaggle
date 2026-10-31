@@ -204,3 +204,20 @@ in section 5 stands.
 
 ## Step 2 (31 Oct 05:42 IST)
 GPU quota reset (30 h left, next reset 7 Nov 05:30 IST). Pushed the private bench kernel aryanawasthiteykik/casmi26-bench477 v1 from /home/user/work/push_bench477 (never to be submitted). A tracked background wait downloads the outputs to /home/user/work/out_bench477 when it completes; expected 3.5-5 h, so about 09:15-10:45 IST. The CASMI 0.478 copy (casmi-kunal-478-copy) was submitted 31 Oct 03:53 IST (ref 57818217), pending.
+
+## Step 3 result: calibration gate FAILED (31 Oct 09:4x IST)
+casmi26-bench477 v1 completed (pushed 05:42 IST, about 3.8 h; fragment-check time budget not exceeded). Outputs in /home/user/work/out_bench477; bench_results.json copied to enveda-casmi26/artifacts/bench477_results.json. 250 molecules (70 class 1, 50 class 2, 130 class 3).
+
+| Variant | Public LB | Bench MRR (all) | c1 | c2 | c3 |
+|---|---|---|---|---|---|
+| baseline0465 / V0 | 0.465 | 0.5169 | 0.948 | 0.868 | 0.150 |
+| public0466 / V1 | 0.466 | 0.5147 | 0.943 | 0.860 | 0.151 |
+| V2 (0.50) | 0.472 | 0.5113 | 0.937 | 0.858 | 0.149 |
+| CUSTOM (0.75) | 0.472 | 0.5045 | 0.932 | 0.857 | 0.139 |
+| physical_V2 (fragment check) | - | 0.5035 | 0.930 | 0.829 | 0.149 |
+| merged477 | 0.477 | 0.4978 | 0.925 | 0.834 | 0.139 |
+
+Paired bootstrap over molecules: merged477 vs baseline -0.019 (P(better) 0.00), vs V2 -0.0135 (0.00), vs CUSTOM -0.0067 (0.00); V2 vs V1 -0.0034 (0.06); V1 vs baseline -0.0022 (0.18).
+The bench orders the variants exactly in REVERSE of the public leaderboard: every step that gained publicly (neural weight up, fragment check, merge) loses on this bench. Pre-registered rule: if the bench does not reproduce the LB order, it is not trusted and we stop. So no own idea is tested on it.
+Likely reasons (not verified): (1) the bench pseudo-test (enveda-np-examples, class mix simulated by hiding spectra) differs from the hidden test in exactly the way the public gains exploit (e.g. the neural spectrum model and fragment check gain on hidden-test molecules that are different from these natural products); (2) leakage left in the PubChem-channel FPNets and pool features favours the baseline's own ranking on these molecules; (3) the public gains are about one molecule each (0.004) on ~125 public molecules, so the public order itself may be noise, and the bench may simply be right about private. Either way, neither this bench nor the old V22 bench can approve or reject changes to the 0.477 line.
+Cost: about 3.8 GPU h of 30 (27.19 h left at 08:31 IST, roughly 26.2 h after this run).
