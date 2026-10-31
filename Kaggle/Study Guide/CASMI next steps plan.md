@@ -232,3 +232,62 @@ Question: is the bench477 reversal (baseline0465 0.517 > V1 > V2 > CUSTOM > merg
 **Verdict:** P(A) ~0.4, P(B) ~0.6: the public +0.012 is most likely a mix of a small real gain on the test's [M+H]+-heavy narrow-mass molecules and selection noise; the bench overstates the loss but its direction (0 rank-1 wins, neural answer rank 9 vs 1) is a real warning. Expected private: 0.477 line about baseline +0.000 to +0.005, with real downside.
 **Final selection recommendation:** two submissions that disagree on this question, since Kaggle scores the better one on private: (1) the 0.477 copy (casmi-busyaprime-477-copy, ref 57736039) and (2) a conservative baseline without the neural/fragment/merge layers: our own 0.465 stack (ref 57585472), preferred over the 0.464/0.465 public copies because it is the honest, own-validated model. Not two neural-line copies (0.472 and 0.477 share the same risk).
 Negatives: no leakage explanation found; the neural model itself could not be inspected (not local).
+
+## Candidate database audit (31 Oct 14:05 IST; CPU only, nothing pushed or submitted)
+Question: can a database change (which structures can enter the 25-lists) win +0.005 or more public, mainly on class 3?
+Script `enveda-casmi26/57_candidate_recall_audit.py`; outputs `artifacts/57_summary.json`, `57_probe_recall.csv`,
+`57_additions.csv`. Downloads (data only, new dir `/home/user/benchdata/dbaudit`): COCONUT 2026-10 lite CSV (199 MB zip,
+coconut.s3.uni-jena.de), Kaggle xianyu3/casmi26-licensed-coconut-candidates-202610, xjoannax88/casmi-pubchemlite-candidates
+(proxy for the pipeline's franciscoangulo PubChemLite), deadsignalslab/casmi26-chebi-lmsd-regenerated,
+dmitriigluzdov/casmi26-natural-product-knowledge-table (LOTUS 2026-04-13 + NPAtlas 2024_09). HMDB: download blocked (403).
+
+**1. Current sources (0.477 busyaprime and 0.479 midx; identical datasets, no new database in either).**
+- Engine 1 (Ahmed v4n): v4 pool = train.parquet structures U prvsiyan COCONUT (710,701 metric keys), +-10 ppm (30 ppm
+  fallback), no formula filter, plus generated derivatives of strong analogs.
+- Engine 2 (two-ranker): prvsiyan COCONUT 436,389 + ChEBI/LMSD 98,433 (sergiomalv) + PubChemLite CC0 + train, +-10 ppm
+  (30 fallback), no formula filter, top 25 into the RRF fusion.
+- PubChem channel: tier of 105.9 M structures, 150-1250 Da (+ delta/growth supplements of the popularity dataset), +-10 ppm,
+  pass 1 top 5,000 by f.z plus the 200 most documented, 25 non-pool structures by z(f.z) + 0.15 popularity, merged only
+  through the gate (rel > 150, candidate-level).
+- Final lists (bench477, 250 lists): 24.98 entries on average (min 21). Origin of final candidates: v4 pool 55%, engine-2
+  extras 10%, PubChem tier only 19%, in no database (generated) 16%. Rank 1: v4 pool 89%, tier only 8%, engine-2 extras 1%,
+  generated 1%.
+
+**2. Recall for structures absent from train.parquet** (present = raw ik14, parent ik14 or metric key matches):
+
+| Probe | n | v4 pool / COCONUT | engine-2 pool | PubChem tier | current union | missing from all |
+|---|---|---|---|---|---|---|
+| P1 Enveda-180 Zenodo, not in train (synthetic, Enamine) | 3,717 | 0.0% | 0.2% | 96.7% | 96.7% | 121 |
+| P2 NPAtlas first reported 2021-2024, not in train | 2,523 | 99.4% | 99.6% | 99.5% | 99.64% | 9 |
+| P3 LOTUS/NPAtlas, not in train (random 5k) | 4,815 | 99.1% | 99.5% | 97.8% | 99.56% | 21 |
+
+Even the newest published natural products are already in the current sources (99.6%). The 121 Enveda-180 misses are
+synthetic screening compounds in no NP database.
+
+**3. Additions: new structures and dilution** (150-1250 Da, largest fragment + uncharged parent):
+
+| Addition | Structures | new to engine-2 pool | of which neutral | neutral, new to every source | P2 newly reached | extra decoys per +-10 ppm window (engine-2 window ~100-180) |
+|---|---|---|---|---|---|---|
+| COCONUT 2026-10 full (CC0 archive) | 479,690 | 4,545 | 52 | 45 | 8 of 9 | 0.000-0.001 |
+| COCONUT 2026-10 ChEBI+Wikidata subset (CC BY 4.0 / CC0) | 149,002 | 273 | 9 | 7 | 8 | 0.000-0.001 |
+| LOTUS 2026-04 (CC BY 4.0) | 151,885 | 438 | 137 | 52 | 8 | 0.011-0.018 |
+| NPAtlas 2024_09 (CC BY-NC 4.0, allowed since 17 Oct) | 33,497 | 121 | 106 | 64 | 9 | 0.005-0.043 |
+
+Almost every COCONUT-new row is a salt, mixture or permanently charged cation (4,297 cations with no neutral form; the test
+has no [M]+ spectra in the visible file). The same handful (8-9) of 2021-2023 NPAtlas compounds is what any addition adds.
+
+**4. Gain vs dilution.** Class 3: by the host's definition its answers are absent from PubChem and COCONUT, and the audit
+finds only 7-64 neutral structures in all public NP databases that are outside our current sources: reach ~0. Class 2
+(20% of the test): newly reachable rate 0.3-0.4% (P2); at an honest RR of 0.26 for newly reachable answers the upper bound
+is **+0.0002 MRR (0.03 public molecule)**; dilution is also ~0 (<0.05 extra decoys per list). Neither recall nor dilution
+moves: the database is saturated (confirms lever 15). The class-3 gap (79/130 answers missing on the bench) is a
+generation gap, not a database gap; the class-2 gap is ranking inside the PubChem window (median 5-15k structures per
++-10 ppm; unseen1: PubChem-channel top-25 recall 52% for PubChem-only answers), which the widening attempts (rel 100/250,
+blind expansion) already lost on the LB.
+
+**5. Recommendation.** No database change is worth a GPU run or a submission (expected public gain +0.0000 to +0.0002, far
+below 0.004 for one molecule). If a run happens anyway for another reason, the only defensible add-on is the licensed
+COCONUT 2026-10 subset (xianyu3, CC BY 4.0 / CC0) into engine 2's pool, as a guarded insertion: only metric keys absent
+from the current list, appended at ranks >= 20, never rank 1; verify ranks 1-19 byte-identical to the base on all lists
+and that the recall-only test (57) still reads P2 99.9%. Do not add NPAtlas/LOTUS/COCONUT cations, HMDB or a wider
+PubChem window. Negative result logged; stop list item 5 extended with "database additions".

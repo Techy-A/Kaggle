@@ -1,0 +1,211 @@
+{
+ "current_sources": {
+  "engine1_v4pool": "train.parquet structures U prvsiyan COCONUT (710,701 metric keys), +-10 ppm window (30 ppm fallback), no formula filter, plus generated derivatives of strong analogs",
+  "engine2_pool": "prvsiyan COCONUT 436,389 + ChEBI/LMSD (sergiomalv, 98,433 regenerated) + PubChemLite CC0 (franciscoangulo; proxy here xjoannax88 347,250) + train; +-10 ppm (30 fallback), no formula filter; top 25 into weighted RRF with engine 1",
+  "pubchem_channel": "PubChem tier 105,875,489 rows 150-1250 Da (+ delta_pc/growth_pc supplements of the popularity dataset, not local); +-10 ppm; pass-1 top 5,000 by partial f.z plus the 200 most documented; 25 non-pool structures by z(f.z) + 0.15 popularity; enter the final list only through the gated merge (promotion rel > 150, candidate-level gate)",
+  "post": "neural RRF, leader-safe consensus, fragment check, merge (0.477); 0.479 adds K14 dedup and fills empty slots from scored outsiders (fusion overflow, PubChem, engine 2, main tail); no new database",
+  "bench477_final_list_sizes": {
+   "count": 250.0,
+   "mean": 24.984,
+   "std": 0.253,
+   "min": 21.0,
+   "25%": 25.0,
+   "50%": 25.0,
+   "75%": 25.0,
+   "max": 25.0
+  },
+  "bench477_final_candidate_origin_all_ranks": {
+   "v4pool": 0.55,
+   "e2_extra": 0.1009,
+   "tier_only": 0.1897,
+   "no_database": 0.1595
+  },
+  "bench477_final_candidate_origin_rank1": {
+   "v4pool": 0.892,
+   "e2_extra": 0.012,
+   "tier_only": 0.084,
+   "no_database": 0.012
+  }
+ },
+ "additions": [
+  {
+   "addition": "coconut_2026_10_full",
+   "structures": 479690,
+   "raw_hit_engine2_pool": 467232,
+   "new_to_engine2_pool_150_1250": 4545,
+   "of_which_neutral": 52,
+   "neutral_already_in_pubchem_tier": 7,
+   "new_to_every_source": 4342,
+   "new_to_every_source_neutral": 45,
+   "neutral_new_examples": "GPYJIEDEIYMKIE;LSXDOTMGLUJQCM;QKEOZZYXWAIQFO;VBJZVLUMGGDVMO;KJZYNXUDTRRSPN"
+  },
+  {
+   "addition": "coconut_2026_10_licensed_chebi_wikidata",
+   "structures": 149002,
+   "raw_hit_engine2_pool": 146822,
+   "new_to_engine2_pool_150_1250": 273,
+   "of_which_neutral": 9,
+   "neutral_already_in_pubchem_tier": 2,
+   "new_to_every_source": 262,
+   "new_to_every_source_neutral": 7,
+   "neutral_new_examples": "GPYJIEDEIYMKIE;GZCRRIHWUXGPOV;MSIKGPJALGFUSA;PNDPGZBMCMUPRI;WABPQHHGFIMREM"
+  },
+  {
+   "addition": "lotus_2026_04",
+   "structures": 151885,
+   "raw_hit_engine2_pool": 150369,
+   "new_to_engine2_pool_150_1250": 438,
+   "of_which_neutral": 137,
+   "neutral_already_in_pubchem_tier": 85,
+   "new_to_every_source": 344,
+   "new_to_every_source_neutral": 52,
+   "neutral_new_examples": "DREILIVQKZCMRK;GZCRRIHWUXGPOV;FHLLYBWFMYXLJD;GPYJIEDEIYMKIE;MOQADKPFYVWPSE"
+  },
+  {
+   "addition": "npatlas_2024_09",
+   "structures": 33497,
+   "raw_hit_engine2_pool": 33304,
+   "new_to_engine2_pool_150_1250": 121,
+   "of_which_neutral": 106,
+   "neutral_already_in_pubchem_tier": 42,
+   "new_to_every_source": 79,
+   "new_to_every_source_neutral": 64,
+   "neutral_new_examples": "NGSTYRDBRUACKF;KBXWQBRDRROSOX;JJWGPPMCHCDINJ;VGDVCIZTNDVTEB;KIUQNTQCSXQEFM"
+  }
+ ],
+ "probe_recall": [
+  {
+   "probe": "P1_enveda180_not_in_train",
+   "n": 3717,
+   "train": 0.0,
+   "v4pool_coconut": 0.0,
+   "e2_coconut_prvsiyan": 0.0,
+   "e2_chebi_lmsd": 0.0,
+   "e2_pubchemlite": 0.0016,
+   "pubchem_tier": 0.9674,
+   "engine2_pool": 0.0016,
+   "current_union": 0.9674,
+   "missing_from_all": 121,
+   "coconut_2026_10_full": 0.0,
+   "gain_union_coconut_2026_10_full": 0,
+   "gain_e2_coconut_2026_10_full": 0,
+   "coconut_2026_10_licensed_chebi_wikidata": 0.0,
+   "gain_union_coconut_2026_10_licensed_chebi_wikidata": 0,
+   "gain_e2_coconut_2026_10_licensed_chebi_wikidata": 0,
+   "lotus_2026_04": 0.0,
+   "gain_union_lotus_2026_04": 0,
+   "gain_e2_lotus_2026_04": 0,
+   "npatlas_2024_09": 0.0,
+   "gain_union_npatlas_2024_09": 0,
+   "gain_e2_npatlas_2024_09": 0
+  },
+  {
+   "probe": "P2_npatlas_2021_2024_not_in_train",
+   "n": 2523,
+   "train": 0.0,
+   "v4pool_coconut": 0.9937,
+   "e2_coconut_prvsiyan": 0.9937,
+   "e2_chebi_lmsd": 0.0028,
+   "e2_pubchemlite": 0.0,
+   "pubchem_tier": 0.9945,
+   "engine2_pool": 0.996,
+   "current_union": 0.9964,
+   "missing_from_all": 9,
+   "coconut_2026_10_full": 0.9988,
+   "gain_union_coconut_2026_10_full": 8,
+   "gain_e2_coconut_2026_10_full": 8,
+   "coconut_2026_10_licensed_chebi_wikidata": 0.8117,
+   "gain_union_coconut_2026_10_licensed_chebi_wikidata": 8,
+   "gain_e2_coconut_2026_10_licensed_chebi_wikidata": 8,
+   "lotus_2026_04": 0.8145,
+   "gain_union_lotus_2026_04": 8,
+   "gain_e2_lotus_2026_04": 8,
+   "npatlas_2024_09": 1.0,
+   "gain_union_npatlas_2024_09": 9,
+   "gain_e2_npatlas_2024_09": 10
+  },
+  {
+   "probe": "P3_lotus_npatlas_not_in_train_5k",
+   "n": 4815,
+   "train": 0.0,
+   "v4pool_coconut": 0.9907,
+   "e2_coconut_prvsiyan": 0.9909,
+   "e2_chebi_lmsd": 0.0039,
+   "e2_pubchemlite": 0.0027,
+   "pubchem_tier": 0.9776,
+   "engine2_pool": 0.995,
+   "current_union": 0.9956,
+   "missing_from_all": 21,
+   "coconut_2026_10_full": 0.9979,
+   "gain_union_coconut_2026_10_full": 17,
+   "gain_e2_coconut_2026_10_full": 17,
+   "coconut_2026_10_licensed_chebi_wikidata": 0.9472,
+   "gain_union_coconut_2026_10_licensed_chebi_wikidata": 16,
+   "gain_e2_coconut_2026_10_licensed_chebi_wikidata": 16,
+   "lotus_2026_04": 0.9836,
+   "gain_union_lotus_2026_04": 18,
+   "gain_e2_lotus_2026_04": 20,
+   "npatlas_2024_09": 0.2324,
+   "gain_union_npatlas_2024_09": 3,
+   "gain_e2_npatlas_2024_09": 4
+  }
+ ],
+ "dilution": [
+  {
+   "probe": "P1_enveda180_not_in_train",
+   "tier_window_median": 14576.0,
+   "e2_window_median": 183.0,
+   "e2_window_mean": 202.80575733118107,
+   "extra_e2_decoys_mean_coconut_2026_10_full": 0.0,
+   "extra_e2_decoys_mean_coconut_2026_10_licensed_chebi_wikidata": 0.0,
+   "extra_e2_decoys_mean_lotus_2026_04": 0.011,
+   "extra_e2_decoys_mean_npatlas_2024_09": 0.005
+  },
+  {
+   "probe": "P2_npatlas_2021_2024_not_in_train",
+   "tier_window_median": 6884.0,
+   "e2_window_median": 98.0,
+   "e2_window_mean": 139.0443915973048,
+   "extra_e2_decoys_mean_coconut_2026_10_full": 0.0,
+   "extra_e2_decoys_mean_coconut_2026_10_licensed_chebi_wikidata": 0.0,
+   "extra_e2_decoys_mean_lotus_2026_04": 0.018,
+   "extra_e2_decoys_mean_npatlas_2024_09": 0.043
+  },
+  {
+   "probe": "P3_lotus_npatlas_not_in_train_5k",
+   "tier_window_median": 5173.0,
+   "e2_window_median": 87.0,
+   "e2_window_mean": 139.31028037383177,
+   "extra_e2_decoys_mean_coconut_2026_10_full": 0.001,
+   "extra_e2_decoys_mean_coconut_2026_10_licensed_chebi_wikidata": 0.001,
+   "extra_e2_decoys_mean_lotus_2026_04": 0.014,
+   "extra_e2_decoys_mean_npatlas_2024_09": 0.028
+  }
+ ],
+ "expected": {
+  "coconut_2026_10_full": {
+   "class2_newly_reachable_rate_P2": 0.0032,
+   "class2_moved_into_engine2_rate_P2": 0.0032,
+   "mrr_gain_upper_bound": 0.00018,
+   "class3_reach": "0 by the host's definition (absent from PubChem and COCONUT); new neutral structures outside every current source: 45"
+  },
+  "coconut_2026_10_licensed_chebi_wikidata": {
+   "class2_newly_reachable_rate_P2": 0.0032,
+   "class2_moved_into_engine2_rate_P2": 0.0032,
+   "mrr_gain_upper_bound": 0.00017,
+   "class3_reach": "0 by the host's definition (absent from PubChem and COCONUT); new neutral structures outside every current source: 7"
+  },
+  "lotus_2026_04": {
+   "class2_newly_reachable_rate_P2": 0.0032,
+   "class2_moved_into_engine2_rate_P2": 0.0032,
+   "mrr_gain_upper_bound": 0.00022,
+   "class3_reach": "0 by the host's definition (absent from PubChem and COCONUT); new neutral structures outside every current source: 52"
+  },
+  "npatlas_2024_09": {
+   "class2_newly_reachable_rate_P2": 0.0036,
+   "class2_moved_into_engine2_rate_P2": 0.004,
+   "mrr_gain_upper_bound": 0.00021,
+   "class3_reach": "0 by the host's definition (absent from PubChem and COCONUT); new neutral structures outside every current source: 64"
+  }
+ }
+}
