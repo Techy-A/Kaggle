@@ -486,3 +486,6 @@ Script `name-that-llm/lab/13_new_datasets_audit.py`, output `lab/artifacts/audit
 
 ## Morning 31 Oct 08:31 IST
 Nothing above 0.663 to copy (omerfarukmerey 0.663; alexchilton and lightningv08 0.662). Medal lines (3,985 teams): gold 0.681, silver 0.662, bronze 0.660, top 0.736; us 0.662 rank 127 (was 117).
+
+## judith007 0.664 copy (31 Oct 12:3x IST)
+judith007/0-664-hyperparameter-tuned-who-are-u, public **0.664** (12 votes): the 0.663 V31+ATLAS20 notebook with (1) Llama-3.1-8B from alexchilton's model upload (same Meta weights, shard sizes asserted), the same fix we made with Meta's source; (2) the scoring rerun never takes the fast path; (3) typography evidence scale 1.5 -> 1.2; (4) Sinkhorn 0.45 -> 0.60. Its own chart shows identical code re-scoring within +-0.01 of the author's page score (nlm-v27 0.643-0.651), i.e. 0.664 vs 0.663 is noise. Copy ntl-664-tuned-copy pushed and submitted on the user's standing instruction. Forecast written before submitting: 0.662 (0.658-0.665).
