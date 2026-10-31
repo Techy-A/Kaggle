@@ -535,3 +535,5 @@ kunaldesale2408/enveda-casmi-2026-mid moved to public **0.478** (83 votes) with 
 - heliosli is now 0.479 (76 votes), still needs the private reranker datasets. Nothing copyable above 0.477.
 - Medal lines (4,420 teams): gold 0.482, silver 0.477, bronze 0.477, top 0.517; us 0.477 rank 173 (was 144 at 22:04 UTC yesterday; same score, others caught up).
 - Bench casmi26-bench477 still RUNNING (pushed 05:42 IST); quota 27.19 h left.
+
+**31 Oct 09:53 IST pointer (bench reversal diagnosis):** bench477 baseline->merged477: 0 rank-1 gains, 4 losses; neural ranks the answer 9-10 on average vs baseline 1-4.5 (leakage would favour neural, so not leakage); bench differs from test in adduct mix and mass range; P(A real public gain) ~0.4 vs P(B noise) ~0.6. Final selection: 0.477 copy + own 0.465 stack (57585472). Details: plan note "Bench reversal diagnosis", `56_bench_reversal_diagnosis.py`.
