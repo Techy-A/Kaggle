@@ -529,3 +529,9 @@ Notebooks: heliosli 0.478 still alone above the 0.477 plateau; new alexchilton "
 
 ## kunaldesale 0.478 copy (31 Oct, IST)
 kunaldesale2408/enveda-casmi-2026-mid moved to public **0.478** (83 votes) with no private datasets (same public sources plus metric/rdkit-2026-3-3-wheel). Changes vs the 0.477 line: weights 0.25/0.75 with rank 1 locked, a stricter fragment re-scorer (>=3 spectra, margin >= 0.095, votes >= 0.75, nmargin >= 0.23, depth <= 6), a PubChem documentation prior on ranks 2-25 (w_pop 0.14, w_spec 0.05; the author says it was tuned on the public benchmark panel, +0.0086 there), formula-gated isomer swaps on ranks 2-10 by fragment evidence, and an InChIKey-14 dedup. Copy casmi-kunal-478-copy (exact, original image, push dir /home/user/work/push_kunal478) pushed on the user's word; submit when the visible run completes. Forecast written before submitting: 0.477 (0.475-0.478); exact CASMI copies reproduced 5 of 6 times, and +0.001 over the 0.477 is a quarter of one molecule, inside noise. Rank-only copy.
+
+## Morning 31 Oct 08:31 IST
+- kunaldesale 0.478 copy (ref 57818217) scored **0.476** public: inside the forecast range (0.475-0.478) but below both the author's 0.478 and our 0.477; exact CASMI copies now reproduced 5 of 7 within 0.001 (this one -0.002). Our best stays 0.477. Likely rerun noise or a later notebook version than the one that scored; not worth chasing.
+- heliosli is now 0.479 (76 votes), still needs the private reranker datasets. Nothing copyable above 0.477.
+- Medal lines (4,420 teams): gold 0.482, silver 0.477, bronze 0.477, top 0.517; us 0.477 rank 173 (was 144 at 22:04 UTC yesterday; same score, others caught up).
+- Bench casmi26-bench477 still RUNNING (pushed 05:42 IST); quota 27.19 h left.
