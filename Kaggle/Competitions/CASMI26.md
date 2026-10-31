@@ -551,3 +551,9 @@ flexonafft/casmi26-closing-the-evidence-gap (99 votes, public 0.479), same publi
 
 ## Above the public line (31 Oct 23:xx IST; research only)
 See [[Above the public line]] (`Study Guide/`). At 22:54 IST: 38 teams above 0.479, but only 10 at >= 0.485 (28 are within one molecule); gold (rank 18) 0.483; us 0.479 rank 73. The top 5 had independent pipelines from day one (0.49 on 16 Oct vs public 0.446) and climb slowly with 89-197 submissions; no public assets. heliosli's team is 0.486 (public 0.479 + private reranker). **Corrections:** the "yes" to cross-test-spectrum processing in 752297 (Marie Killian, 26 Oct 20:53 IST) is posted as HOST, so it is allowed; the enveda-180 "test spectra in train" are the visible placeholder (staff, 745715), not the hidden test. Next step proposed: CPU pre-check of a rank-1-protected cross-test-spectrum consistency boost on the np-examples bench; odds of gold about 10%.
+
+## Cross-test-spectrum boost pre-check (1 Nov 00:3x IST; CPU only, nothing pushed or submitted) - NEGATIVE
+Bench477: 44% of molecules have a Tanimoto >= 0.5 analog in the set, 28% a detectable one (modcos >= 0.7); modified
+cosine predicts analogs well (AUC 0.92). Pre-registered rank-1-locked boost on merged477 lists: +0.0013 bench MRR,
+P(better) 0.83 (gate 0.9); oracle ceiling +0.0047. Forecast public +0.0001 to +0.0004. No-go. Details: [[CASMI next steps
+plan]] section "Cross-test-spectrum boost"; script `enveda-casmi26/58_cross_spectrum_boost.py`.

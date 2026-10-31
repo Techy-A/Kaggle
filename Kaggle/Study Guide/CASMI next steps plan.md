@@ -291,3 +291,50 @@ COCONUT 2026-10 subset (xianyu3, CC BY 4.0 / CC0) into engine 2's pool, as a gua
 from the current list, appended at ranks >= 20, never rank 1; verify ranks 1-19 byte-identical to the base on all lists
 and that the recall-only test (57) still reads P2 99.9%. Do not add NPAtlas/LOTUS/COCONUT cations, HMDB or a wider
 PubChem window. Negative result logged; stop list item 5 extended with "database additions".
+
+## Cross-test-spectrum boost (1 Nov 00:2x IST; CPU only, nothing pushed or submitted)
+Idea: related test molecules (analog series, shared scaffold) lend evidence to each other; host-allowed (752297).
+Script `enveda-casmi26/58_cross_spectrum_boost.py`; outputs `artifacts/58_summary.json`, `58_pairs.csv`,
+`58_boost_per_list.csv`. Bench: bench477 (250 enveda-np-examples molecules, 1,184 timsTOF spectra).
+
+**Pre-registered rule (written 1 Nov 00:27 IST, after the pre-check counts, before any boost was scored).**
+- Spectral partners A, B: best modified cosine over their spectra >= 0.70 with >= 6 matched peaks (same ion mode;
+  0.01 Da; peaks < precursor - 0.5, >= 1% of max, top 50, sqrt intensities).
+- A is a confident anchor: A's merged477 rank-1 candidate has `library_max` >= 0.87 (the lever-table gate).
+- In B's list, every candidate at ranks 2-25 with Morgan r2 (2048) Tanimoto >= 0.50 and < 1.0 to any confident
+  partner's rank 1 moves up 3 places, never above rank 2 (ties go to the boosted candidate). Rank 1 is locked.
+- Scored on the merged477 bench lists. Accept only if paired bootstrap over the 250 molecules gives P(better) >= 0.9
+  and there are zero class-1 rank losses at rank 2 (rank 1 cannot move). Diagnostics only (not for acceptance): an
+  oracle anchor (A's true answer, no confidence gate) and the rule without the confidence gate.
+- Caveat fixed in advance: the bench orders the public variants in reverse and is not calibrated, so a pass is only a
+  weak signal; forecast public gain = bench gain / 3-10.
+
+**Pre-check result (bench477, 250 molecules, 31,125 pairs; RDKit 2026.09.1 local, true answers' Morgan r2 2048).**
+Partners are common, far above the 5% stop rule:
+| Partner definition | Molecules with a partner |
+|---|---|
+| answer Tanimoto >= 0.4 / 0.5 / 0.6 / 0.7 | 58.8% / **44.4%** / 34.8% / 19.2% |
+| same Murcko scaffold (not benzene) | 32.4% |
+| modified cosine >= 0.6 / 0.7 / 0.8 (>= 6 matched peaks) | 63.6% / 45.2% / 30.8% |
+| neutral-loss cosine >= 0.6 (>= 4 matched losses) | 30.8% |
+| detectable and real: modcos >= 0.7 (n >= 6) and Tanimoto >= 0.5 | **28.4%** (71 molecules: 25 c1, 9 c2, 37 c3) |
+Spectral -> structure: pair AUC of modified cosine for Tanimoto >= 0.5 is 0.92 (0.88 with >= 6 matched peaks; NL cosine
+0.71) against a base rate of 0.4% of pairs; precision 0.16 / 0.31 / 0.60 at modcos 0.6 / 0.7 / 0.8, recall 0.50 / 0.41
+/ 0.29. Strong ranking signal, but at 0.7 two of three spectral partners are not structural analogs. Headroom: of the 71
+detectable-related molecules, merged477 already has the answer at rank 1 for 30, at ranks 2-25 for 23, missing for 18.
+Caveat: enveda-np-examples may be a curated analog-rich panel; the hidden test's partner rate is unknown.
+
+**Boost result (pre-registered rule above, merged477 lists): FAILS the gate.**
+| Variant | Lists with anchor / touched / rr changed | Up / down (c1, c2, c3) | Delta MRR | P(better) |
+|---|---|---|---|---|
+| **primary** (confident anchor, library_max >= 0.87; 45 anchors) | 41 / 24 / 7 | c1 0/0, c2 1/1, c3 3/2 | **+0.0013** (95% CI -0.0008 to +0.0044) | **0.83** |
+| diag: no confidence gate | 113 / 76 / 11 | c1 2/0, c2 0/2, c3 4/3 | +0.0017 | 0.81 |
+| diag: oracle anchor (A's true answer) | 113 / 85 / 12 | c1 2/0, c2 0/1, c3 7/2 | +0.0047 | 1.00 |
+Rank 1 never moved (0 rank-1 changes), 0 losses from rank 2. The oracle shows the ceiling: even with perfect anchors the
+lever moves ~12 of 250 lists and +0.005 bench MRR, because analog candidates are already near the top of B's list or
+absent (class 3).
+**Forecast (public, ~125 molecules):** primary +0.0013 / 3-10 = **+0.0001 to +0.0004** (0.03-0.1 molecule); oracle
+ceiling +0.0005 to +0.0016 (< 0.5 molecule). The bench reverses the LB order, so even the sign is weak evidence.
+**Verdict: no-go.** Not worth a Kaggle run or a submission. Idea logged as negative (partners exist, the boost has no
+measurable room inside ranks 2-25); add "cross-test-spectrum boost" to the stop list. Not tried: a boost that may move
+rank 1 (against lesson 1) or generation of analogs of a confident partner for class 3 (list composition, stop list).

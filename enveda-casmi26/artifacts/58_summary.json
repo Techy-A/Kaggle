@@ -1,0 +1,193 @@
+{
+ "precheck": {
+  "n_molecules": 250,
+  "n_pairs": 31125,
+  "n_pairs_same_mode_scored": 23690,
+  "partner_fraction_structure": {
+   "tani>=0.4": 0.588,
+   "tani>=0.5": 0.444,
+   "tani>=0.6": 0.348,
+   "tani>=0.7": 0.192,
+   "same_scaffold": 0.324
+  },
+  "partner_fraction_spectral": {
+   "modcos>=0.6,n>=6": 0.636,
+   "modcos>=0.7,n>=6": 0.452,
+   "modcos>=0.8,n>=6": 0.308,
+   "nlcos>=0.6,n>=4": 0.308
+  },
+  "partner_fraction_both": {
+   "modcos>=0.6,n>=6 & tani>=0.4": 0.396,
+   "modcos>=0.6,n>=6 & tani>=0.5": 0.332,
+   "modcos>=0.7,n>=6 & tani>=0.4": 0.328,
+   "modcos>=0.7,n>=6 & tani>=0.5": 0.284,
+   "modcos>=0.7,n>=6 & same_scaffold": 0.184
+  },
+  "predictiveness": {
+   "base_rate_tani>=0.5": 0.0038,
+   "n_related_pairs": 117,
+   "auc_modcos_n6": 0.877,
+   "auc_modcos": 0.924,
+   "auc_nlcos": 0.709,
+   "spearman_modcos_tani": 0.27,
+   "modcos>=0.6,n>=6": {
+    "pairs": 369,
+    "precision_tani>=0.5": 0.16,
+    "recall": 0.504,
+    "median_tani": 0.182
+   },
+   "modcos>=0.7,n>=6": {
+    "pairs": 155,
+    "precision_tani>=0.5": 0.31,
+    "recall": 0.41,
+    "median_tani": 0.276
+   },
+   "modcos>=0.8,n>=6": {
+    "pairs": 57,
+    "precision_tani>=0.5": 0.596,
+    "recall": 0.291,
+    "median_tani": 0.532
+   }
+  },
+  "detectable_related_molecules": {
+   "n": 71,
+   "by_class": {
+    "1": 25,
+    "2": 9,
+    "3": 37
+   },
+   "answer_rank1": 30,
+   "answer_rank2_25": 23,
+   "answer_missing": 18
+  },
+  "extrapolated_fraction_n400": 0.4598
+ },
+ "boost": {
+  "rule": {
+   "spec_cos": 0.7,
+   "spec_match": 6,
+   "conf_libmax": 0.87,
+   "tani": 0.5,
+   "shift": 3,
+   "max_rank": 25
+  },
+  "n_confident_anchors": 45,
+  "primary": {
+   "mrr_base": 0.4978,
+   "mrr_boost": 0.4991,
+   "delta": 0.00128,
+   "p_better": 0.8337,
+   "ci95": [
+    -0.00081,
+    0.00437
+   ],
+   "lists_with_anchor": 41,
+   "lists_touched": 24,
+   "candidates_boosted": 219,
+   "lists_changed_rr": 7,
+   "rank1_changes": 0,
+   "per_class": {
+    "1": {
+     "n": 70,
+     "up": 0,
+     "down": 0,
+     "down_from_rank2": 0,
+     "delta": 0.0
+    },
+    "2": {
+     "n": 50,
+     "up": 1,
+     "down": 1,
+     "down_from_rank2": 0,
+     "delta": -0.0001
+    },
+    "3": {
+     "n": 130,
+     "up": 3,
+     "down": 2,
+     "down_from_rank2": 0,
+     "delta": 0.0025
+    }
+   },
+   "mix_delta": 0.00128
+  },
+  "diag_no_conf_gate": {
+   "mrr_base": 0.4978,
+   "mrr_boost": 0.4995,
+   "delta": 0.00167,
+   "p_better": 0.8091,
+   "ci95": [
+    -0.00202,
+    0.00571
+   ],
+   "lists_with_anchor": 113,
+   "lists_touched": 76,
+   "candidates_boosted": 545,
+   "lists_changed_rr": 11,
+   "rank1_changes": 0,
+   "per_class": {
+    "1": {
+     "n": 70,
+     "up": 2,
+     "down": 0,
+     "down_from_rank2": 0,
+     "delta": 0.0036
+    },
+    "2": {
+     "n": 50,
+     "up": 0,
+     "down": 2,
+     "down_from_rank2": 1,
+     "delta": -0.0061
+    },
+    "3": {
+     "n": 130,
+     "up": 4,
+     "down": 3,
+     "down_from_rank2": 0,
+     "delta": 0.0037
+    }
+   },
+   "mix_delta": 0.00171
+  },
+  "diag_oracle_anchor": {
+   "mrr_base": 0.4978,
+   "mrr_boost": 0.5025,
+   "delta": 0.0047,
+   "p_better": 0.9977,
+   "ci95": [
+    0.0011,
+    0.00919
+   ],
+   "lists_with_anchor": 113,
+   "lists_touched": 85,
+   "candidates_boosted": 624,
+   "lists_changed_rr": 12,
+   "rank1_changes": 0,
+   "per_class": {
+    "1": {
+     "n": 70,
+     "up": 2,
+     "down": 0,
+     "down_from_rank2": 0,
+     "delta": 0.0036
+    },
+    "2": {
+     "n": 50,
+     "up": 0,
+     "down": 1,
+     "down_from_rank2": 0,
+     "delta": -0.0011
+    },
+    "3": {
+     "n": 130,
+     "up": 7,
+     "down": 2,
+     "down_from_rank2": 0,
+     "delta": 0.0076
+    }
+   },
+   "mix_delta": 0.00474
+  }
+ }
+}
