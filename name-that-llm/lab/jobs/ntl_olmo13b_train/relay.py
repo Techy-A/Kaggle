@@ -7,6 +7,7 @@ Why: a Kaggle kernel holds no API token here, so the kernel writes outputs and t
 unit (or the Colab notebook) reads them from the dataset.
 Output: the mirror dir (default /home/user/work/ds_ntl_olmo13b_member) and a new dataset version.
 Usage: python relay.py --cli /path/to/kaggle_www.py [--mirror DIR] [--kernel owner/slug]   (KAGGLE_API_TOKEN in the environment)
+       other members: add --dataset owner/slug --folder <the kernel's output folder> (q8pool: ntl-q8pool-member)
 """
 import argparse
 import json
@@ -24,12 +25,14 @@ def main():
     ap.add_argument('--cli', required=True)
     ap.add_argument('--kernel', default=KERNEL)
     ap.add_argument('--mirror', default='/home/user/work/ds_ntl_olmo13b_member')
+    ap.add_argument('--dataset', default=DATASET)
+    ap.add_argument('--folder', default='ntl-olmo13b-member')
     a = ap.parse_args()
     kg = lambda *x, **kw: subprocess.run([sys.executable, a.cli, *x], **kw)
     dl = f'{a.mirror}_dl_{time.strftime("%m%d%H%M")}'
     os.makedirs(dl)
     kg('kernels', 'output', a.kernel, '-p', dl, check=True)
-    src = os.path.join(dl, 'ntl-olmo13b-member')
+    src = os.path.join(dl, a.folder)
     assert os.path.isdir(src), os.listdir(dl)
     os.makedirs(a.mirror, exist_ok=True)
     for f in os.listdir(src):
@@ -40,19 +43,19 @@ def main():
         else:
             shutil.copy(os.path.join(src, f), a.mirror)
     for f in os.listdir(dl):   # keep the logs next to the download, drop the big copy
-        if f != 'ntl-olmo13b-member':
+        if f != a.folder:
             print('log:', os.path.join(dl, f))
     shutil.rmtree(src)
-    json.dump({'title': DATASET.split('/')[1], 'id': DATASET, 'licenses': [{'name': 'CC-BY-SA-4.0'}]},
+    json.dump({'title': a.dataset.split('/')[1], 'id': a.dataset, 'licenses': [{'name': 'CC-BY-SA-4.0'}]},
               open(os.path.join(a.mirror, 'dataset-metadata.json'), 'w'))
-    st = kg('datasets', 'status', DATASET, capture_output=True, text=True)   # exit 0 is not enough: look for 'ready'
+    st = kg('datasets', 'status', a.dataset, capture_output=True, text=True)   # exit 0 is not enough: look for 'ready'
     exists = st.returncode == 0 and 'ready' in st.stdout
     files = sorted(f for f in os.listdir(a.mirror) if f != 'dataset-metadata.json')
     msg = 'relay: ' + ', '.join(files)
     cmd = ['datasets', 'version', '-p', a.mirror, '-m', msg[:200], '-r', 'zip'] if exists else \
         ['datasets', 'create', '-p', a.mirror, '-r', 'zip']
     kg(*cmd, check=True)
-    print('uploaded', DATASET, files)
+    print('uploaded', a.dataset, files)
 
 
 if __name__ == '__main__':

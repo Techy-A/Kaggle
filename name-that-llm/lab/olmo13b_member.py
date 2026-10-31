@@ -40,14 +40,19 @@ class LoRALinear(nn.Module):
 
 
 def load_trunk(base_dir, keep, quant, device, compute_dtype='float16'):
-    """The first `keep` layers; quant='nf4' quantizes every linear layer, everything else stays fp32."""
+    """The first `keep` layers; quant='nf4' quantizes every linear layer, everything else stays fp32; quant='fp16' loads
+    the whole trunk in fp16 (the dtype the notebooks' l24 members merge their LoRA into; an 8B trunk of 24 layers fits a T4)."""
     from transformers import AutoConfig, AutoModel
     mc = AutoConfig.from_pretrained(base_dir)
     mc.num_hidden_layers, mc.use_cache = keep, False
     if getattr(mc, 'layer_types', None) is not None:
         mc.layer_types = mc.layer_types[:keep]
     kw = dict(config=mc, dtype=torch.float32)
-    if quant == 'nf4':
+    if quant == 'fp16':
+        kw['dtype'] = torch.float16
+        if str(device).startswith('cuda'):
+            kw['device_map'] = {'': device}   # straight to the GPU: two ranks' fp32 copies would not fit in host RAM
+    elif quant == 'nf4':
         from transformers import BitsAndBytesConfig
         kw['quantization_config'] = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type='nf4',
                                                        bnb_4bit_compute_dtype=getattr(torch, compute_dtype),
@@ -56,7 +61,7 @@ def load_trunk(base_dir, keep, quant, device, compute_dtype='float16'):
     else:
         assert quant is None, quant
     model = AutoModel.from_pretrained(base_dir, **kw)
-    if quant is None:
+    if 'device_map' not in kw:
         model.to(device)
     assert len(model.layers) == keep
     model.norm = nn.Identity()   # features read the raw residual stream, as in the 14B members

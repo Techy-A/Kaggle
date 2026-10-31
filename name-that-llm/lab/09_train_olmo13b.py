@@ -13,6 +13,9 @@ What: nishantdahal's 14B two-stage LoRA recipe ("Two-stage LoRA, part two") on a
 Units: stage1 (the pool; it never sees train); fold<k> (stage 2 from stage 1 on 4/5 of the prompts, GroupKFold(5) on
 prompt_id = 07's folds, scores the held-out fifth); full (stage 2 on all of train: the shipped member); merge (OOF).
 Several GPUs: run under torchrun; each step's triplets are split over the ranks and the LoRA/head gradients summed.
+Other bases (31 Oct): --quant fp16 --member/--base-name/--base-class/--pool-note train the same recipe on another
+decoder in fp16 (the q8pool member: Qwen3-8B-Base, 24 layers, jobs/ntl_q8pool_train; check: lab/tests/check_q8pool.py).
+The defaults are unchanged (OLMo-2-13B, NF4).
 
 Why: a new ensemble member from another model family. The #2 team (0.673) uses OLMo-2-13B; our 0.636 base has only
 Qwen decoders. The OOF measures it alone and its value next to the base's n-gram SVC, before any submission.
@@ -169,7 +172,7 @@ class Trainer:
         warm = max(1, int(0.1 * len(plan)))
         sched = torch.optim.lr_scheduler.LambdaLR(opt, lambda s: (s + 1) / warm if s < warm else 0.5 * (
             1 + math.cos(math.pi * min(1.0, (s - warm) / max(1, sch['total'] - warm)))))
-        fp16 = self.dev.type == 'cuda' and a.quant == 'nf4' and a.compute_dtype == 'float16'
+        fp16 = self.dev.type == 'cuda' and (a.quant == 'nf4' and a.compute_dtype == 'float16' or a.quant == 'fp16')
         scaler = torch.amp.GradScaler('cuda', init_scale=2.0 ** 12, enabled=fp16)
         state_path = os.path.join(a.out, 'state', f'{unit}.pt')
         start = 0
@@ -271,19 +274,19 @@ def export(tr, a, out_dir, info):
     os.makedirs(os.path.join(out_dir, 'adapter'), exist_ok=True)
     save_file(om.adapter_state(tr.lora), os.path.join(out_dir, 'adapter', 'adapter_model.safetensors'))
     json.dump({'r': a.r, 'lora_alpha': a.alpha, 'lora_dropout': a.lora_dropout, 'peft_type': 'LORA', 'bias': 'none',
-               'base_model_name_or_path': 'allenai/OLMo-2-1124-13B', 'auto_mapping': {'base_model_class': 'Olmo2Model'},
+               'base_model_name_or_path': a.base_name, 'auto_mapping': {'base_model_class': a.base_class},
                'target_modules': sorted({k.split('.')[-1] for k in tr.lora})},
               open(os.path.join(out_dir, 'adapter', 'adapter_config.json'), 'w'), indent=1)
     save_file({k: v.detach().float().cpu().contiguous() for k, v in tr.heads.state_dict().items()},
               os.path.join(out_dir, 'heads.safetensors'))
-    cfg = dict(model_dir='allenai/OLMo-2-1124-13B', keep=a.keep, layers=a.layers, max_len=a.max_len, r=a.r,
+    cfg = dict(model_dir=a.base_name, keep=a.keep, layers=a.layers, max_len=a.max_len, r=a.r,
                alpha=a.alpha, ldrop=a.lora_dropout, head_drop=a.head_drop, lr_adapter=a.lr2[0], lr_head=a.lr2[1],
                wd=0.01, warmup=0.1, epochs=float(a.stage2_epochs), triplets_per_step=a.triplets_per_step, group=3,
                eval_bs=a.eval_bs, seed=a.seed, grad_ckpt=True, eos_id=int(tr.eos),
                eos_note='eos_id is the end token appended in training (<|endoftext|>)',
                quant=a.quant, compute_dtype=a.compute_dtype, nonquant_dtype='float32', final_norm=False,
                stage1=dict(epochs=a.stage1_epochs, lr_adapter=a.lr1[0], lr_head=a.lr1[1], class_weighted=True,
-                           pool='nishantdahal/ntl-handwriting-blend pool_v4 minus content cosine >= 0.3 to train'))
+                           pool=a.pool_note))
     json.dump(dict(cfg=cfg, labels=LABELS, train_info=info), open(os.path.join(out_dir, 'meta.json'), 'w'), indent=1)
 
 
@@ -332,7 +335,11 @@ def main():
     ap.add_argument('--pool')
     ap.add_argument('--base', help='OLMo-2-1124-13B dir (config, tokenizer, safetensors)')
     ap.add_argument('--out', required=True)
-    ap.add_argument('--quant', default='nf4', type=lambda s: None if s == 'none' else s, help='nf4 or none')
+    ap.add_argument('--quant', default='nf4', type=lambda s: None if s == 'none' else s, help='nf4, fp16 or none')
+    ap.add_argument('--member', default=MEMBER, help='export folder name of the full unit')
+    ap.add_argument('--base-name', default='allenai/OLMo-2-1124-13B', help='recorded in meta.json / adapter_config')
+    ap.add_argument('--base-class', default='Olmo2Model')
+    ap.add_argument('--pool-note', default='nishantdahal/ntl-handwriting-blend pool_v4 minus content cosine >= 0.3 to train')
     ap.add_argument('--compute-dtype', default='float16')
     ap.add_argument('--keep', type=int, default=27)
     ap.add_argument('--layers', default='2,4,6,9,13,17,22,27', type=lambda s: [int(x) for x in s.split(',')])
@@ -437,7 +444,7 @@ def main():
             info = tr.fit([ids_tr[i] for i in fit_rows], sub(y), sub(groups), sub(train.model.values),
                           a.stage2_epochs, *a.lr2, False, unit)
             if unit == 'full':
-                out_dir = os.path.join(a.out, MEMBER)
+                out_dir = os.path.join(a.out, a.member)
                 export(tr, a, out_dir, info)
                 chk = np.arange(min(128, len(train)))
                 P_mem, _ = tr.logits(ids_tr, chk, groups)

@@ -1,0 +1,21 @@
+{
+ "id": "aryanawasthiteykik/ntl-q8pool-prep",
+ "title": "ntl-q8pool-prep",
+ "code_file": "ntl-q8pool-prep.ipynb",
+ "language": "python",
+ "kernel_type": "notebook",
+ "is_private": true,
+ "enable_gpu": false,
+ "enable_tpu": false,
+ "enable_internet": true,
+ "docker_image_pinning_type": "latest",
+ "dataset_sources": [
+  "crtproduction/name-that-llm-open-pool",
+  "nishantdahal/ntl-handwriting-blend"
+ ],
+ "competition_sources": [
+  "name-that-llm"
+ ],
+ "kernel_sources": [],
+ "model_sources": []
+}
