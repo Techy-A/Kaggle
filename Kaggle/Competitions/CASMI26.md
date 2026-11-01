@@ -557,3 +557,5 @@ Bench477: 44% of molecules have a Tanimoto >= 0.5 analog in the set, 28% a detec
 cosine predicts analogs well (AUC 0.92). Pre-registered rank-1-locked boost on merged477 lists: +0.0013 bench MRR,
 P(better) 0.83 (gate 0.9); oracle ceiling +0.0047. Forecast public +0.0001 to +0.0004. No-go. Details: [[CASMI next steps
 plan]] section "Cross-test-spectrum boost"; script `enveda-casmi26/58_cross_spectrum_boost.py`.
+
+- 1 Nov: copying bgunshui/casmi26-480-neural-ensemble (public 0.479 Variant M + z-score ensemble of public and self-trained spectrum model, ranks 2-25 only; author reports 0.480). Forecast 0.479 (0.474-0.484): +1 molecule over 0.479 is within noise.
