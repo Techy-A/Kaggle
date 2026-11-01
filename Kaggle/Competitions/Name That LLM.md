@@ -514,3 +514,5 @@ User-approved 31 Oct night ("start both now"): train ONE new two-stage LoRA memb
 
 ## Blend validation and teacher features (1 Nov 02:2x IST; research only)
 See [[NTL blend validation and teacher features]]: GoPain's multi-cut OOF recipe (m 18/6/3/2, accept only if better at every cut) applied to a proxy blend we can rebuild out of fold; GLM-5.3-Flash/Kimi K3 teachers judged infeasible in the 9 h run (P about 0.05-0.1); recommended feature is a GLM-4-9B + Qwen3-8B likelihood-stat head at w 0.05-0.10 (~3 GPU h, P(pass) about 0.15).
+
+- 1 Nov: open-pool copy (ntl-664-openpool-copy v1, ref 57846561) **failed to score** on the hidden rerun (visible run fine, 11 min; metadata identical to original apart from image pin; no source dataset changed before submit). Resubmitted once, same version, same forecast 0.662 (0.657-0.666). q8pool member: stage1 centred bAcc 0.631, stage2 fold0 0.565 plain / 0.663 centred (540 rows); diversity check pending.
