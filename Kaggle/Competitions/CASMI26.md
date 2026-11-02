@@ -560,3 +560,5 @@ plan]] section "Cross-test-spectrum boost"; script `enveda-casmi26/58_cross_spec
 
 - 1 Nov: copying bgunshui/casmi26-480-neural-ensemble (public 0.479 Variant M + z-score ensemble of public and self-trained spectrum model, ranks 2-25 only; author reports 0.480). Forecast 0.479 (0.474-0.484): +1 molecule over 0.479 is within noise.
 - 2 Nov 05:56 IST: bgunshui 0.480 neural ensemble copy (ref 57880522) scored **0.479** = forecast; ties best 0.479.
+
+- 2 Nov scan (discussions): host Marie Killian 27 Oct: submissions that use third-party weights whose training code/permitted data cannot be reproduced can be removed from the leaderboard regardless of rank (medal eligibility affected); 30 Oct (David Healey): pre-built datasets fine if free/open and not built from proprietary data; weight-only datasets (fpnet etc) still unanswered (thread 753662, 2 Nov). Keep our own reproducible 0.465 stack as one of the two final selections.

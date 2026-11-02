@@ -519,3 +519,5 @@ See [[NTL blend validation and teacher features]]: GoPain's multi-cut OOF recipe
 - 1 Nov 21:14 IST: retry ref 57861613 **failed to score again** (COMPLETE, no score). Dropped zbigniewkirchner open-pool copy: does not run in our account (likely hidden-run limit). Best stays 0.662.
 - 1 Nov: cause found: original uses 9 input notebooks, our pull listed 8; missing zbigniewkirchner/ntl-lora24-qwen3-instyle (provides **/lora24/final, member lora24_public w 0.177; visible run takes placeholder fast path so never asserted). Pushed v2 with it added. Forecast 0.662 (0.657-0.666).
 - 2 Nov 09:58 IST: v2 with the missing input (ref 57877589) **also failed to score**. Missing input was not (the only) cause. Notebook dropped for good. Best stays 0.662.
+
+- 2 Nov scan: no notebook above 0.662 by more than knob tuning (0.664-0.665 claims are same-family). Discussion: Open Pool v11 (190,588 passages) updated weekly; single Qwen adapter 0.637 from pool alone (Carrot Production); Nishant Dahal ~0.65 single model.
