@@ -559,3 +559,4 @@ P(better) 0.83 (gate 0.9); oracle ceiling +0.0047. Forecast public +0.0001 to +0
 plan]] section "Cross-test-spectrum boost"; script `enveda-casmi26/58_cross_spectrum_boost.py`.
 
 - 1 Nov: copying bgunshui/casmi26-480-neural-ensemble (public 0.479 Variant M + z-score ensemble of public and self-trained spectrum model, ranks 2-25 only; author reports 0.480). Forecast 0.479 (0.474-0.484): +1 molecule over 0.479 is within noise.
+- 2 Nov 05:56 IST: bgunshui 0.480 neural ensemble copy (ref 57880522) scored **0.479** = forecast; ties best 0.479.
