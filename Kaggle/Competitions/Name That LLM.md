@@ -521,3 +521,4 @@ See [[NTL blend validation and teacher features]]: GoPain's multi-cut OOF recipe
 - 2 Nov 09:58 IST: v2 with the missing input (ref 57877589) **also failed to score**. Missing input was not (the only) cause. Notebook dropped for good. Best stays 0.662.
 
 - 2 Nov scan: no notebook above 0.662 by more than knob tuning (0.664-0.665 claims are same-family). Discussion: Open Pool v11 (190,588 passages) updated weekly; single Qwen adapter 0.637 from pool alone (Carrot Production); Nishant Dahal ~0.65 single model.
+- 2 Nov: user-directed copies (claims 0.665): synthreaper/ntl-sovereign-gold-apex and chyibo/name-that-llm-0663-fork, latest versions. Forecast each 0.663 (0.658-0.667); same family as 0.662-0.664 copies, claim is within +-0.005 noise.
