@@ -44,5 +44,5 @@ Risk accepted: every CASMI submission above our own 0.465 uses third-party weigh
 Fresh leaderboards, our ranks vs the three lines, GPU used, what changed, and which week of this plan we are in. If CASMI is below the bronze line for 7 days running, CASMI gets the next week's GPU first.
 
 ## Final-selection shortlist (update as scores land)
-- CASMI: 0.479 (baidalin midx copy, 57830973), 0.479 (bgunshui copy without second model, 57880522); pending: 0.480 copy with our scorer.
-- NTL: 0.666 (sovereign copy, 57919709), 0.665 (chy663 copy, 57919589); pending: 0.667 alexchilton copy.
+- CASMI: 0.479 (baidalin midx copy, 57830973), 0.479 (bgunshui copy without second model, 57880522); tried: 0.474 (with our own scorer, 57961190) - dropped.
+- NTL: 0.666 (sovereign copy, 57919709), 0.665 (chy663 copy, 57919589); tried: 0.663 (alexchilton 0.667 copy, 57957346).
