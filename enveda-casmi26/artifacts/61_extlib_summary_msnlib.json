@@ -1,0 +1,115 @@
+{
+ "lib_spectra_all": 560017,
+ "lib_structures_all": 46907,
+ "new_spectra": 508,
+ "new_structures": 56,
+ "grid": [
+  {
+   "tau": 0.6,
+   "k": 3,
+   "false_hit_rate_train": 0.0007,
+   "test_molecules_hit": 0,
+   "expected_public": 0.0
+  },
+  {
+   "tau": 0.6,
+   "k": 5,
+   "false_hit_rate_train": 0.0007,
+   "test_molecules_hit": 0,
+   "expected_public": 0.0
+  },
+  {
+   "tau": 0.6,
+   "k": 8,
+   "false_hit_rate_train": 0.0007,
+   "test_molecules_hit": 0,
+   "expected_public": 0.0
+  },
+  {
+   "tau": 0.7,
+   "k": 3,
+   "false_hit_rate_train": 0.0005,
+   "test_molecules_hit": 0,
+   "expected_public": 0.0
+  },
+  {
+   "tau": 0.7,
+   "k": 5,
+   "false_hit_rate_train": 0.0005,
+   "test_molecules_hit": 0,
+   "expected_public": 0.0
+  },
+  {
+   "tau": 0.7,
+   "k": 8,
+   "false_hit_rate_train": 0.0005,
+   "test_molecules_hit": 0,
+   "expected_public": 0.0
+  },
+  {
+   "tau": 0.8,
+   "k": 3,
+   "false_hit_rate_train": 0.0005,
+   "test_molecules_hit": 0,
+   "expected_public": 0.0
+  },
+  {
+   "tau": 0.8,
+   "k": 5,
+   "false_hit_rate_train": 0.0005,
+   "test_molecules_hit": 0,
+   "expected_public": 0.0
+  },
+  {
+   "tau": 0.8,
+   "k": 8,
+   "false_hit_rate_train": 0.0005,
+   "test_molecules_hit": 0,
+   "expected_public": 0.0
+  },
+  {
+   "tau": 0.85,
+   "k": 3,
+   "false_hit_rate_train": 0.0005,
+   "test_molecules_hit": 0,
+   "expected_public": 0.0
+  },
+  {
+   "tau": 0.85,
+   "k": 5,
+   "false_hit_rate_train": 0.0005,
+   "test_molecules_hit": 0,
+   "expected_public": 0.0
+  },
+  {
+   "tau": 0.85,
+   "k": 8,
+   "false_hit_rate_train": 0.0005,
+   "test_molecules_hit": 0,
+   "expected_public": 0.0
+  },
+  {
+   "tau": 0.9,
+   "k": 3,
+   "false_hit_rate_train": 0.0005,
+   "test_molecules_hit": 0,
+   "expected_public": 0.0
+  },
+  {
+   "tau": 0.9,
+   "k": 5,
+   "false_hit_rate_train": 0.0005,
+   "test_molecules_hit": 0,
+   "expected_public": 0.0
+  },
+  {
+   "tau": 0.9,
+   "k": 8,
+   "false_hit_rate_train": 0.0005,
+   "test_molecules_hit": 0,
+   "expected_public": 0.0
+  }
+ ],
+ "n_test_molecules": 400,
+ "n_cal_molecules": 5676
+}
