@@ -7,7 +7,9 @@ structure is in train, so every hit it gets from this library is a wrong structu
 Why: heliosli's 0.482 notebook puts such a match at rank 1 (his private dataset casmi26-extlib-v1); the host allows newer
 releases of train.parquet's sources (thread 750684, 27 Oct). This counts how many test molecules could gain.
 Output: artifacts/61_extlib_summary.json, artifacts/61_test_hits.csv. CPU, a few minutes.
-Usage: python enveda-casmi26/61_extlib_hits.py [--lib /home/user/work/extlib] [--ncal 6000]
+Usage: python enveda-casmi26/61_extlib_hits.py [--lib /home/user/work/extlib] [--ncal 6000] [--msnlib]
+--msnlib: use only MSnLib v8 MS2 (Zenodo 23494858, CC BY 4.0, from MSnLib doi:10.5281/zenodo.21105617) instead of
+MassBank + GNPS; outputs get the suffix _msnlib.
 """
 import argparse, json, os
 import numpy as np, pandas as pd, pyarrow.parquet as pq, pyarrow.dataset as ds
@@ -28,8 +30,26 @@ def vec(mz, it, prec):
     return dict(zip(s.index, s.values / n)) if n > 0 else {}
 
 
-def load_lib(path, train_keys):
+def load_msnlib(path):
+    m = pq.read_table(f'{path}/msnlib.parquet', columns=['inchikey', 'precursor_mz', 'mzs', 'intensities', 'charge']).to_pandas()
+    m = m.dropna(subset=['mzs', 'intensities', 'inchikey'])
+    m['mz'] = m.mzs.map(lambda x: np.fromstring(x, sep=','))
+    m['intensity'] = m.intensities.map(lambda x: np.fromstring(x, sep=','))
+    m['ion_mode'] = np.where(m.charge > 0, 'positive', 'negative')
+    m['src'] = 'msnlib'
+    return m[['src', 'inchikey', 'ion_mode', 'precursor_mz', 'mz', 'intensity']]
+
+
+def load_lib(path, train_keys, msnlib=False):
     rows = []
+    if msnlib:
+        df = load_msnlib(path)
+        df['k'] = df.inchikey.fillna('').str.upper().str[:14]
+        df['mode'] = df.ion_mode.str[:3]
+        lib = df[(df.k.str.len() == 14) & (df.precursor_mz > 50)][['src', 'k', 'mode', 'precursor_mz', 'mz', 'intensity']]
+        n_all, k_all = len(lib), lib.k.nunique()
+        lib = lib[~lib.k.isin(train_keys)].sort_values(['mode', 'precursor_mz']).reset_index(drop=True)
+        return lib, dict(lib_spectra_all=n_all, lib_structures_all=k_all, new_spectra=len(lib), new_structures=int(lib.k.nunique()))
     g = pq.read_table(f'{path}/gnps.parquet', columns=['ion_mode', 'inchikey', 'precursor_mz', 'mz', 'intensity', 'ms_level']).to_pandas()
     g['src'] = 'gnps'
     m = pq.read_table(f'{path}/massbank.parquet', columns=['ion_mode', 'inchikey', 'precursor_mz', 'mz', 'intensity', 'spectrum_type']).to_pandas()
@@ -68,11 +88,12 @@ def best_hits(q, lib, vecs):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('--lib', default='/home/user/work/extlib'); ap.add_argument('--ncal', type=int, default=6000)
+    ap = argparse.ArgumentParser(); ap.add_argument('--lib', default='/home/user/work/extlib'); ap.add_argument('--ncal', type=int, default=6000); ap.add_argument('--msnlib', action='store_true')
     a = ap.parse_args()
     meta = pd.read_parquet(f'{D}/train_meta.parquet', columns=['inchikey14'])
     train_keys = set(meta.inchikey14)
-    lib, S = load_lib(a.lib, train_keys)
+    lib, S = load_lib(a.lib, train_keys, a.msnlib)
+    sfx = '_msnlib' if a.msnlib else ''
     print(S, flush=True)
     vecs = {j: vec(r.mz, r.intensity, r.precursor_mz) for j, r in lib.iterrows()}
     # test
@@ -98,8 +119,8 @@ def main():
     S['grid'] = grid
     S['n_test_molecules'] = int(te.mol.nunique()); S['n_cal_molecules'] = int(tr.mol.nunique())
     os.makedirs(ART, exist_ok=True)
-    json.dump(S, open(f'{ART}/61_extlib_summary.json', 'w'), indent=1)
-    th.sort_values('cos', ascending=False).to_csv(f'{ART}/61_test_hits.csv', index=False)
+    json.dump(S, open(f'{ART}/61_extlib_summary{sfx}.json', 'w'), indent=1)
+    th.sort_values('cos', ascending=False).to_csv(f'{ART}/61_test_hits{sfx}.csv', index=False)
     print(json.dumps(S, indent=1))
 
 
