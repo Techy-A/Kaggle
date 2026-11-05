@@ -47,7 +47,7 @@ def embed(df, tag):
             f.write(f'BEGIN IONS\nTITLE={i}\nPEPMASS={r.precursor_mz}\nCHARGE=1+\n')
             for m, v in zip(r.ms2_mzs, r.ms2_normalized_intensities): f.write(f'{m} {v}\n')
             f.write('END IONS\n')
-    E = dreams_embeddings(p, model_pth=CK, batch_size=256, progress_bar=False)
+    E = dreams_embeddings(p, model_pth=CK, batch_size=32, progress_bar=False)
     os.remove(p); return np.asarray(E, dtype=np.float32)
 comp = glob.glob('/kaggle/input/**/test.parquet', recursive=True)
 te = pd.read_parquet([c for c in comp if 'competitions' in c or 'enveda' in c][0], columns=['molecule_id','spectrum_id','precursor_mz','ms2_mzs','ms2_normalized_intensities'])
