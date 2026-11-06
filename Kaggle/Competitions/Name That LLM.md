@@ -536,3 +536,14 @@ See [[NTL blend validation and teacher features]]: GoPain's multi-cut OOF recipe
 - 6 Nov 04:35 IST: ozertuu 0.672 copy (pool v13 mirror, ref 58023688) scored **0.668** (forecast 0.669, 0.664-0.673): inside range, ties our best 0.668. The 0.672 claim did not hold on our account.
 - 6 Nov scan: alexchilton/name-that-llm-0-669-all-public-what-failed ran ozertuu's 0.670+ M4 Apex verbatim and scored **0.669** on their account (ozertuu's 0.672+ V5 page withdrawn; it scored 0.668 for them, as for us). Copying with our v13 pool mirror. Forecast 0.668 (0.664-0.671). Risk note: thread 756466 asks whether datasets made by sending competition text to ChatGPT (mercurydust/ntllm-chatgpt-a-b, used by the verifier in every 0.667+ notebook including ours) break rule 2.4.b; no host answer yet. Thread 751754: identical notebooks failing with "Notebook Threw Exception" after 3-4 h since 21 Oct.
 - 6 Nov 21:30 IST scan: nothing to copy. ozertuu "0.672+ Dual-SVC BETTER!" (V8) still cites V1 at 0.672; our copy of that line scored 0.668 and alexchilton reports 0.668 for V5 too. New threads: reverse leakage (random K-fold pessimistic, 0.11 vs 0.35 grouped); merge offers (Mistral/OLMo LoRAs, public 0.663). CASMI: Majyles open-sources a 0.313 pipeline with validation notes (class 1 is cross-instrument: timsTOF test vs other-instrument libraries, entropy similarity ~0.90 vs ~0.99); no new scored notebook above 0.480.
+
+### Claimed vs reproduced (why page scores overstate), 6 Nov
+| Notebook (claim) | Our run | Others' runs | Note |
+|---|---|---|---|
+| judith007 0.664 | 0.659 | chyibo 0.659, 0.659 | scored version was v2 of 6; latest code differs (HALX2158) |
+| zbigniewkirchner open pool 0.664 | failed x3 | chyibo failed | hidden-run failure, not ours |
+| alexchilton 0.667 | 0.663 | - | pool v14 default (0.667 needs v13) |
+| omerfarukmerey 0.668 (pool v13 pinned) | **0.668** | - | reproduced once pinned |
+| ozertuu 0.672 V1 | 0.668 (our copy) | alexchilton 0.668 (V5) | V1 headline kept on later versions; "Gold Medal Notebook" badge = upvote medal, not a competition medal |
+| ozertuu 0.670+ M4 (alexchilton) | pending | alexchilton 0.669 | |
+Reasons a headline beats reproductions: (1) the author's best single run on a ~40% public split, where identical code drifts up to 0.009; (2) the headline stays while the code changes version to version; (3) inputs drift (open pool v13 to v14/v15, extra-passage batches); (4) selection: authors post their luckiest run. Rule: copy only text that names a scored version, pin its inputs, and expect 0.002-0.004 below the headline.
