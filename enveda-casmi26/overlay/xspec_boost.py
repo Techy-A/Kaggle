@@ -120,3 +120,56 @@ def run_overlay(sub_csv, ev_parquet, test_parquet):
         import traceback; traceback.print_exc()
         print('[xspec] failed; submission unchanged:', e, flush=True)
         return None
+
+
+# ===== instrument mass-accuracy prior (ranks 2-25 only; rank 1 never changes) =====
+# Bench477 (250 molecules): candidate neutral-mass error vs the measured precursor, centred on the instrument offset
+# (median signed ppm of all rank-1 candidates, -1.49 on the bench, no answers used): answers beyond 5 ppm 0.6%, other
+# candidates 7.4%. Moving ranks 2-25 beyond 5 ppm to the end of the 25: +0.0007 MRR, P(better) 0.95, 3 up / 0 down.
+ADDUCT_MASS = {'[M+H]+': 1.007276, '[M-H]-': -1.007276, '[M+Na]+': 22.989218, '[M+NH4]+': 18.033823, '[M+K]+': 38.963158,
+               '[M+Cl]-': 34.969402, '[M+CH2O2-H]-': 44.998201, '[M-H2O+H]+': 1.007276 - 18.010565}
+MASS_RULE = dict(tail_ppm=5.0, max_rank=25)
+
+
+def mass_prior(sub, test):
+    from rdkit.Chem.Descriptors import ExactMolWt
+    t = test[test.adduct.isin(ADDUCT_MASS)].copy()
+    t['nm'] = t.precursor_mz - t.adduct.map(ADDUCT_MASS)
+    nm = t.groupby('molecule_id').nm.median().to_dict()
+    cache = {}
+    def mw(s):
+        if s not in cache:
+            m = Chem.MolFromSmiles(s); cache[s] = ExactMolWt(m) if m is not None else float('nan')
+        return cache[s]
+    L = {m: s.split(';') for m, s in zip(sub.molecule_id, sub.smiles)}
+    top = [(mw(l[0]) - nm[m]) / nm[m] * 1e6 for m, l in L.items() if m in nm and l and l[0]]
+    centre = float(np.nanmedian(top)) if top else 0.0
+    out, moved = {}, 0
+    for m, full in L.items():
+        if m not in nm:
+            out[m] = ';'.join(full); continue
+        lst, tail = full[:MASS_RULE['max_rank']], full[MASS_RULE['max_rank']:]
+        far = [i for i in range(1, len(lst)) if abs((mw(lst[i]) - nm[m]) / nm[m] * 1e6 - centre) > MASS_RULE['tail_ppm']]
+        new = [lst[0]] + [lst[i] for i in range(1, len(lst)) if i not in far] + [lst[i] for i in far] + tail
+        assert new[0] == full[0] and sorted(new) == sorted(full)
+        moved += new != full; out[m] = ';'.join(new)
+    res = sub.copy(); res['smiles'] = res.molecule_id.map(out)
+    return res, dict(centre_ppm=round(centre, 3), lists_reordered=moved,
+                     rank1_changed=int(sum(a.split(';')[0] != b.split(';')[0] for a, b in zip(sub.smiles, res.smiles))))
+
+
+def run_mass_overlay(sub_csv, test_parquet):
+    import shutil
+    try:
+        sub = pd.read_csv(sub_csv, dtype=str, keep_default_na=False)
+        test = pd.read_parquet(test_parquet, columns=['molecule_id', 'adduct', 'precursor_mz'])
+        new, stats = mass_prior(sub, test[test.molecule_id.isin(set(sub.molecule_id))])
+        assert stats['rank1_changed'] == 0 and len(new) == len(sub) and new.smiles.notna().all()
+        shutil.copy2(sub_csv, str(sub_csv) + '.pre_mass')
+        new.to_csv(sub_csv, index=False)
+        print('[mass] applied', stats, flush=True)
+        return stats
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        print('[mass] failed; submission unchanged:', e, flush=True)
+        return None
