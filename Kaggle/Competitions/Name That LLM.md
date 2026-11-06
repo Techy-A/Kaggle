@@ -547,3 +547,4 @@ See [[NTL blend validation and teacher features]]: GoPain's multi-cut OOF recipe
 | ozertuu 0.672 V1 | 0.668 (our copy) | alexchilton 0.668 (V5) | V1 headline kept on later versions; "Gold Medal Notebook" badge = upvote medal, not a competition medal |
 | ozertuu 0.670+ M4 (alexchilton) | pending | alexchilton 0.669 | |
 Reasons a headline beats reproductions: (1) the author's best single run on a ~40% public split, where identical code drifts up to 0.009; (2) the headline stays while the code changes version to version; (3) inputs drift (open pool v13 to v14/v15, extra-passage batches); (4) selection: authors post their luckiest run. Rule: copy only text that names a scored version, pin its inputs, and expect 0.002-0.004 below the headline.
+- 7 Nov 05:05 IST: **ntl-ac669-copy v2 (alexchilton 0.669 = ozertuu 0.670+ M4 Apex, pool v13 mirror) scored 0.669** (forecast 0.668, 0.664-0.671). New NTL best 0.669; reproduced the author-run score exactly.
