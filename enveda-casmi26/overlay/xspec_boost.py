@@ -164,6 +164,7 @@ def run_mass_overlay(sub_csv, test_parquet):
         sub = pd.read_csv(sub_csv, dtype=str, keep_default_na=False)
         test = pd.read_parquet(test_parquet, columns=['molecule_id', 'adduct', 'precursor_mz'])
         new, stats = mass_prior(sub, test[test.molecule_id.isin(set(sub.molecule_id))])
+        assert abs(stats['centre_ppm']) <= 5, f"implausible instrument centre {stats['centre_ppm']} ppm (placeholder lists?)"
         assert stats['rank1_changed'] == 0 and len(new) == len(sub) and new.smiles.notna().all()
         shutil.copy2(sub_csv, str(sub_csv) + '.pre_mass')
         new.to_csv(sub_csv, index=False)
