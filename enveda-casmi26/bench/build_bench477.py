@@ -25,7 +25,8 @@ the frozen smoke switch is overridden by BENCH (IS_RERUN = True), so every bench
 Output: <out_dir>/casmi26-bench477.ipynb and kernel-metadata.json (private, same image pin and data sources as the
 copy: the BENCH block needs only the competition train.parquet; the leak-free FPNets ship inside the v4g assets).
 
-usage: python build_bench477.py [--src /home/user/work/push_c477] [--out /home/user/work/push_bench477]
+usage: python build_bench477.py [--src /home/user/work/push_c477] [--out /home/user/work/push_bench477] [--unseen]
+--unseen (8 Nov): the leak-free unseen pseudo-test instead of enveda-np-examples (see build_frozen); default unchanged.
 """
 import argparse
 import base64
@@ -185,14 +186,21 @@ def patch(cells, i, old, new):
     cells[i]['source'] = s.replace(old, new).splitlines(True)
 
 
-def build_frozen(raw):
-    """Decoded frozen notebook bytes -> bench frozen notebook bytes (same compact JSON format)."""
+def build_frozen(raw, unseen=False):
+    """Decoded frozen notebook bytes -> bench frozen notebook bytes (same compact JSON format).
+
+    unseen=True: the leak-free unseen pseudo-test (320 Enveda-180 Zenodo timsTOF structures absent from train.parquet,
+    dataset casmi26-bench-unseen-e180) with the production models (BENCH_LEAKFREE=0) and the full train library; only
+    the class-3 hiding applies (no spectra to drop: these structures have none in train)."""
     nb = json.loads(raw)
     assert json.dumps(nb, separators=(',', ':')).encode() == raw, 'frozen source is not compact JSON'
     cells = nb['cells']
     assert len(cells) == 59 and 'SMOKE switch' in src_of(cells[30])
-    bench = B.BENCH_CELL.replace('__LEAKFREE__', '1').replace('__DEPTH__', '')
-    cells[30]['source'] = (src_of(cells[30]) + '\n' + bench + BENCH_TAIL).splitlines(True)
+    if unseen:
+        bench, tail = B.BENCH_CELL_UNSEEN.replace('__LEAKFREE__', '0').replace('__DEPTH__', ''), ''
+    else:
+        bench, tail = B.BENCH_CELL.replace('__LEAKFREE__', '1').replace('__DEPTH__', ''), BENCH_TAIL
+    cells[30]['source'] = (src_of(cells[30]) + '\n' + bench + tail).splitlines(True)
     # cell 32, engine 2: class-3 drop / class-2 re-add / ranker rows without np (module strings), leak-free FPNets
     s = src_of(cells[32]).splitlines(True)
     assert s[3].startswith('for _n, _src in ENG_FILES.items():')
@@ -213,7 +221,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--src', default='/home/user/work/push_c477')
     ap.add_argument('--out', default='/home/user/work/push_bench477')
+    ap.add_argument('--unseen', action='store_true', help='leak-free unseen pseudo-test (8 Nov); default unchanged')
     a = ap.parse_args()
+    slug = SLUG + ('-unseen' if a.unseen else '')
     md = json.load(open(os.path.join(a.src, 'kernel-metadata.json')))
     nb = json.load(open(os.path.join(a.src, md['code_file'])))
     cells = nb['cells']
@@ -223,7 +233,7 @@ def main():
     old_b64 = re.search(r"^FROZEN_B64 = '([A-Za-z0-9+/=]+)'$", s9, re.M).group(1)
     raw = base64.b64decode(old_b64)
     assert hashlib.sha256(raw).hexdigest() == old_sha
-    new_raw = build_frozen(raw)
+    new_raw = build_frozen(raw, a.unseen)
     new_sha = hashlib.sha256(new_raw).hexdigest()
     new_b64 = base64.b64encode(new_raw).decode()
     patch(cells, 9, f"FROZEN_SHA256 = '{old_sha}'", f"FROZEN_SHA256 = '{new_sha}'")
@@ -240,11 +250,13 @@ def main():
     os.makedirs(a.out, exist_ok=True)
     for old in glob.glob(os.path.join(a.out, '*.ipynb')):
         os.remove(old)
-    code_file = f'{SLUG}.ipynb'
+    code_file = f'{slug}.ipynb'
     with open(os.path.join(a.out, code_file), 'w') as f:
         json.dump(nb, f, indent=1, ensure_ascii=False)
         f.write('\n')
-    md.update(id=f'aryanawasthiteykik/{SLUG}', title='CASMI26 Bench477', code_file=code_file, is_private=True)
+    md.update(id=f'aryanawasthiteykik/{slug}', title='CASMI26 Bench477' + (' Unseen' if a.unseen else ''), code_file=code_file, is_private=True)
+    if a.unseen:
+        md['dataset_sources'] = md['dataset_sources'] + ['aryanawasthiteykik/casmi26-bench-unseen-e180']
     md.pop('id_no', None)
     json.dump(md, open(os.path.join(a.out, 'kernel-metadata.json'), 'w'), indent=1)
     print('wrote', a.out, len(nb['cells']), 'cells | kernel', md['id'], '| frozen sha', old_sha[:12], '->', new_sha[:12])

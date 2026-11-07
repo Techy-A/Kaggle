@@ -1,0 +1,25 @@
+{
+ "molecules": 128,
+ "spectra": 1569,
+ "adducts": {
+  "[M+H]+": 974,
+  "[M-H]-": 570,
+  "[M+NH4]+": 21,
+  "[M+Na]+": 4
+ },
+ "instruments": {
+  "LC-ESI-QFT": 1438,
+  "Orbitrap": 128,
+  "GC-APCI-QTOF": 2,
+  "qTof": 1
+ },
+ "sources": {
+  "massbank": 1440,
+  "gnps": 129
+ },
+ "mass_q": [
+  329.03032,
+  756.4542,
+  1044.49069
+ ]
+}
