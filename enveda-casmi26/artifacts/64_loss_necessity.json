@@ -1,0 +1,18 @@
+{
+ "lists_reordered": 12,
+ "mrr_base": 0.4875352092352092,
+ "mrr_new": 0.4874399711399711,
+ "delta": -9.523809523809523e-05,
+ "p_better": 0.0,
+ "up": 0,
+ "down": 1,
+ "rank1_changed": 0,
+ "true_violation": [
+  4,
+  18
+ ],
+ "other_violation": [
+  137,
+  421
+ ]
+}
