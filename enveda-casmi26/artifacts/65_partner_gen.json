@@ -1,0 +1,11 @@
+{
+ "pairs_with_transform": 64,
+ "molecules": 54,
+ "oracle_hits": 31,
+ "oracle_new": 8,
+ "real_hits": 20,
+ "real_new": 6,
+ "real_new_conf": 1,
+ "max_products": 23,
+ "median_products": 3.5
+}
