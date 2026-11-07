@@ -6,7 +6,7 @@ train.parquet; classes 2/3 = 128/192), compute paired MRR@25 deltas with bootstr
   (2) tail reranker (63_final_model.txt) on merged477  LB -0.021  -> must be <= 0
   (3) xspec boost + mass prior on merged477      LB +0.001  -> must be >= -0.001
 Pass = all three signs right. Output: artifacts/68_unseen_calibration.json.
-Usage: python 68_unseen_calibration.py [unseen_out_dir]
+Usage: python 68_unseen_calibration.py [unseen_out_dir] [test_parquet]   (8 Nov: test path optional, default unchanged)
 """
 import json, sys
 from pathlib import Path
@@ -16,7 +16,7 @@ RDLogger.DisableLog('rdApp.*')
 HERE = Path(__file__).parent; sys.path.insert(0, str(HERE / 'overlay'))
 import tail_rr, xspec_boost
 U = Path(sys.argv[1] if len(sys.argv) > 1 else '/home/user/work/out_unseen')
-test = pd.read_parquet('/home/user/benchdata/ds_unseen/unseen_test.parquet')
+test = pd.read_parquet(sys.argv[2] if len(sys.argv) > 2 else '/home/user/benchdata/ds_unseen/unseen_test.parquet')
 ans = pd.read_csv(U / 'bench_answers.csv', dtype=str, keep_default_na=False)
 keys = {m: {a, b} - {''} for m, a, b in zip(ans.molecule_id, ans.inchikey14, ans.metric_key)}
 ev = pd.read_parquet(U / 'frozen_candidate_evidence.parquet')
@@ -49,4 +49,4 @@ res['3_xspec_mass'] = compare(merged, xm, '(3) xspec + mass prior', '>= -0.001')
 ok = [res['1_merged_vs_baseline']['delta'] > 0, res['2_tail_reranker']['delta'] <= 0, res['3_xspec_mass']['delta'] >= -0.001]
 res['signs_right'] = ok; res['PASS'] = all(ok)
 print('signs right:', ok, '-> PASS' if all(ok) else '-> FAIL')
-(HERE / 'artifacts/68_unseen_calibration.json').write_text(json.dumps(res, indent=1, default=str))
+(HERE / ('artifacts/68_unseen_calibration.json' if len(sys.argv) <= 2 else f'artifacts/68_calibration_{U.name}.json')).write_text(json.dumps(res, indent=1, default=str))
