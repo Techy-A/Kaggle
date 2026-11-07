@@ -222,8 +222,10 @@ def main():
     ap.add_argument('--src', default='/home/user/work/push_c477')
     ap.add_argument('--out', default='/home/user/work/push_bench477')
     ap.add_argument('--unseen', action='store_true', help='leak-free unseen pseudo-test (8 Nov); default unchanged')
+    ap.add_argument('--unseen-dataset', default='casmi26-bench-unseen-e180', help='with --unseen: the dataset holding unseen_test.parquet / unseen_answers.csv')
+    ap.add_argument('--slug-suffix', default='-unseen', help='with --unseen: kernel slug suffix')
     a = ap.parse_args()
-    slug = SLUG + ('-unseen' if a.unseen else '')
+    slug = SLUG + (a.slug_suffix if a.unseen else '')
     md = json.load(open(os.path.join(a.src, 'kernel-metadata.json')))
     nb = json.load(open(os.path.join(a.src, md['code_file'])))
     cells = nb['cells']
@@ -254,9 +256,9 @@ def main():
     with open(os.path.join(a.out, code_file), 'w') as f:
         json.dump(nb, f, indent=1, ensure_ascii=False)
         f.write('\n')
-    md.update(id=f'aryanawasthiteykik/{slug}', title='CASMI26 Bench477' + (' Unseen' if a.unseen else ''), code_file=code_file, is_private=True)
+    md.update(id=f'aryanawasthiteykik/{slug}', title='CASMI26 Bench477' + (' ' + a.slug_suffix.strip('-').replace('-', ' ').title() if a.unseen else ''), code_file=code_file, is_private=True)
     if a.unseen:
-        md['dataset_sources'] = md['dataset_sources'] + ['aryanawasthiteykik/casmi26-bench-unseen-e180']
+        md['dataset_sources'] = md['dataset_sources'] + [f'aryanawasthiteykik/{a.unseen_dataset}']
     md.pop('id_no', None)
     json.dump(md, open(os.path.join(a.out, 'kernel-metadata.json'), 'w'), indent=1)
     print('wrote', a.out, len(nb['cells']), 'cells | kernel', md['id'], '| frozen sha', old_sha[:12], '->', new_sha[:12])
