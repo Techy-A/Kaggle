@@ -46,3 +46,18 @@ Fresh leaderboards, our ranks vs the three lines, GPU used, what changed, and wh
 ## Final-selection shortlist (update as scores land)
 - CASMI: **0.481 (0.480 recipe + xspec boost + mass prior, rank 1 locked, 58060036) = first-choice final selection**, 0.480 (xspec only, 58059377), 0.480 (alexchilton 0.480 copy with his scorer, 57991848), 0.479 (baidalin midx copy, 57830973), 0.479 (bgunshui copy without second model, 57880522); tried: 0.474 (with our own scorer, 57961190), 0.470 (rajrajak99 "484" copy, 58008759), 0.459 (tail-reranker test, 58065748) - dropped.
 - NTL: **0.669 (alexchilton 0.669 copy, ozertuu M4 Apex, pool v13, 58059052)**, 0.668 (omerfarukmerey 0.668 copy, pool v13, 57991450), 0.666 (sovereign copy, 57919709), 0.665 (chy663 copy, 57919589); tried: 0.663 (alexchilton 0.667 copy, 57957346), 0.668 (ozertuu 0.672 copy, 58023688).
+
+## Weekly check, Sat 7 Nov 10:14 IST (start of plan week 8-14 Nov)
+| | ours | rank | above us / tied | bronze | silver | gold |
+|---|---|---|---|---|---|---|
+| NTL (4,957 teams) | 0.669 | 286 | 166 / 168 | 0.668 (r495) | 0.669 (r247) | 0.706 (r19) |
+| CASMI (4,900 teams) | 0.481 | 239 | 84 / 163 | 0.480 (r490) | 0.481 (r245) | 0.488 (r19) |
+Both inside bronze; CASMI just inside silver on the tie-break, NTL just outside silver on the tie-break.
+This week: CASMI 0.479 -> 0.481 with our own rank-1-locked overlays (cross-spectrum boost + mass prior); NTL 0.666 -> 0.669 by copying scored versions with pinned inputs (pool v13 mirror). Dropped with evidence: own scorer (0.474), DreaMS head (0.218 offline), SpecBridge (not public), atlas / newer libraries (0 test hits), tail reranker (0.459, bench reversal).
+GPU: quota reset today (30 h). Used last week about 18 h (DreaMS 2.3 h + setup, scorer s2 2.5 h, q8pool member 8.6 h, copies and overlays ~5 h).
+Next actions (this week):
+1. NTL: our q8pool member onto the 0.669 base at small weight, one change, forecast first (1-2 GPU h). It is also the honest-validation pick.
+2. NTL: watch thread 756466 (ChatGPT-built verifier dataset vs rule 2.4.b); if ruled out, our final NTL pick must drop the verifier.
+3. CASMI: keep the 0.481 overlay notebook as first final pick; apply the same two overlays to any new public base that shows a real score above 0.481.
+4. Daily scans; copy only scored versions with pinned inputs.
+CASMI is not below bronze, so no GPU priority switch.
