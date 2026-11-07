@@ -1,0 +1,52 @@
+{
+ "1_merged_vs_baseline": {
+  "delta": 0.00212,
+  "p_better": 0.687,
+  "up": 13,
+  "down": 16,
+  "rank1_changed": 30,
+  "need": "> 0"
+ },
+ "2_tail_reranker": {
+  "delta": -0.01004,
+  "p_better": 0.0,
+  "up": 4,
+  "down": 26,
+  "rank1_changed": 0,
+  "need": "<= 0",
+  "stats": {
+   "centre_ppm": -0.587,
+   "lists_reordered": 320,
+   "rank1_changed": 0
+  }
+ },
+ "3_xspec_mass": {
+  "delta": 0.00026,
+  "p_better": 0.953,
+  "up": 3,
+  "down": 0,
+  "rank1_changed": 0,
+  "need": ">= -0.001",
+  "stats": {
+   "xspec": {
+    "molecules": 320,
+    "with_partner": 73,
+    "confident_anchors": 28,
+    "lists_touched": 1,
+    "lists_reordered": 1,
+    "rank1_changed": 0
+   },
+   "mass": {
+    "centre_ppm": -0.587,
+    "lists_reordered": 157,
+    "rank1_changed": 0
+   }
+  }
+ },
+ "signs_right": [
+  true,
+  true,
+  true
+ ],
+ "PASS": true
+}
