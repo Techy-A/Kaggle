@@ -665,3 +665,13 @@ plan]] section "Cross-test-spectrum boost"; script `enveda-casmi26/58_cross_spec
   | (2) tail reranker (63 final model) | -0.021 | **-0.0100** | 0.00 | 4/26 | +0.0386 |
   | (3) xspec + mass prior | +0.001 | **+0.0003** | 0.95 | 3/0 | +0.0020 |
   All three pre-registered signs right. **The leakage hypothesis is confirmed:** the tail reranker flips from +0.039 (leaky np bench) to -0.010 (leak-free), matching the LB -0.021. **The unseen bench is now the CASMI yardstick for classes 2/3** (class 1 still from bench477). Limits: n = 320, no class 1, only 3 calibration points; (1) is weak (P 0.69). Rule from now on: never train on the unseen bench (it is the yardstick); judge every idea on it before any LB submission; re-check ideas that were rejected on the leaky bench.
+- 8 Nov 02:40 IST, **re-tests on the leak-free unseen bench (69_unseen_retests.py, artifacts/69_unseen_retests.json): nothing passes, nothing harms; the bench has no power for these ideas.** Base merged477 0.1150, truths in the 25-list for only 61/320 (class-3 hit@25 3/192).
+  | idea | delta | P(better) | up/down | note |
+  |---|---|---|---|---|
+  | A loss necessity (64) | 0.0000 | - | 0/0 | no list changed where it matters |
+  | B isomer exclusion R3 | +0.0001 | 0.62 | 1/0 | 1 rank-1 change |
+  | B isomer R1 collision swap | 0.0000 | - | 0/0 | |
+  | C formula prior tau 0.7 / 0.87 | -0.0004 / +0.0001 | 0.24 / 0.64 | 1/1, 1/0 | |
+  | D partner generation P_a/P_c/P_f | 0.0000 | - | 0/0 | only 2 molecules get products; truth generated for 0 |
+  Why no power: the unseen set is Enveda-180, a largely SYNTHETIC library (first answer is a fluorinated drug-like oxadiazole), so natural-product chemistry (glycosides, hydroxylation series, test-side analogue partners) barely occurs, and class-3 truths are almost never in the lists. Verdict: the unseen bench detects harmful reorders (tail reranker) but cannot judge NP-specific or class-3 ideas. None of A-D goes to the LB.
+  - **Next option:** a second leak-free bench on natural products: the 128 MassBank/GNPS NP structures not in train (67_leakfree_bench_select.py, mass median 756, mostly QFT). It would (a) replicate the 3-sign calibration on independent NP data and (b) give partner generation and isomer exclusion real material. Cost: dataset upload in the unseen format + one bench run (~3-4 GPU h). Needs a go.
