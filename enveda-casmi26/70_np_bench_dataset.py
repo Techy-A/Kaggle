@@ -8,7 +8,9 @@ with peaks below 2e-4 dropped, MassBank normalised collision energies ("40 % (no
 ns_00000..., classes 3/2 = 60/40% by md5 order (the unseen split), molecular_formula empty as in make_unseen.
 Why: the unseen bench (Enveda-180) is largely synthetic and had no power for NP-specific ideas (69); this set is NP.
 Output: <out>/unseen_test.parquet, <out>/unseen_answers.csv, <out>/dataset-metadata.json (private Kaggle dataset).
-Usage: python 70_np_bench_dataset.py <out_dir>
+Usage: python 70_np_bench_dataset.py <out_dir> [max_precursor_mz]
+max_precursor_mz (8 Nov, option B): keep molecules whose median precursor m/z is at most this (ICEBERG ran out of
+budget on the heavy ones: 39/106 scored in 5,400 s); default keeps all, unchanged.
 """
 import hashlib, json, os, sys
 import numpy as np, pandas as pd
@@ -30,6 +32,9 @@ for r in t.itertuples():
                      collision_energy_ev=ce, collision_energy_orig_units='eV' if len(ce) else ''))
 df = pd.DataFrame(rows)
 df = df[df.ms2_mzs.map(len) >= 3].reset_index(drop=True)
+if len(sys.argv) > 2:
+    _med = df.groupby('molecule_id').precursor_mz.median()
+    df = df[df.molecule_id.isin(_med.index[_med <= float(sys.argv[2])])].reset_index(drop=True)
 df['spectrum_id'] = [f'ns_{i:05d}' for i in range(len(df))]
 cols = ['molecule_id', 'spectrum_id', 'ms2_mzs', 'ms2_normalized_intensities', 'base_peak_intensity', 'adduct',
         'ionization_mode', 'instrument_type', 'precursor_mz', 'collision_energy_orig', 'collision_energy_ev',

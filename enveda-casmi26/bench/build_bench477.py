@@ -186,7 +186,7 @@ def patch(cells, i, old, new):
     cells[i]['source'] = s.replace(old, new).splitlines(True)
 
 
-def build_frozen(raw, unseen=False):
+def build_frozen(raw, unseen=False, ice_budget=None):
     """Decoded frozen notebook bytes -> bench frozen notebook bytes (same compact JSON format).
 
     unseen=True: the leak-free unseen pseudo-test (320 Enveda-180 Zenodo timsTOF structures absent from train.parquet,
@@ -198,6 +198,9 @@ def build_frozen(raw, unseen=False):
     assert len(cells) == 59 and 'SMOKE switch' in src_of(cells[30])
     if unseen:
         bench, tail = B.BENCH_CELL_UNSEEN.replace('__LEAKFREE__', '0').replace('__DEPTH__', ''), ''
+        if ice_budget is not None:   # 8 Nov: heavy NP molecules need a longer ICEBERG budget (cell 48 asserts it finished)
+            assert bench.count('ICE_BUDGET = 5400') == 1
+            bench = bench.replace('ICE_BUDGET = 5400', f'ICE_BUDGET = {int(ice_budget)}')
     else:
         bench, tail = B.BENCH_CELL.replace('__LEAKFREE__', '1').replace('__DEPTH__', ''), BENCH_TAIL
     cells[30]['source'] = (src_of(cells[30]) + '\n' + bench + tail).splitlines(True)
@@ -224,6 +227,8 @@ def main():
     ap.add_argument('--unseen', action='store_true', help='leak-free unseen pseudo-test (8 Nov); default unchanged')
     ap.add_argument('--unseen-dataset', default='casmi26-bench-unseen-e180', help='with --unseen: the dataset holding unseen_test.parquet / unseen_answers.csv')
     ap.add_argument('--slug-suffix', default='-unseen', help='with --unseen: kernel slug suffix')
+    ap.add_argument('--ice-budget', type=int, default=None, help='with --unseen: ICEBERG budget in s (default: the cell\'s 5400)')
+    ap.add_argument('--time-guard', type=float, default=None, help='outer TIME_GUARD_HOURS (default: the notebook\'s 7.5)')
     a = ap.parse_args()
     slug = SLUG + (a.slug_suffix if a.unseen else '')
     md = json.load(open(os.path.join(a.src, 'kernel-metadata.json')))
@@ -235,12 +240,16 @@ def main():
     old_b64 = re.search(r"^FROZEN_B64 = '([A-Za-z0-9+/=]+)'$", s9, re.M).group(1)
     raw = base64.b64decode(old_b64)
     assert hashlib.sha256(raw).hexdigest() == old_sha
-    new_raw = build_frozen(raw, a.unseen)
+    new_raw = build_frozen(raw, a.unseen, a.ice_budget if a.unseen else None)
     new_sha = hashlib.sha256(new_raw).hexdigest()
     new_b64 = base64.b64encode(new_raw).decode()
     patch(cells, 9, f"FROZEN_SHA256 = '{old_sha}'", f"FROZEN_SHA256 = '{new_sha}'")
     patch(cells, 9, f"FROZEN_B64 = '{old_b64}'", f"FROZEN_B64 = '{new_b64}'")
     patch(cells, 12, RUN_OLD, RUN_NEW)
+    if a.time_guard is not None:   # 8 Nov: a longer pipeline must not silently skip the optional (tail-rescue) stages
+        _tg = [i for i, c in enumerate(cells) if 'TIME_GUARD_HOURS = 7.5' in src_of(c)]
+        assert len(_tg) == 1, _tg
+        patch(cells, _tg[0], 'TIME_GUARD_HOURS = 7.5', f'TIME_GUARD_HOURS = {a.time_guard}')
     assert 'PARALLAX_DIAGNOSTICS = apply(' in src_of(cells[13]) and 'pxm_merge' in src_of(cells[16])
     title = {'cell_type': 'markdown', 'id': 'bench477-title', 'metadata': {}, 'source': [
         '# CASMI26 bench477: the 0.477 pipeline on hidden-answer natural products\n', '\n',
