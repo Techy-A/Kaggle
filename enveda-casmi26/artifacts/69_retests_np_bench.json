@@ -1,0 +1,103 @@
+{
+ "A_loss_necessity": {
+  "delta": -0.00253,
+  "p_better": 0.0,
+  "up": 0,
+  "down": 1,
+  "rank1_changed": 0,
+  "pushed_out": 0,
+  "new_in": 0,
+  "class3_delta": 0.0,
+  "class2_delta": -0.0063
+ },
+ "B_iso_R3": {
+  "delta": 0.0,
+  "p_better": 0.0,
+  "up": 0,
+  "down": 0,
+  "rank1_changed": 0,
+  "pushed_out": 0,
+  "new_in": 0,
+  "class3_delta": 0.0,
+  "class2_delta": 0.0,
+  "stats": {
+   "groups": 11,
+   "anchors": 14,
+   "lists_touched": 0,
+   "removed": 0,
+   "rank1_changed": 0
+  }
+ },
+ "B_iso_R1": {
+  "delta": 0.0,
+  "p_better": 0.0,
+  "up": 0,
+  "down": 0,
+  "rank1_changed": 2,
+  "pushed_out": 0,
+  "new_in": 0,
+  "class3_delta": 0.0,
+  "class2_delta": 0.0
+ },
+ "C_formula_tau0.7": {
+  "delta": 0.00108,
+  "p_better": 0.635,
+  "up": 1,
+  "down": 0,
+  "rank1_changed": 0,
+  "pushed_out": 0,
+  "new_in": 0,
+  "class3_delta": 0.0018,
+  "class2_delta": 0.0
+ },
+ "C_formula_tau0.87": {
+  "delta": 0.00108,
+  "p_better": 0.635,
+  "up": 1,
+  "down": 0,
+  "rank1_changed": 0,
+  "pushed_out": 0,
+  "new_in": 0,
+  "class3_delta": 0.0018,
+  "class2_delta": 0.0
+ },
+ "D_P_a": {
+  "delta": 0.01086,
+  "p_better": 0.871,
+  "up": 3,
+  "down": 2,
+  "rank1_changed": 0,
+  "pushed_out": 0,
+  "new_in": 3,
+  "class3_delta": 0.0248,
+  "class2_delta": -0.0099
+ },
+ "D_P_c": {
+  "delta": 0.01126,
+  "p_better": 0.869,
+  "up": 2,
+  "down": 2,
+  "rank1_changed": 0,
+  "pushed_out": 0,
+  "new_in": 2,
+  "class3_delta": 0.0217,
+  "class2_delta": -0.0043
+ },
+ "D_P_f": {
+  "delta": -0.0014,
+  "p_better": 0.414,
+  "up": 3,
+  "down": 1,
+  "rank1_changed": 0,
+  "pushed_out": 0,
+  "new_in": 3,
+  "class3_delta": 0.0038,
+  "class2_delta": -0.0091
+ },
+ "_meta": {
+  "base_mrr": 0.3262,
+  "n": 77,
+  "partner_molecules": 24,
+  "gen_truth": 4
+ }
+}
