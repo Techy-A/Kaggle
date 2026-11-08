@@ -4,7 +4,7 @@ What: for each prompt (topic x form x target length, built by make_prompts) asks
 Google AI Studio API (the user's free-tier key; the request header comes from $Value set in the environment), keeps
 only responses whose returned modelVersion equals the requested model, writes one JSON line per response to
 gen/gemini_trio.jsonl (prompt_id, prompt, topic, model, model_version, text, n_words, finish_reason, usage, ts).
-Resumable (skips prompt x model pairs already written), backs off on 429/503, stops at --max-calls or --budget-min.
+Only finishReason STOP responses are kept (maxOutputTokens 8192: thinking tokens count against it). Resumable (skips prompt x model pairs already written), backs off on 429/503, stops at --max-calls or --budget-min.
 Why: gemini-3.7-flash is the rarest label in Open Pool v15 (3,541 rows vs 22,508 for 3.8-flash; 0 from the Benchmarks
 proxy), its OOF recall is 0.427 and 176 of 450 trio passages are within-trio errors. Same-prompt triplets carry
 exactly the sibling signal. Host rule (752084): self-generated data within reasonable cost is allowed, need not be
@@ -35,7 +35,7 @@ def make_prompts(seed=7):
 
 
 def call(model, prompt, key, timeout=180):
-    body = json.dumps({'contents': [{'parts': [{'text': prompt}]}], 'generationConfig': {'maxOutputTokens': 2048}}).encode()
+    body = json.dumps({'contents': [{'parts': [{'text': prompt}]}], 'generationConfig': {'maxOutputTokens': 8192}}).encode()
     req = urllib.request.Request(f'https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent', data=body,
                                  headers={'x-goog-api-key': key, 'Content-Type': 'application/json'})
     with urllib.request.urlopen(req, timeout=timeout) as r:
@@ -65,6 +65,7 @@ def main():
                     mv = d.get('modelVersion', ''); c = (d.get('candidates') or [{}])[0]
                     txt = ''.join(x.get('text', '') for x in (c.get('content') or {}).get('parts', []) if not x.get('thought')).strip()
                     if not txt: stats['empty'] += 1; break
+                    if c.get('finishReason') != 'STOP': stats.setdefault('truncated', 0); stats['truncated'] += 1; break   # thinking tokens can exhaust the budget
                     if mv and not mv.startswith(m): stats['mismatch'] += 1; print('MODEL MISMATCH', m, mv); break
                     rec = dict(P, model=m, model_version=mv, text=txt, n_words=len(txt.split()), finish_reason=c.get('finishReason'),
                                usage=d.get('usageMetadata'), ts=round(ts))
