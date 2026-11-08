@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="t d"><title id="t">Kaggle</title><desc id="d">My Kaggle competition work, one folder per competition: code, notebooks and notes.</desc>
+<rect x="1" y="1" width="1198" height="358" rx="24" fill="#F4F8FD" stroke="#DCE7F3" stroke-width="2" />
+<text x="64" y="78" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', 'Courier New', monospace" font-size="17" font-weight="600" fill="#0284C7" text-anchor="start" letter-spacing="2" >COMPETITION WORK</text>
+<text x="64" y="142" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="64" font-weight="700" fill="#0B2239" text-anchor="start" >Kaggle</text>
+<text x="64" y="220" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="22" font-weight="400" fill="#4B6178" text-anchor="start" >One folder per competition:</text>
+<text x="64" y="251" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="22" font-weight="400" fill="#4B6178" text-anchor="start" >code, notebooks and notes.</text>
+<text x="64" y="314" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', 'Courier New', monospace" font-size="18" font-weight="400" fill="#4B6178" text-anchor="start" >kaggle.com/aryanawasthiteykik</text>
+<rect x="690" y="40" width="450" height="280" rx="18" fill="#FFFFFF" stroke="#DCE7F3" stroke-width="2" />
+<rect x="716" y="62" width="398" height="70" rx="12" fill="#F7FAFD" stroke="#DCE7F3" stroke-width="2" />
+<text x="736" y="93" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', 'Courier New', monospace" font-size="22" font-weight="700" fill="#0B2239" text-anchor="start" >enveda-casmi26/</text>
+<text x="736" y="118" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#4B6178" text-anchor="start" >Molecule ID from mass spectra</text>
+<rect x="1010" y="74" width="84" height="28" rx="14" fill="#0284C7" />
+<text x="1052" y="94" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', 'Courier New', monospace" font-size="16" font-weight="700" fill="#FFFFFF" text-anchor="middle" >ACTIVE</text>
+<rect x="716" y="146" width="398" height="70" rx="12" fill="#F7FAFD" stroke="#DCE7F3" stroke-width="2" />
+<text x="736" y="177" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', 'Courier New', monospace" font-size="22" font-weight="700" fill="#0B2239" text-anchor="start" >name-that-llm/</text>
+<text x="736" y="202" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#4B6178" text-anchor="start" >Which LLM wrote this text?</text>
+<rect x="716" y="230" width="398" height="70" rx="12" fill="#F7FAFD" stroke="#DCE7F3" stroke-width="2" />
+<text x="736" y="261" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', 'Courier New', monospace" font-size="22" font-weight="700" fill="#0B2239" text-anchor="start" >colab/</text>
+<text x="736" y="286" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#4B6178" text-anchor="start" >Notebooks for free Colab GPUs</text>
+</svg>
