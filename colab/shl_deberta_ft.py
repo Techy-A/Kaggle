@@ -1,7 +1,7 @@
 # %% [markdown]
 # # SHL: DeBERTa-v3-large fine-tune "the winners' way", on free Colab (T4)
 #
-# Trains one arm of `src/06_finetune_text.py` from the SHL repo (branch `claude/tender-cray-a5xjla`): the main
+# Trains one arm of `src/06_finetune_text.py` from the SHL repo (branch `main`): the main
 # model's fine-tune recipe (`--crops --drop-zero --epochs 2`, the member of submission 33) with two changes,
 #
 # 1. `--dropout0`: every dropout in the DeBERTa config set to 0 (ELL 3rd place: "[High Impact]" for regression);
@@ -21,7 +21,7 @@
 # `progress.json` after every fold, and the merged out-of-fold + test predictions after every seed.
 
 # %%
-REPO, BRANCH = "https://github.com/Techy-A/shl-grammar-scoring", "claude/tender-cray-a5xjla"
+REPO, BRANCH = "https://github.com/Techy-A/shl-grammar-scoring", "main"
 INPUTS = "aryanawasthiteykik/shl-ft-inputs"     # private: folds.csv, transcripts_prompt[_crops].parquet, train.csv
 OUTPUTS = "aryanawasthiteykik/shl-ft-outputs"   # private, created on the first upload
 FLAGS = "--crops --drop-zero --epochs 2 --dropout0 --head bins"   # main-model recipe + the two changes
