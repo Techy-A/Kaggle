@@ -1,0 +1,270 @@
+# competition-style topics (8 Nov); train topics excluded by 21_topic_filter.py
+the migration of Arctic terns between the poles
+bioluminescent plankton lighting a night shoreline
+the slow growth of stalactites in limestone caves
+the life cycle of a single raindrop
+tardigrades surviving the vacuum of space
+the ring system of Saturn
+the Great Red Spot of Jupiter
+volcanic hydrothermal vents on the ocean floor
+the first photograph of a black hole's shadow
+the Antikythera mechanism
+the invention of the printing press
+the silence of a snowfall in a pine forest
+honeybee waggle dances
+the magnetic sense of migrating sea turtles
+the sound of whale song carrying across ocean basins
+coral reef spawning under a full moon
+the half-life of radioactive carbon and the dating of the past
+the Fibonacci sequence in sunflower heads
+the Mandelbrot set
+the infinity of prime numbers
+the concept of zero in Indian mathematics
+# near-train p004 0.16: Gödel's incompleteness theorems
+the Monty Hall problem
+the four-colour theorem
+the birthday paradox
+entropy and the arrow of time
+superconductivity at very low temperatures
+the double-slit experiment
+quantum entanglement between distant particles
+the speed of light as a cosmic limit
+# near-train p107 0.15: the cosmic microwave background
+the formation of the Moon from a giant impact
+the Kuiper belt and the edge of the solar system
+comets returning after centuries
+the aurora borealis over a frozen lake
+the eye of a hurricane
+lightning and the chemistry of thunderstorms
+tides and the pull of the Moon
+plate tectonics and drifting continents
+the Himalayas still rising
+glaciers carving valleys over millennia
+the Atacama desert, the driest place on Earth
+deep-sea anglerfish in perpetual darkness
+the immortal jellyfish Turritopsis
+the root systems of ancient redwoods
+lichen as a partnership of fungus and alga
+the germination of a seed after a desert rain
+cicadas emerging after seventeen years
+the murmuration of starlings at dusk
+monarch butterflies wintering in Mexican forests
+the language of elephants through low-frequency rumbles
+crows that remember human faces
+dolphins sleeping with half their brain
+the axolotl regrowing a lost limb
+the mimic octopus imitating other animals
+the human heartbeat over a lifetime
+the microbiome living in the human gut
+how memories are consolidated during sleep
+the placebo effect
+the plasticity of the adult brain
+the sense of smell and its link to memory
+synesthesia, hearing colours and seeing sounds
+the discovery of penicillin
+the eradication of smallpox
+the structure of DNA as a double helix
+CRISPR and the editing of genes
+the origin of life in tidal pools
+the Cambrian explosion of animal forms
+the extinction of the dinosaurs
+the domestication of wheat
+the history of the humble potato across continents
+the spice routes of the Indian Ocean
+the Silk Road as a road of ideas
+# near-train p069 0.14: the library of Alexandria
+the Rosetta Stone and the decipherment of hieroglyphs
+the cave paintings of Lascaux
+Stonehenge and the solstice sunrise
+the Inca road system in the Andes
+the Great Wall seen as a line of human labour
+the cathedral builders of the Middle Ages
+the invention of the mechanical clock
+the first transatlantic telegraph cable
+the Apollo 11 landing seen from Earth
+the International Space Station orbiting at dawn
+the Hubble Deep Field
+the James Webb telescope unfolding in space
+exoplanets in the habitable zone
+the search for life on Europa beneath its ice
+Mars and its vanished rivers
+the solar wind and space weather
+sunspots and the eleven-year solar cycle
+the Milky Way seen from a desert night
+the Andromeda galaxy on a collision course
+a supernova seeding the elements of life
+how stars forge carbon and oxygen
+the periodic table as a map of matter
+the chemistry of a candle flame
+why glass is clear
+the crystal structure of snowflakes
+the colours of a soap bubble
+the physics of a rainbow
+the Doppler effect in a passing siren
+the resonance of a cello string
+the acoustics of a stone cathedral
+silence and the anechoic chamber
+the invention of musical notation
+Bach's fugues as architecture in sound
+jazz improvisation as a conversation
+the haiku and the cutting word
+the Japanese art of kintsugi, repairing with gold
+wabi-sabi and the beauty of impermanence
+the Danish idea of hygge
+the Portuguese longing called saudade
+the Welsh word hiraeth
+the Sanskrit concept of dharma
+the Stoic practice of imagining loss
+Zeno's paradoxes of motion
+Plato's allegory of the cave
+# near-train p088 0.14: the ship of Theseus
+the trolley problem
+free will and determinism
+the hard problem of consciousness
+the Turing test
+the dream of a universal language
+the invention of writing in Mesopotamia
+the alphabet travelling from Phoenicia
+the death of a language with its last speaker
+sign languages and the grammar of the hands
+the art of translation between languages without shared words
+maps and the territories they distort
+the Mercator projection
+the longitude problem and the marine chronometer
+lighthouses on remote coasts
+the sound of a foghorn at night
+the first flight at Kitty Hawk
+the bicycle as a liberating machine
+the steam engine and the industrial age
+the transistor and the shrinking of computers
+the internet as a web of cables under the sea
+the first email ever sent
+the binary code beneath every image
+artificial neural networks learning to see
+the ethics of machines that decide
+the loneliness of a lighthouse keeper
+the tea ceremony in Kyoto
+bread rising overnight in a warm kitchen
+the fermentation of wine
+the chemistry of chocolate
+coffee and the coffeehouses of Vienna
+the salt trade and the price of a grain
+the invention of paper in China
+origami folding a crane from a single sheet
+the mathematics of knots
+the Möbius strip with only one side
+the Klein bottle
+fractal coastlines that never end
+chaos theory and the butterfly effect
+weather forecasting at the edge of predictability
+the El Niño oscillation
+ocean currents as the planet's conveyor belt
+the Sargasso Sea and the eels that return to it
+salmon swimming upstream to spawn
+the hibernation of bears
+the winter survival of wood frogs that freeze solid
+camels in the desert heat
+penguins huddling through the Antarctic winter
+the snow leopard in the high Himalayas
+the night sky of the Southern Cross
+the Mayan calendar
+the Gregorian reform of the calendar
+leap seconds and the wobbling Earth
+the measurement of the metre
+the kilogram redefined by a physical constant
+the uncertainty principle
+Schrödinger's cat
+the Higgs boson
+neutrinos passing through the Earth
+antimatter and its mysterious scarcity
+the multiverse hypothesis
+time dilation for a traveller near light speed
+the twin paradox
+wormholes as shortcuts through spacetime
+# near-train p094 0.12: the Fermi paradox
+the Drake equation
+the Arecibo message sent to the stars
+the Wow! signal
+the golden ratio in art and nature
+the perspective revolution of Renaissance painting
+the camera obscura
+the invention of photography
+the first moving pictures
+the colour blue in history
+indigo dye and the colour trade
+the pigment ultramarine ground from lapis lazuli
+the sculptures of Michelangelo emerging from marble
+the Taj Mahal at dawn
+Gaudí's unfinished Sagrada Família
+the gardens of Kyoto's moss temples
+bonsai trees grown over centuries
+the oldest living tree on Earth
+the seed vault in Svalbard
+the Amazon rainforest breathing
+the Sahara once green
+the Dead Sea and its buoyant salt
+the Mariana Trench
+the Northwest Passage through Arctic ice
+Antarctic ice cores as an archive of air
+permafrost thawing under a warming sky
+the carbon cycle
+photosynthesis turning light into sugar
+chlorophyll and the green of leaves
+autumn leaves changing colour
+the scent of rain called petrichor
+the sound of cicadas on a summer evening
+fireflies synchronising their flashes
+the circadian clock inside every cell
+the ageing of stars and people
+the mathematics of a spider web
+the strength of spider silk
+the architecture of termite mounds
+ant colonies as a single mind
+slime moulds solving mazes
+the immune system remembering old enemies
+vaccines and the training of immunity
+the first heart transplant
+the stethoscope and the sound of the body
+the microscope revealing a hidden world
+Leeuwenhoek's first sight of bacteria
+the telescope of Galileo and the moons of Jupiter
+Kepler's laws of planetary motion
+Newton's apple and universal gravitation
+Einstein's thought experiment of riding a light beam
+Marie Curie and the glow of radium
+Ada Lovelace imagining a thinking engine
+Alan Turing and the breaking of codes
+the Enigma machine
+cryptography and the secrecy of messages
+the art of letter writing
+the postal service and messages across oceans
+the message in a bottle
+the last voyage of the Endurance
+Shackleton's crossing of South Georgia
+the first ascent of Everest
+free diving into the deep blue
+the bends and the pressure of the deep
+the submarine and the silent ocean
+the sonar map of the seafloor
+shipwrecks preserved in the Baltic Sea
+the Titanic resting in darkness
+amber preserving an ancient insect
+fossils as letters from deep time
+the Burgess Shale
+the footprints at Laetoli
+the first use of fire by early humans
+the invention of the wheel
+the domestication of the dog
+horses and the shaping of empires
+the honey hunters of the Himalayas
+the art of beekeeping
+the nightingale's song
+the dawn chorus of birds
+the silence before an earthquake
+tsunamis crossing an ocean in hours
+the eruption of Krakatoa heard across the world
+Pompeii preserved in ash
+the Northern Lights in Norse myth
+the constellations as shared stories
+the Pleiades across many cultures
+navigation by the North Star

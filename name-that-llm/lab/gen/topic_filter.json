@@ -1,0 +1,1078 @@
+{
+ "the migration of Arctic terns between the poles": {
+  "cos": 0.038,
+  "pid": "p137"
+ },
+ "bioluminescent plankton lighting a night shoreline": {
+  "cos": 0.013,
+  "pid": "p105"
+ },
+ "the slow growth of stalactites in limestone caves": {
+  "cos": 0.022,
+  "pid": "p101"
+ },
+ "the life cycle of a single raindrop": {
+  "cos": 0.018,
+  "pid": "p067"
+ },
+ "tardigrades surviving the vacuum of space": {
+  "cos": 0.034,
+  "pid": "p041"
+ },
+ "the ring system of Saturn": {
+  "cos": 0.047,
+  "pid": "p023"
+ },
+ "the Great Red Spot of Jupiter": {
+  "cos": 0.031,
+  "pid": "p023"
+ },
+ "volcanic hydrothermal vents on the ocean floor": {
+  "cos": 0.092,
+  "pid": "p114"
+ },
+ "the first photograph of a black hole's shadow": {
+  "cos": 0.116,
+  "pid": "p083"
+ },
+ "the Antikythera mechanism": {
+  "cos": 0.111,
+  "pid": "p028"
+ },
+ "the invention of the printing press": {
+  "cos": 0.069,
+  "pid": "p024"
+ },
+ "the silence of a snowfall in a pine forest": {
+  "cos": 0.029,
+  "pid": "p100"
+ },
+ "honeybee waggle dances": {
+  "cos": 0.011,
+  "pid": "p097"
+ },
+ "the magnetic sense of migrating sea turtles": {
+  "cos": 0.02,
+  "pid": "p090"
+ },
+ "the sound of whale song carrying across ocean basins": {
+  "cos": 0.072,
+  "pid": "p000"
+ },
+ "coral reef spawning under a full moon": {
+  "cos": 0.05,
+  "pid": "p061"
+ },
+ "the half-life of radioactive carbon and the dating of the past": {
+  "cos": 0.035,
+  "pid": "p053"
+ },
+ "the Fibonacci sequence in sunflower heads": {
+  "cos": 0.065,
+  "pid": "p001"
+ },
+ "the Mandelbrot set": {
+  "cos": 0.12,
+  "pid": "p136"
+ },
+ "the infinity of prime numbers": {
+  "cos": 0.026,
+  "pid": "p136"
+ },
+ "the concept of zero in Indian mathematics": {
+  "cos": 0.023,
+  "pid": "p021"
+ },
+ "G\u00f6del's incompleteness theorems": {
+  "cos": 0.156,
+  "pid": "p004"
+ },
+ "the Monty Hall problem": {
+  "cos": 0.102,
+  "pid": "p037"
+ },
+ "the four-colour theorem": {
+  "cos": 0.034,
+  "pid": "p004"
+ },
+ "the birthday paradox": {
+  "cos": 0.019,
+  "pid": "p036"
+ },
+ "entropy and the arrow of time": {
+  "cos": 0.057,
+  "pid": "p033"
+ },
+ "superconductivity at very low temperatures": {
+  "cos": 0.021,
+  "pid": "p138"
+ },
+ "the double-slit experiment": {
+  "cos": 0.025,
+  "pid": "p071"
+ },
+ "quantum entanglement between distant particles": {
+  "cos": 0.116,
+  "pid": "p144"
+ },
+ "the speed of light as a cosmic limit": {
+  "cos": 0.051,
+  "pid": "p115"
+ },
+ "the cosmic microwave background": {
+  "cos": 0.154,
+  "pid": "p107"
+ },
+ "the formation of the Moon from a giant impact": {
+  "cos": 0.025,
+  "pid": "p049"
+ },
+ "the Kuiper belt and the edge of the solar system": {
+  "cos": 0.029,
+  "pid": "p010"
+ },
+ "comets returning after centuries": {
+  "cos": 0.032,
+  "pid": "p081"
+ },
+ "the aurora borealis over a frozen lake": {
+  "cos": 0.076,
+  "pid": "p137"
+ },
+ "the eye of a hurricane": {
+  "cos": 0.015,
+  "pid": "p013"
+ },
+ "lightning and the chemistry of thunderstorms": {
+  "cos": 0.02,
+  "pid": "p038"
+ },
+ "tides and the pull of the Moon": {
+  "cos": 0.041,
+  "pid": "p081"
+ },
+ "plate tectonics and drifting continents": {
+  "cos": 0.058,
+  "pid": "p044"
+ },
+ "the Himalayas still rising": {
+  "cos": 0.034,
+  "pid": "p027"
+ },
+ "glaciers carving valleys over millennia": {
+  "cos": 0.024,
+  "pid": "p093"
+ },
+ "the Atacama desert, the driest place on Earth": {
+  "cos": 0.029,
+  "pid": "p083"
+ },
+ "deep-sea anglerfish in perpetual darkness": {
+  "cos": 0.076,
+  "pid": "p105"
+ },
+ "the immortal jellyfish Turritopsis": {
+  "cos": 0.028,
+  "pid": "p105"
+ },
+ "the root systems of ancient redwoods": {
+  "cos": 0.033,
+  "pid": "p086"
+ },
+ "lichen as a partnership of fungus and alga": {
+  "cos": 0.028,
+  "pid": "p129"
+ },
+ "the germination of a seed after a desert rain": {
+  "cos": 0.024,
+  "pid": "p062"
+ },
+ "cicadas emerging after seventeen years": {
+  "cos": 0.028,
+  "pid": "p101"
+ },
+ "the murmuration of starlings at dusk": {
+  "cos": 0.016,
+  "pid": "p066"
+ },
+ "monarch butterflies wintering in Mexican forests": {
+  "cos": 0.013,
+  "pid": "p096"
+ },
+ "the language of elephants through low-frequency rumbles": {
+  "cos": 0.027,
+  "pid": "p123"
+ },
+ "crows that remember human faces": {
+  "cos": 0.013,
+  "pid": "p149"
+ },
+ "dolphins sleeping with half their brain": {
+  "cos": 0.02,
+  "pid": "p096"
+ },
+ "the axolotl regrowing a lost limb": {
+  "cos": 0.03,
+  "pid": "p050"
+ },
+ "the mimic octopus imitating other animals": {
+  "cos": 0.025,
+  "pid": "p013"
+ },
+ "the human heartbeat over a lifetime": {
+  "cos": 0.059,
+  "pid": "p000"
+ },
+ "the microbiome living in the human gut": {
+  "cos": 0.017,
+  "pid": "p046"
+ },
+ "how memories are consolidated during sleep": {
+  "cos": 0.03,
+  "pid": "p056"
+ },
+ "the placebo effect": {
+  "cos": 0.028,
+  "pid": "p145"
+ },
+ "the plasticity of the adult brain": {
+  "cos": 0.1,
+  "pid": "p106"
+ },
+ "the sense of smell and its link to memory": {
+  "cos": 0.024,
+  "pid": "p019"
+ },
+ "synesthesia, hearing colours and seeing sounds": {
+  "cos": 0.014,
+  "pid": "p068"
+ },
+ "the discovery of penicillin": {
+  "cos": 0.023,
+  "pid": "p070"
+ },
+ "the eradication of smallpox": {
+  "cos": 0.0,
+  "pid": "p000"
+ },
+ "the structure of DNA as a double helix": {
+  "cos": 0.052,
+  "pid": "p022"
+ },
+ "CRISPR and the editing of genes": {
+  "cos": 0.083,
+  "pid": "p026"
+ },
+ "the origin of life in tidal pools": {
+  "cos": 0.036,
+  "pid": "p094"
+ },
+ "the Cambrian explosion of animal forms": {
+  "cos": 0.093,
+  "pid": "p059"
+ },
+ "the extinction of the dinosaurs": {
+  "cos": 0.041,
+  "pid": "p125"
+ },
+ "the domestication of wheat": {
+  "cos": 0.031,
+  "pid": "p093"
+ },
+ "the history of the humble potato across continents": {
+  "cos": 0.022,
+  "pid": "p125"
+ },
+ "the spice routes of the Indian Ocean": {
+  "cos": 0.013,
+  "pid": "p054"
+ },
+ "the Silk Road as a road of ideas": {
+  "cos": 0.062,
+  "pid": "p045"
+ },
+ "the library of Alexandria": {
+  "cos": 0.141,
+  "pid": "p069"
+ },
+ "the Rosetta Stone and the decipherment of hieroglyphs": {
+  "cos": 0.09,
+  "pid": "p046"
+ },
+ "the cave paintings of Lascaux": {
+  "cos": 0.048,
+  "pid": "p101"
+ },
+ "Stonehenge and the solstice sunrise": {
+  "cos": 0.016,
+  "pid": "p029"
+ },
+ "the Inca road system in the Andes": {
+  "cos": 0.055,
+  "pid": "p032"
+ },
+ "the Great Wall seen as a line of human labour": {
+  "cos": 0.019,
+  "pid": "p101"
+ },
+ "the cathedral builders of the Middle Ages": {
+  "cos": 0.023,
+  "pid": "p011"
+ },
+ "the invention of the mechanical clock": {
+  "cos": 0.027,
+  "pid": "p056"
+ },
+ "the first transatlantic telegraph cable": {
+  "cos": 0.034,
+  "pid": "p007"
+ },
+ "the Apollo 11 landing seen from Earth": {
+  "cos": 0.012,
+  "pid": "p109"
+ },
+ "the International Space Station orbiting at dawn": {
+  "cos": 0.031,
+  "pid": "p117"
+ },
+ "the Hubble Deep Field": {
+  "cos": 0.02,
+  "pid": "p137"
+ },
+ "the James Webb telescope unfolding in space": {
+  "cos": 0.02,
+  "pid": "p080"
+ },
+ "exoplanets in the habitable zone": {
+  "cos": 0.027,
+  "pid": "p044"
+ },
+ "the search for life on Europa beneath its ice": {
+  "cos": 0.03,
+  "pid": "p029"
+ },
+ "Mars and its vanished rivers": {
+  "cos": 0.037,
+  "pid": "p078"
+ },
+ "the solar wind and space weather": {
+  "cos": 0.06,
+  "pid": "p137"
+ },
+ "sunspots and the eleven-year solar cycle": {
+  "cos": 0.03,
+  "pid": "p066"
+ },
+ "the Milky Way seen from a desert night": {
+  "cos": 0.047,
+  "pid": "p081"
+ },
+ "the Andromeda galaxy on a collision course": {
+  "cos": 0.018,
+  "pid": "p130"
+ },
+ "a supernova seeding the elements of life": {
+  "cos": 0.012,
+  "pid": "p002"
+ },
+ "how stars forge carbon and oxygen": {
+  "cos": 0.043,
+  "pid": "p103"
+ },
+ "the periodic table as a map of matter": {
+  "cos": 0.034,
+  "pid": "p017"
+ },
+ "the chemistry of a candle flame": {
+  "cos": 0.027,
+  "pid": "p071"
+ },
+ "why glass is clear": {
+  "cos": 0.024,
+  "pid": "p015"
+ },
+ "the crystal structure of snowflakes": {
+  "cos": 0.047,
+  "pid": "p044"
+ },
+ "the colours of a soap bubble": {
+  "cos": 0.027,
+  "pid": "p015"
+ },
+ "the physics of a rainbow": {
+  "cos": 0.027,
+  "pid": "p123"
+ },
+ "the Doppler effect in a passing siren": {
+  "cos": 0.019,
+  "pid": "p145"
+ },
+ "the resonance of a cello string": {
+  "cos": 0.062,
+  "pid": "p068"
+ },
+ "the acoustics of a stone cathedral": {
+  "cos": 0.026,
+  "pid": "p135"
+ },
+ "silence and the anechoic chamber": {
+  "cos": 0.019,
+  "pid": "p119"
+ },
+ "the invention of musical notation": {
+  "cos": 0.022,
+  "pid": "p123"
+ },
+ "Bach's fugues as architecture in sound": {
+  "cos": 0.035,
+  "pid": "p000"
+ },
+ "jazz improvisation as a conversation": {
+  "cos": 0.01,
+  "pid": "p100"
+ },
+ "the haiku and the cutting word": {
+  "cos": 0.049,
+  "pid": "p005"
+ },
+ "the Japanese art of kintsugi, repairing with gold": {
+  "cos": 0.048,
+  "pid": "p040"
+ },
+ "wabi-sabi and the beauty of impermanence": {
+  "cos": 0.025,
+  "pid": "p005"
+ },
+ "the Danish idea of hygge": {
+  "cos": 0.01,
+  "pid": "p106"
+ },
+ "the Portuguese longing called saudade": {
+  "cos": 0.018,
+  "pid": "p056"
+ },
+ "the Welsh word hiraeth": {
+  "cos": 0.014,
+  "pid": "p126"
+ },
+ "the Sanskrit concept of dharma": {
+  "cos": 0.015,
+  "pid": "p062"
+ },
+ "the Stoic practice of imagining loss": {
+  "cos": 0.019,
+  "pid": "p106"
+ },
+ "Zeno's paradoxes of motion": {
+  "cos": 0.009,
+  "pid": "p139"
+ },
+ "Plato's allegory of the cave": {
+  "cos": 0.028,
+  "pid": "p021"
+ },
+ "the ship of Theseus": {
+  "cos": 0.139,
+  "pid": "p088"
+ },
+ "the trolley problem": {
+  "cos": 0.067,
+  "pid": "p089"
+ },
+ "free will and determinism": {
+  "cos": 0.069,
+  "pid": "p072"
+ },
+ "the hard problem of consciousness": {
+  "cos": 0.037,
+  "pid": "p071"
+ },
+ "the Turing test": {
+  "cos": 0.043,
+  "pid": "p127"
+ },
+ "the dream of a universal language": {
+  "cos": 0.025,
+  "pid": "p127"
+ },
+ "the invention of writing in Mesopotamia": {
+  "cos": 0.016,
+  "pid": "p031"
+ },
+ "the alphabet travelling from Phoenicia": {
+  "cos": 0.016,
+  "pid": "p124"
+ },
+ "the death of a language with its last speaker": {
+  "cos": 0.042,
+  "pid": "p081"
+ },
+ "sign languages and the grammar of the hands": {
+  "cos": 0.022,
+  "pid": "p081"
+ },
+ "the art of translation between languages without shared words": {
+  "cos": 0.048,
+  "pid": "p060"
+ },
+ "maps and the territories they distort": {
+  "cos": 0.028,
+  "pid": "p012"
+ },
+ "the Mercator projection": {
+  "cos": 0.019,
+  "pid": "p074"
+ },
+ "the longitude problem and the marine chronometer": {
+  "cos": 0.023,
+  "pid": "p028"
+ },
+ "lighthouses on remote coasts": {
+  "cos": 0.019,
+  "pid": "p091"
+ },
+ "the sound of a foghorn at night": {
+  "cos": 0.036,
+  "pid": "p126"
+ },
+ "the first flight at Kitty Hawk": {
+  "cos": 0.018,
+  "pid": "p110"
+ },
+ "the bicycle as a liberating machine": {
+  "cos": 0.038,
+  "pid": "p065"
+ },
+ "the steam engine and the industrial age": {
+  "cos": 0.04,
+  "pid": "p132"
+ },
+ "the transistor and the shrinking of computers": {
+  "cos": 0.017,
+  "pid": "p055"
+ },
+ "the internet as a web of cables under the sea": {
+  "cos": 0.057,
+  "pid": "p100"
+ },
+ "the first email ever sent": {
+  "cos": 0.026,
+  "pid": "p076"
+ },
+ "the binary code beneath every image": {
+  "cos": 0.029,
+  "pid": "p002"
+ },
+ "artificial neural networks learning to see": {
+  "cos": 0.049,
+  "pid": "p047"
+ },
+ "the ethics of machines that decide": {
+  "cos": 0.024,
+  "pid": "p070"
+ },
+ "the loneliness of a lighthouse keeper": {
+  "cos": 0.015,
+  "pid": "p120"
+ },
+ "the tea ceremony in Kyoto": {
+  "cos": 0.039,
+  "pid": "p040"
+ },
+ "bread rising overnight in a warm kitchen": {
+  "cos": 0.026,
+  "pid": "p076"
+ },
+ "the fermentation of wine": {
+  "cos": 0.022,
+  "pid": "p035"
+ },
+ "the chemistry of chocolate": {
+  "cos": 0.015,
+  "pid": "p053"
+ },
+ "coffee and the coffeehouses of Vienna": {
+  "cos": 0.02,
+  "pid": "p064"
+ },
+ "the salt trade and the price of a grain": {
+  "cos": 0.028,
+  "pid": "p031"
+ },
+ "the invention of paper in China": {
+  "cos": 0.039,
+  "pid": "p045"
+ },
+ "origami folding a crane from a single sheet": {
+  "cos": 0.012,
+  "pid": "p041"
+ },
+ "the mathematics of knots": {
+  "cos": 0.037,
+  "pid": "p032"
+ },
+ "the M\u00f6bius strip with only one side": {
+  "cos": 0.019,
+  "pid": "p043"
+ },
+ "the Klein bottle": {
+  "cos": 0.023,
+  "pid": "p000"
+ },
+ "fractal coastlines that never end": {
+  "cos": 0.039,
+  "pid": "p128"
+ },
+ "chaos theory and the butterfly effect": {
+  "cos": 0.028,
+  "pid": "p025"
+ },
+ "weather forecasting at the edge of predictability": {
+  "cos": 0.019,
+  "pid": "p028"
+ },
+ "the El Ni\u00f1o oscillation": {
+  "cos": 0.023,
+  "pid": "p074"
+ },
+ "ocean currents as the planet's conveyor belt": {
+  "cos": 0.09,
+  "pid": "p103"
+ },
+ "the Sargasso Sea and the eels that return to it": {
+  "cos": 0.016,
+  "pid": "p061"
+ },
+ "salmon swimming upstream to spawn": {
+  "cos": 0.014,
+  "pid": "p147"
+ },
+ "the hibernation of bears": {
+  "cos": 0.009,
+  "pid": "p088"
+ },
+ "the winter survival of wood frogs that freeze solid": {
+  "cos": 0.015,
+  "pid": "p077"
+ },
+ "camels in the desert heat": {
+  "cos": 0.059,
+  "pid": "p062"
+ },
+ "penguins huddling through the Antarctic winter": {
+  "cos": 0.023,
+  "pid": "p119"
+ },
+ "the snow leopard in the high Himalayas": {
+  "cos": 0.024,
+  "pid": "p091"
+ },
+ "the night sky of the Southern Cross": {
+  "cos": 0.043,
+  "pid": "p080"
+ },
+ "the Mayan calendar": {
+  "cos": 0.018,
+  "pid": "p064"
+ },
+ "the Gregorian reform of the calendar": {
+  "cos": 0.014,
+  "pid": "p064"
+ },
+ "leap seconds and the wobbling Earth": {
+  "cos": 0.023,
+  "pid": "p047"
+ },
+ "the measurement of the metre": {
+  "cos": 0.012,
+  "pid": "p036"
+ },
+ "the kilogram redefined by a physical constant": {
+  "cos": 0.012,
+  "pid": "p056"
+ },
+ "the uncertainty principle": {
+  "cos": 0.043,
+  "pid": "p014"
+ },
+ "Schr\u00f6dinger's cat": {
+  "cos": 0.028,
+  "pid": "p074"
+ },
+ "the Higgs boson": {
+  "cos": 0.011,
+  "pid": "p138"
+ },
+ "neutrinos passing through the Earth": {
+  "cos": 0.019,
+  "pid": "p130"
+ },
+ "antimatter and its mysterious scarcity": {
+  "cos": 0.034,
+  "pid": "p058"
+ },
+ "the multiverse hypothesis": {
+  "cos": 0.026,
+  "pid": "p094"
+ },
+ "time dilation for a traveller near light speed": {
+  "cos": 0.078,
+  "pid": "p064"
+ },
+ "the twin paradox": {
+  "cos": 0.032,
+  "pid": "p055"
+ },
+ "wormholes as shortcuts through spacetime": {
+  "cos": 0.059,
+  "pid": "p014"
+ },
+ "the Fermi paradox": {
+  "cos": 0.123,
+  "pid": "p094"
+ },
+ "the Drake equation": {
+  "cos": 0.024,
+  "pid": "p089"
+ },
+ "the Arecibo message sent to the stars": {
+  "cos": 0.027,
+  "pid": "p144"
+ },
+ "the Wow! signal": {
+  "cos": 0.019,
+  "pid": "p123"
+ },
+ "the golden ratio in art and nature": {
+  "cos": 0.102,
+  "pid": "p001"
+ },
+ "the perspective revolution of Renaissance painting": {
+  "cos": 0.036,
+  "pid": "p024"
+ },
+ "the camera obscura": {
+  "cos": 0.038,
+  "pid": "p013"
+ },
+ "the invention of photography": {
+  "cos": 0.018,
+  "pid": "p059"
+ },
+ "the first moving pictures": {
+  "cos": 0.025,
+  "pid": "p046"
+ },
+ "the colour blue in history": {
+  "cos": 0.018,
+  "pid": "p010"
+ },
+ "indigo dye and the colour trade": {
+  "cos": 0.023,
+  "pid": "p133"
+ },
+ "the pigment ultramarine ground from lapis lazuli": {
+  "cos": 0.024,
+  "pid": "p054"
+ },
+ "the sculptures of Michelangelo emerging from marble": {
+  "cos": 0.017,
+  "pid": "p028"
+ },
+ "the Taj Mahal at dawn": {
+  "cos": 0.012,
+  "pid": "p029"
+ },
+ "Gaud\u00ed's unfinished Sagrada Fam\u00edlia": {
+  "cos": 0.008,
+  "pid": "p098"
+ },
+ "the gardens of Kyoto's moss temples": {
+  "cos": 0.026,
+  "pid": "p109"
+ },
+ "bonsai trees grown over centuries": {
+  "cos": 0.025,
+  "pid": "p146"
+ },
+ "the oldest living tree on Earth": {
+  "cos": 0.035,
+  "pid": "p146"
+ },
+ "the seed vault in Svalbard": {
+  "cos": 0.017,
+  "pid": "p107"
+ },
+ "the Amazon rainforest breathing": {
+  "cos": 0.027,
+  "pid": "p091"
+ },
+ "the Sahara once green": {
+  "cos": 0.021,
+  "pid": "p108"
+ },
+ "the Dead Sea and its buoyant salt": {
+  "cos": 0.019,
+  "pid": "p061"
+ },
+ "the Mariana Trench": {
+  "cos": 0.011,
+  "pid": "p023"
+ },
+ "the Northwest Passage through Arctic ice": {
+  "cos": 0.031,
+  "pid": "p009"
+ },
+ "Antarctic ice cores as an archive of air": {
+  "cos": 0.101,
+  "pid": "p119"
+ },
+ "permafrost thawing under a warming sky": {
+  "cos": 0.082,
+  "pid": "p009"
+ },
+ "the carbon cycle": {
+  "cos": 0.033,
+  "pid": "p103"
+ },
+ "photosynthesis turning light into sugar": {
+  "cos": 0.026,
+  "pid": "p090"
+ },
+ "chlorophyll and the green of leaves": {
+  "cos": 0.038,
+  "pid": "p108"
+ },
+ "autumn leaves changing colour": {
+  "cos": 0.021,
+  "pid": "p146"
+ },
+ "the scent of rain called petrichor": {
+  "cos": 0.023,
+  "pid": "p147"
+ },
+ "the sound of cicadas on a summer evening": {
+  "cos": 0.04,
+  "pid": "p048"
+ },
+ "fireflies synchronising their flashes": {
+  "cos": 0.014,
+  "pid": "p133"
+ },
+ "the circadian clock inside every cell": {
+  "cos": 0.056,
+  "pid": "p066"
+ },
+ "the ageing of stars and people": {
+  "cos": 0.021,
+  "pid": "p081"
+ },
+ "the mathematics of a spider web": {
+  "cos": 0.028,
+  "pid": "p085"
+ },
+ "the strength of spider silk": {
+  "cos": 0.03,
+  "pid": "p133"
+ },
+ "the architecture of termite mounds": {
+  "cos": 0.007,
+  "pid": "p057"
+ },
+ "ant colonies as a single mind": {
+  "cos": 0.026,
+  "pid": "p112"
+ },
+ "slime moulds solving mazes": {
+  "cos": 0.056,
+  "pid": "p112"
+ },
+ "the immune system remembering old enemies": {
+  "cos": 0.026,
+  "pid": "p122"
+ },
+ "vaccines and the training of immunity": {
+  "cos": 0.016,
+  "pid": "p002"
+ },
+ "the first heart transplant": {
+  "cos": 0.013,
+  "pid": "p000"
+ },
+ "the stethoscope and the sound of the body": {
+  "cos": 0.025,
+  "pid": "p068"
+ },
+ "the microscope revealing a hidden world": {
+  "cos": 0.027,
+  "pid": "p123"
+ },
+ "Leeuwenhoek's first sight of bacteria": {
+  "cos": 0.021,
+  "pid": "p114"
+ },
+ "the telescope of Galileo and the moons of Jupiter": {
+  "cos": 0.029,
+  "pid": "p023"
+ },
+ "Kepler's laws of planetary motion": {
+  "cos": 0.022,
+  "pid": "p072"
+ },
+ "Newton's apple and universal gravitation": {
+  "cos": 0.016,
+  "pid": "p121"
+ },
+ "Einstein's thought experiment of riding a light beam": {
+  "cos": 0.041,
+  "pid": "p104"
+ },
+ "Marie Curie and the glow of radium": {
+  "cos": 0.012,
+  "pid": "p055"
+ },
+ "Ada Lovelace imagining a thinking engine": {
+  "cos": 0.013,
+  "pid": "p057"
+ },
+ "Alan Turing and the breaking of codes": {
+  "cos": 0.09,
+  "pid": "p127"
+ },
+ "the Enigma machine": {
+  "cos": 0.068,
+  "pid": "p075"
+ },
+ "cryptography and the secrecy of messages": {
+  "cos": 0.037,
+  "pid": "p039"
+ },
+ "the art of letter writing": {
+  "cos": 0.028,
+  "pid": "p060"
+ },
+ "the postal service and messages across oceans": {
+  "cos": 0.021,
+  "pid": "p042"
+ },
+ "the message in a bottle": {
+  "cos": 0.072,
+  "pid": "p000"
+ },
+ "the last voyage of the Endurance": {
+  "cos": 0.029,
+  "pid": "p061"
+ },
+ "Shackleton's crossing of South Georgia": {
+  "cos": 0.014,
+  "pid": "p027"
+ },
+ "the first ascent of Everest": {
+  "cos": 0.026,
+  "pid": "p008"
+ },
+ "free diving into the deep blue": {
+  "cos": 0.026,
+  "pid": "p044"
+ },
+ "the bends and the pressure of the deep": {
+  "cos": 0.031,
+  "pid": "p090"
+ },
+ "the submarine and the silent ocean": {
+  "cos": 0.026,
+  "pid": "p103"
+ },
+ "the sonar map of the seafloor": {
+  "cos": 0.021,
+  "pid": "p059"
+ },
+ "shipwrecks preserved in the Baltic Sea": {
+  "cos": 0.013,
+  "pid": "p088"
+ },
+ "the Titanic resting in darkness": {
+  "cos": 0.014,
+  "pid": "p121"
+ },
+ "amber preserving an ancient insect": {
+  "cos": 0.017,
+  "pid": "p101"
+ },
+ "fossils as letters from deep time": {
+  "cos": 0.054,
+  "pid": "p027"
+ },
+ "the Burgess Shale": {
+  "cos": 0.0,
+  "pid": "p000"
+ },
+ "the footprints at Laetoli": {
+  "cos": 0.013,
+  "pid": "p058"
+ },
+ "the first use of fire by early humans": {
+  "cos": 0.057,
+  "pid": "p142"
+ },
+ "the invention of the wheel": {
+  "cos": 0.028,
+  "pid": "p059"
+ },
+ "the domestication of the dog": {
+  "cos": 0.021,
+  "pid": "p076"
+ },
+ "horses and the shaping of empires": {
+  "cos": 0.016,
+  "pid": "p125"
+ },
+ "the honey hunters of the Himalayas": {
+  "cos": 0.023,
+  "pid": "p101"
+ },
+ "the art of beekeeping": {
+  "cos": 0.018,
+  "pid": "p040"
+ },
+ "the nightingale's song": {
+  "cos": 0.02,
+  "pid": "p000"
+ },
+ "the dawn chorus of birds": {
+  "cos": 0.036,
+  "pid": "p052"
+ },
+ "the silence before an earthquake": {
+  "cos": 0.039,
+  "pid": "p054"
+ },
+ "tsunamis crossing an ocean in hours": {
+  "cos": 0.018,
+  "pid": "p110"
+ },
+ "the eruption of Krakatoa heard across the world": {
+  "cos": 0.027,
+  "pid": "p049"
+ },
+ "Pompeii preserved in ash": {
+  "cos": 0.023,
+  "pid": "p069"
+ },
+ "the Northern Lights in Norse myth": {
+  "cos": 0.021,
+  "pid": "p109"
+ },
+ "the constellations as shared stories": {
+  "cos": 0.044,
+  "pid": "p142"
+ },
+ "the Pleiades across many cultures": {
+  "cos": 0.024,
+  "pid": "p087"
+ },
+ "navigation by the North Star": {
+  "cos": 0.026,
+  "pid": "p110"
+ }
+}
